@@ -3,6 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <utility>
+#include <Windows.h>
 
 std::map<std::string, std::string> Object::spatials = {
   { "SPATIAL_0", "None" },
@@ -14,7 +15,6 @@ std::map<std::string, std::string> Object::spatials = {
 };
 const char* Object::NO_SPATIAL = "NO_SPATIAL";
 const char* Object::NO_SIMPLE_ATTRIBUTE = "NO_SIMPLE_ATTRIBUTE";
-
 
 size_t split(const std::string &txt, std::vector<std::string> &strs, char ch = ' ')
 {
@@ -28,17 +28,47 @@ size_t split(const std::string &txt, std::vector<std::string> &strs, char ch = '
 		pos = txt.find(ch, initialPos);
 	}
 	// Add the last one
-	strs.push_back(txt.substr(initialPos, std::min(pos, txt.size()) - initialPos + 1));
+	strs.push_back(txt.substr(initialPos, (pos < txt.size() ? pos : txt.size()) - initialPos + 1));
 	return strs.size();
 }
 
-Object::Object(std::string ID, std::string code, std::string datasetID, std::string spatialID, std::map<std::string, int> simpleAttributes)
+Object::Object(std::string ID, std::string code, std::string datasetID, std::string spatialID)
 	: ID_(std::move(ID))
   , code_(std::move(code))
   , datasetID_(std::move(datasetID))
   , spatialID_(std::move(spatialID))
-  , simpleAttributes_(std::move(std::move(simpleAttributes)))
 {
+}
+
+bool Object::isAttributeExist(std::vector<std::string> path) const
+{
+	std::string fullPath = "./attributes/";
+	for (auto p : path) {
+		fullPath = fullPath + p + "/";
+	}
+	DWORD dwFileAttributes = GetFileAttributes(fullPath.c_str());
+	if (dwFileAttributes == 0xFFFFFFFF)
+		return false;
+	return dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
+}
+
+std::string Object::getAttributeValue(std::vector<std::string> path) const {
+	std::string result;
+	std::string fullPath = "./attributes/";
+	for (auto p : path) {
+		fullPath = fullPath + p + "/";
+	}
+	fullPath += "value.txt";
+	std::ifstream in(fullPath);
+	in >> result;
+	in.close();
+
+	return result;
+}
+
+// как заглушка для старого кода
+int Object::getSimpleAttributeValue(std::string code) const {
+	return 0;
 }
 
 std::string Object::getID() const 
@@ -60,11 +90,6 @@ std::string Object::getSpatialID() const {
 	return spatialID_;
 }
 
-int Object::getSimpleAttributeValue(std::string code) const
-{
-  return simpleAttributes_.at(code);
-}
-
 void ObjectController::setObjects(std::string datasetID) {
 	objects_.clear();
 	std::ifstream in(path + datasetID);
@@ -72,28 +97,11 @@ void ObjectController::setObjects(std::string datasetID) {
 		std::cout << "Error - host: file '" << path + datasetID << "' doesn't opened" << std::endl;
 	}
   std::string objectID, objectCode, spatialID;
-  std::map<std::string, int> simpleAttributes;
-  std::string simpleAttributeCode;
-  int simpleAttributeValue;
+
 	while (!in.eof()) {
-		in >> objectID >> objectCode >> spatialID >> simpleAttributeCode;
-    if (spatialID == Object::NO_SPATIAL) {
-      spatialID.clear();
-    }
-    if (simpleAttributeCode != Object::NO_SIMPLE_ATTRIBUTE) {
-      in >> simpleAttributeValue;
-      simpleAttributes[simpleAttributeCode] = simpleAttributeValue;
-    }
-    
-		//std::getline(in, tmp);
-		//split(tmp, simpleAttributes);
-    //simpleAttributes.erase(simpleAttributes.begin());
+		in >> objectID >> objectCode >> spatialID;
 		objectIndexByID_[objectID] = objects_.size();
-		objects_.push_back(
-      Object(objectID, objectCode, 
-             datasetID, spatialID, 
-             simpleAttributes
-      ));
+		objects_.push_back(Object(objectID, objectCode, datasetID, spatialID));
 	}
 
 	in.close();

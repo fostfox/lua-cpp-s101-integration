@@ -1,4 +1,4 @@
-FEATURE_1 AirportAirfield           SPATIAL_1       NO_SIMPLE_ATTRIBUTE
-FEATURE_2 ArchipelagicSeaLaneAxis   NO_SPATIAL      NO_SIMPLE_ATTRIBUTE
-FEATURE_3 Berth                     SPATIAL_3       NO_SIMPLE_ATTRIBUTE
-FEATURE_4 Lake                      SPATIAL_5       NO_SIMPLE_ATTRIBUTE
+FEATURE_1 AirportAirfield           SPATIAL_1
+FEATURE_2 ArchipelagicSeaLaneAxis   SPATIAL_3
+FEATURE_3 Berth                     SPATIAL_3
+FEATURE_4 Lake                      SPATIAL_5 

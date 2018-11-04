@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <fstream>
 
 //* Так как на хосте мы должны хранить сответствие SpatialID-SpatialType создал такую функцию по конверттации
 // Используется в LuaRuleMashine.cpp строки: 79, 81, 83, 87, 88, 103
@@ -20,8 +21,7 @@ public:
 public:
 	Object() = default;
 	Object(std::string ID, std::string code, 
-    std::string datasetID, std::string spatialID,
-    std::map<std::string, int> simpleAttributes);
+    std::string datasetID, std::string spatialID);
 
 	void setDrawInstructions(std::string drawInstructions);
 	std::vector<std::string> getDrawInstructions() const;
@@ -32,14 +32,16 @@ public:
 	std::string getCode() const;
 	std::string getDatasetID() const;
 	std::string getSpatialID() const;
-  int         getSimpleAttributeValue(std::string code) const;
+	int getSimpleAttributeValue(std::string code) const;
+
+	bool isAttributeExist(std::vector<std::string> path) const;
+	std::string getAttributeValue(std::vector<std::string> path) const;
 
 private:
 	std::string ID_;
 	std::string code_;
 	std::string datasetID_;
 	std::string spatialID_;
-  std::map<std::string, int> simpleAttributes_;  /* pairs of [attributeCode, value] */
 	std::vector<std::string> drawInstructions_;
 
   static std::map<std::string, std::string> spatials;

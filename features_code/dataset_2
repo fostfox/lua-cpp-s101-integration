@@ -1,5 +1,5 @@
-FEATURE_1 Bridge                    SPATIAL_1       categoryOfBridge 5
-FEATURE_2 Canal                     SPATIAL_5       categoryOfBridge 5
-FEATURE_3 Coastline                 SPATIAL_3       categoryOfCoastline 8
-FEATURE_4 Gate                      SPATIAL_1       categoryOfGate 4
-FEATURE_5 NavigationLine            SPATIAL_3       categoryOfNavigationLine 2
+FEATURE_1 Bridge                    SPATIAL_1
+FEATURE_2 Canal                     SPATIAL_5
+FEATURE_3 Coastline                 SPATIAL_3
+FEATURE_4 Gate                      SPATIAL_1
+FEATURE_5 NavigationLine            SPATIAL_3
