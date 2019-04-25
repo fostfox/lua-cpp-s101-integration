@@ -1,6 +1,6 @@
 QT -= gui
 
-CONFIG += c++17 console
+CONFIG += c++11 console
 CONFIG -= app_bundle
 
 INCLUDEPATH += 3rdparty/lualib/include

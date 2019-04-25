@@ -7,11 +7,11 @@ using PositiveInteger = unsigned int;
 using NonNegativeInteger = unsigned int;
 using Real = float;
 using Boolean = bool;
-using CharacterString = QString;
-using Date = QString;
-using Time = QString;
-using DateTime = QString;
-using TruncatedDate = QString;
+using CharacterString = std::string;
+using Date = std::string;
+using Time = std::string;
+using DateTime = std::string;
+using TruncatedDate = std::string;
 
 using ValueEnumAttrType = int;
 using AttrCode = CharacterString;
