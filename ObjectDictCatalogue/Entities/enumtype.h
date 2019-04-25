@@ -71,7 +71,7 @@ void EnumType<Type>::initEnumToStrMap()
         auto newVal = it.key();
         m_qstrToEnumMap[newKey] = newVal;
     }
-    if (!m_strType.isEmpty()){
+    if (!m_strType.empty()){
         m_type = toEnum(m_strType);
     } else {
         m_strType = toQString(m_type);
