@@ -2,7 +2,7 @@
 
 using Type = FC_SpatialPrimitiveTypes;
 
-FC_SpatialPrimitiveType::FC_SpatialPrimitiveType(const QString &type)
+FC_SpatialPrimitiveType::FC_SpatialPrimitiveType(const std::string &type)
     :EnumType<Type>(type)
 {
     initMaps();

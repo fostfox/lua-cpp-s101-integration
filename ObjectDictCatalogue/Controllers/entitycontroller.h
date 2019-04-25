@@ -57,7 +57,7 @@ EntityController<FC_T>::EntityController()
 template<typename FC_T>
 void EntityController<FC_T>::addType(const FC_T &ft)
 {
-    std::string code = ft.header().code().toStdString();
+    std::string code = ft.header().code();
     m_types.push_back(ft);
     m_codes.push_back(code);
     m_codeToPTypeMap[code] = &m_types.back();

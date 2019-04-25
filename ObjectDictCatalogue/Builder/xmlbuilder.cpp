@@ -17,7 +17,7 @@ enum BuildTypes { SimpleAttribute_, ComplexAttribute_,
     Sequential, Nil, Infinite, Ref
 
 };
-const static QMap<QString, BuildTypes> strTypeToBuildType=  {
+const static QMap<std::string, BuildTypes> strTypeToBuildType=  {
     { "S100_FC_SimpleAttribute",        SimpleAttribute_ },
     { "S100_FC_ComplexAttribute",       ComplexAttribute_ },
     { "S100_FC_Role",                   Role_ },
@@ -64,7 +64,7 @@ FeatureCatalogueController FeatureCatalogueXMLBuilder::build(QFile* xmlPath)
 {
     reader.setDevice(xmlPath);
     while (!reader.atEnd()){
-        QString tag = reader.name().toString();
+        std::string tag = reader.name().toString().toStdString();
         if (isStartElementAndAllowed(tag)){
             switch (strTypeToBuildType[tag]) {
                 case SimpleAttribute_ : {
@@ -110,12 +110,12 @@ FeatureCatalogueController FeatureCatalogueXMLBuilder::build(QFile* xmlPath)
         }
     }
     if (reader.error()){
-        qDebug() << QString("Some error: %1").arg(reader.errorString());
+        qDebug() << "Some error: %1" + reader.errorString();
     }
     return fc_controller;
 }
 
-bool FeatureCatalogueXMLBuilder::isStartElementAndAllowed(QString tag)
+bool FeatureCatalogueXMLBuilder::isStartElementAndAllowed(std::string tag)
 {
     return reader.isStartElement() && strTypeToBuildType.contains(tag);
 }
@@ -123,15 +123,15 @@ bool FeatureCatalogueXMLBuilder::isStartElementAndAllowed(QString tag)
 void FeatureCatalogueXMLBuilder::printErrorIfHapend()
 {
     if (reader.error()){
-        qDebug() << QString("Some error: %1").arg(reader.errorString());
+        qDebug() << "Some error: %1" + reader.errorString();
         //throw "Error";
     }
 }
 
-QString FeatureCatalogueXMLBuilder::readAttrValue(QString tag)
+std::string FeatureCatalogueXMLBuilder::readAttrValue(QString tag)
 {
     return reader.isStartElement()
-            ? reader.attributes().value(tag).toString()
+            ? reader.attributes().value(tag).toString().toStdString()
             : "";
 }
 
@@ -156,7 +156,7 @@ FC_SimpleAttribute FeatureCatalogueXMLBuilder::buildSimpleAttribute()
     sa.setValueType(valueType);
 
     while (!reader.atEnd()) {
-        QString tag = reader.name().toString();
+        std::string tag = reader.name().toString().toStdString();
         if (isStartElementAndAllowed(tag)){
             switch (strTypeToBuildType[tag]) {
             case ListedValue: {
@@ -182,7 +182,7 @@ FC_ComplexAttribute FeatureCatalogueXMLBuilder::buildComplexAttribute()
     cmplxAttr.setHeader(header);
 
     while (!reader.atEnd()){
-        QString tag = reader.name().toString();
+        std::string tag = reader.name().toString().toStdString();
         if (isStartElementAndAllowed(tag)){
             switch (strTypeToBuildType[tag]) {
             case SubAttributeBinding: {
@@ -208,7 +208,7 @@ FC_FeatureType FeatureCatalogueXMLBuilder::buildFeatureType()
     featureType.setHeader(header);
 
     while (!reader.atEnd()){
-        QString tag = reader.name().toString();
+        std::string tag = reader.name().toString().toStdString();
         if (isStartElementAndAllowed(tag)){
             switch (strTypeToBuildType[tag]) {
             case AttributeBinding: {
@@ -224,11 +224,11 @@ FC_FeatureType FeatureCatalogueXMLBuilder::buildFeatureType()
                 featureType.addInformationBinding(ib);
             }break;
             case FeatureUseType: {
-                auto element = reader.readElementText();
+                std::string element = reader.readElementText().toStdString();
                 featureType.setFeatureUseType(element);
             } break;
             case PermittedPrimitives : {
-                auto element = reader.readElementText();
+                std::string element = reader.readElementText().toStdString();
                 featureType.addPermittedPrimitives(element);
             } break;
 
@@ -258,7 +258,7 @@ FC_InformationType FeatureCatalogueXMLBuilder::buildInformationType()
     infType.setHeader(header);
 
     while (!reader.atEnd()){
-        QString tag = reader.name().toString();
+        std::string tag = reader.name().toString().toStdString();
         if (isStartElementAndAllowed(tag)){
             switch (strTypeToBuildType[tag]) {
             case AttributeBinding: {
@@ -285,7 +285,7 @@ FC_FeatureAssociation FeatureCatalogueXMLBuilder::buildFeatureAssociation()
     fAss.setHeader(header);
 
     while (!reader.atEnd()){
-        QString tag = reader.name().toString();
+        std::string tag = reader.name().toString().toStdString();
         if (isStartElementAndAllowed(tag)){
             switch (strTypeToBuildType[tag]) {
             case Role: {
@@ -312,7 +312,7 @@ FC_InformationAssociation FeatureCatalogueXMLBuilder::buildInformationAssociatio
     infAss.setHeader(header);
 
     while (!reader.atEnd()){
-        QString tag = reader.name().toString();
+        std::string tag = reader.name().toString().toStdString();
         if (isStartElementAndAllowed(tag)){
             switch (strTypeToBuildType[tag]) {
             case Role: {
@@ -335,27 +335,27 @@ FC_Item FeatureCatalogueXMLBuilder::buildItem()
 {
     FC_Item item;
     while (!reader.atEnd()){
-        QString tag = reader.name().toString();
+        std::string tag = reader.name().toString().toStdString();
         if (isStartElementAndAllowed(tag)){
             switch (strTypeToBuildType[tag]) {
             case Name: {
-                auto element = reader.readElementText();
+                std::string element = reader.readElementText().toStdString();
                 item.setName(element);
             } break;
             case Definition: {
-                auto element = reader.readElementText();
+                std::string element = reader.readElementText().toStdString();
                 item.setDefenition(element);
             } break;
             case Code : {
-                auto element = reader.readElementText();
+                std::string element = reader.readElementText().toStdString();
                 item.setCode(element);
             } break;
             case Remarks : {
-                auto element = reader.readElementText();
+                std::string element = reader.readElementText().toStdString();
                 item.addRemarks(element);
             } break;
             case Alias : {
-                auto element = reader.readElementText();
+                std::string element = reader.readElementText().toStdString();
                 item.addAlias(element);
             } break;
             default : // Тег не подходит
@@ -372,11 +372,11 @@ CD_AttributeValueType FeatureCatalogueXMLBuilder::buildAttributeValueType()
 {
     CD_AttributeValueType type;
     while (!reader.atEnd()){
-        QString tag = reader.name().toString();
+        std::string tag = reader.name().toString().toStdString();
         if (isStartElementAndAllowed(tag)){
             switch (strTypeToBuildType[tag]) {
             case ValueType: {
-                auto element = reader.readElementText();
+                std::string element = reader.readElementText().toStdString();
                 type = CD_AttributeValueType(element);
             } break;
             default : // Тег не подходит
@@ -393,27 +393,27 @@ FC_ListedValue FeatureCatalogueXMLBuilder::buildListedValue()
 {
     FC_ListedValue value;
     while (!reader.atEnd()){
-        QString tag = reader.name().toString();
+        std::string tag = reader.name().toString().toStdString();
         if (isStartElementAndAllowed(tag)){
             switch (strTypeToBuildType[tag]) {
             case Label: {
-                auto element = reader.readElementText();
+                std::string element = reader.readElementText().toStdString();
                 value.setLabel(element);
             } break;
             case Definition: {
-                auto element = reader.readElementText();
+                std::string element = reader.readElementText().toStdString();
                 value.setDefenition(element);
             } break;
             case Code : {
-                auto element = reader.readElementText();
-                value.setCode(element.toUInt());
+                std::string element = reader.readElementText().toStdString();
+                value.setCode(std::stoi(element));
             } break;
             case Remarks: {
-                auto element = reader.readElementText();
+                std::string element = reader.readElementText().toStdString();
                 value.addRemarks(element);
             } break;
             case Alias : {
-                auto element = reader.readElementText();
+                std::string element = reader.readElementText().toStdString();
                 value.addAlias(element);
             } break;
             default : // Тег не подходит
@@ -439,7 +439,7 @@ FC_AttributeBinding FeatureCatalogueXMLBuilder::buildAttributeBinding()
     attrBind.setMultiplicity(multiplisity);
 
     while (!reader.atEnd()){
-        QString tag = reader.name().toString();
+        std::string tag = reader.name().toString().toStdString();
         if (isStartElementAndAllowed(tag)){
             switch (strTypeToBuildType[tag]) {
             case Value : {
@@ -472,7 +472,7 @@ FC_FeatureBinding FeatureCatalogueXMLBuilder::buildFeatureBinding()
     featureBind.setMultiplicity(multiplisity);
 
     while (!reader.atEnd()){
-        QString tag = reader.name().toString();
+        std::string tag = reader.name().toString().toStdString();
         if (isStartElementAndAllowed(tag)){
             switch (strTypeToBuildType[tag]) {
             case Association : {
@@ -509,7 +509,7 @@ FC_InformationBinding FeatureCatalogueXMLBuilder::buildInformationBinding()
     featureBind.setMultiplicity(multiplisity);
 
     while (!reader.atEnd()){
-        QString tag = reader.name().toString();
+        std::string tag = reader.name().toString().toStdString();
         if (isStartElementAndAllowed(tag)){
             switch (strTypeToBuildType[tag]) {
             case Association : {
@@ -536,7 +536,7 @@ Multiplicity FeatureCatalogueXMLBuilder::buildMultiplicity()
     Multiplicity mult;
 
     while (!reader.atEnd()){
-        QString tag = reader.name().toString();
+        std::string tag = reader.name().toString().toStdString();
         if (isStartElementAndAllowed(tag)){
             switch (strTypeToBuildType[tag]) {
             case Lower: {

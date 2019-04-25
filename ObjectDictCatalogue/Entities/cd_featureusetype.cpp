@@ -10,7 +10,7 @@ CD_FeatureUseType::CD_FeatureUseType(CD_FeatureUseTypes type)
     initMaps();
 }
 
-CD_FeatureUseType::CD_FeatureUseType(QString type)
+CD_FeatureUseType::CD_FeatureUseType(std::string type)
     :EnumType<Type>(type)
 {
     initMaps();

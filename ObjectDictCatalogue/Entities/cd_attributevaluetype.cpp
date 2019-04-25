@@ -8,7 +8,7 @@ CD_AttributeValueType::CD_AttributeValueType(CD_AttributeValueTypes t)
     initMaps();
 }
 
-CD_AttributeValueType::CD_AttributeValueType(QString t)
+CD_AttributeValueType::CD_AttributeValueType(std::string t)
     :EnumType<Type>(t)
 {
     initMaps();
