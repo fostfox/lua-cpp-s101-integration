@@ -3,9 +3,20 @@
 #include <QDebug>
 
 
-#include "ObjectDictCatalogue/Controllers/entitycontroller.h"
+#include "ObjectDictCatalogue/Controllers/featurecataloguecontroller.h"
 #include "ObjectMapCatalogue/Controllers/featurescontroller.h"
 #include "drawing_instructions_controller.h"
+
+//#include "../ObjectDictCatalogue/DataTypes/datatypes.h"
+//#include "../ObjectDictCatalogue/Entities/fc_item.h"
+//#include "../ObjectDictCatalogue/Entities/fc_role.h"
+//#include "../ObjectDictCatalogue/Entities/fc_featureassociation.h"
+//#include "../ObjectDictCatalogue/Entities/fc_simpleattribute.h"
+//#include "../ObjectDictCatalogue/Entities/fc_complexattribute.h"
+//#include "../ObjectDictCatalogue/Entities/fc_listedvalue.h"
+//#include "../ObjectDictCatalogue/Entities/fc_attributebinding.h"
+//#include "../ObjectDictCatalogue/Entities/fc_informationbinding.h"
+//#include "../ObjectDictCatalogue/Entities/fc_featurebinding.h"
 
 
 LuaHostFunc::LuaHostFunc(
@@ -19,12 +30,15 @@ LuaHostFunc::LuaHostFunc(
     ,m_drawInstrCtrl(drawInstrCtrl)
 {
     loadFunctions();
+
+    PortrayalInitializeContextParameters(m_lua, std::vector<ContextParameter>()); // TODO:empty contex parametrs
 }
 
 bool LuaHostFunc::doPortrayal()
 {
     auto featuresIDs = m_mapObjCtrl.getFeaturesIDs();
     bool isSuccess = PortrayalMain(m_lua, featuresIDs);
+
     return isSuccess;
 }
 
@@ -67,7 +81,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &featureID, const string &drawingInstructions, const string &observedParameters)
                        -> bool
     {
-        m_drawInstrCtrl->setDrawInstr(stoi(featureID),
+        m_drawInstrCtrl.setDrawInstr(stoi(featureID),
                                       DrawingInstructions (drawingInstructions)
                                       );
         return m_isActionState;
@@ -420,7 +434,7 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetFeatureTypeCodes"
                      , [&]()
     {
-        auto featureTypeCodes = m_dictObjCtrl->featureTypeCtrl().codes();
+        auto featureTypeCodes = m_dictObjCtrl.featureTypeCtrl().codes();
         return featureTypeCodes;
     });
     /*!
@@ -431,7 +445,7 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetInformationTypeCodes"
                      , [&]()
     {
-        auto informTypeCodes = m_dictObjCtrl->informationTypeCrtl().codes();
+        auto informTypeCodes = m_dictObjCtrl.informationTypeCrtl().codes();
         return informTypeCodes;
     });
     /*!
@@ -442,7 +456,7 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetSimpleAttributeTypeCodes"
                      , [&]()
     {
-        auto simpleAtrTypeCodes = m_dictObjCtrl->simpleAttributeCtrl().codes();
+        auto simpleAtrTypeCodes = m_dictObjCtrl.simpleAttributeCtrl().codes();
         return simpleAtrTypeCodes;
     });
     /*!
@@ -454,7 +468,7 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetComplexAttributeTypeCodes"
                      , [&]()
     {
-        auto complexAttrTypeCodes = m_dictObjCtrl->simpleAttributeCtrl().codes();
+        auto complexAttrTypeCodes = m_dictObjCtrl.simpleAttributeCtrl().codes();
         return complexAttrTypeCodes;
     });
     /*!
@@ -465,7 +479,7 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetRoleTypeCodes"
                      , [&]()
     {
-        auto roleTypeCodes = m_dictObjCtrl->rolesCtrl().codes();
+        auto roleTypeCodes = m_dictObjCtrl.rolesCtrl().codes();
         return roleTypeCodes;
     });
     /*!
@@ -477,7 +491,7 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetInformationAssociationTypeCodes"
                      , [&]()
     {
-        auto infAssTypeCodes = m_dictObjCtrl->informationAssociationCtrl().codes();
+        auto infAssTypeCodes = m_dictObjCtrl.informationAssociationCtrl().codes();
         return infAssTypeCodes;
     });
     /*!
@@ -489,7 +503,7 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetFeatureAssociationTypeCodes"
                      , [&]()
     {
-        auto featureAssTypeCodes = m_dictObjCtrl->featureAssociationCtrl().codes();
+        auto featureAssTypeCodes = m_dictObjCtrl.featureAssociationCtrl().codes();
         return featureAssTypeCodes;
     });
     /*!
@@ -502,7 +516,7 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetFeatureTypeInfo"
                      , [&](string featureCode)
     {
-        const auto &featureType = m_dictObjCtrl->featureTypeCtrl().type(featureCode);
+        const auto &featureType = m_dictObjCtrl.featureTypeCtrl().type(featureCode);
 
         vector<sol::object> luaAttributeBindingArr;
         for (const auto &attrBind : featureType.attributeBindings()){
@@ -531,6 +545,7 @@ void LuaHostFunc::loadFunctions()
 //                    luaFeatureBindings
 //                    );
 //        return luaFeatureType;
+        qDebug() << __FUNCTION__;
         throw ;
         return sol::object();
     });
@@ -546,7 +561,7 @@ void LuaHostFunc::loadFunctions()
                        -> sol::object
     {
 
-        const auto &infType = m_dictObjCtrl->informationTypeCrtl().type(informationCode);
+        const auto &infType = m_dictObjCtrl.informationTypeCrtl().type(informationCode);
 
         vector<sol::object> luaAttributeBindingArr;
         luaAttributeBindingArr.reserve(infType.attributeBindings().size());
@@ -573,7 +588,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &attributeCode)
                        -> sol::object
     {
-        const auto &simplAttrType = m_dictObjCtrl->simpleAttributeCtrl().type(attributeCode);
+        const auto &simplAttrType = m_dictObjCtrl.simpleAttributeCtrl().type(attributeCode);
         auto simpleAttrs = luaCreateSimpleAttribute(m_lua, &simplAttrType);
         return simpleAttrs;
     });
@@ -588,7 +603,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &attributeCode)
                        -> sol::object
     {
-        const auto &complAttrType = m_dictObjCtrl->simpleAttributeCtrl().type(attributeCode);
+        const auto &complAttrType = m_dictObjCtrl.simpleAttributeCtrl().type(attributeCode);
         auto simpleAttrs = luaCreateSimpleAttribute(m_lua, &complAttrType);
         return simpleAttrs;
     });
@@ -624,11 +639,13 @@ void LuaHostFunc::loadFunctions()
 
         if ("break" == debugAction){
             m_isActionState = false;
-        } else if ("Trace" == debugAction) {
+        } else if ("trace" == debugAction) {
 
-        } else if ("Start_profiler" == debugAction) {
+        } else if ("start_performance" == debugAction) {
 
-        } else if ("Stop_profiler" == debugAction) {
+        } else if ("stop_performance" == debugAction) {
+
+        } else if ("reset_performance" == debugAction) {
 
         } else {
             throw "Undefined debugger action\n";

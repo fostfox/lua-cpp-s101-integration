@@ -42,7 +42,7 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
 
     while (!m_xmlReader->atEnd()){
         #ifdef QT_DEBUG
-            std::cout << "-";
+            //std::cout << "-";
         #endif
 
         typeOfAttrs = m_xmlReader->name().toString().toStdString();

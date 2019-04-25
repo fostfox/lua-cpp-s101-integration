@@ -34,13 +34,13 @@ const QVariant &Attribute::value() const
 
 void Attribute::setCode(int code)
 {
-    std::cout << "code: " << code << std::endl;
+    //std::cout << "code: " << code << std::endl;
     m_code = code;
 }
 
 void Attribute::setAlias(std::string alias)
 {
-    std::cout << "alias: " << alias << std::endl;
+    //std::cout << "alias: " << alias << std::endl;
     m_alias = alias;
 }
 
@@ -51,7 +51,7 @@ void Attribute::setType(const AttrTypes &type)
 
 void Attribute::setValue(const QVariant &value)
 {
-    std::cout << "code: " << value.toString().toStdString() << std::endl;
+    //std::cout << "code: " << value.toString().toStdString() << std::endl;
     m_value = value;
 }
 

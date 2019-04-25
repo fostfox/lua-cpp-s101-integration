@@ -5,7 +5,7 @@
 #include <QString>
 #include <sol/sol.hpp>
 
-#include "ObjectDictCatalogue/Controllers/entitycontroller.h"
+#include "ObjectDictCatalogue/Controllers/featurecataloguecontroller.h"
 #include "ObjectMapCatalogue/Controllers/featurescontroller.h"
 #include "drawing_instructions_controller.h"
 

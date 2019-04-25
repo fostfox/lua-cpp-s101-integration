@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
         return -1;
     }
     LuaRuleMashine luaPortoyal(luaMainEntry, dictController, mapController);
-
+    qDebug() << luaPortoyal.doPortrayal();
 
     //return a.exec();
 }

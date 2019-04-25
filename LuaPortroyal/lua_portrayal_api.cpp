@@ -11,6 +11,8 @@
 #include "../ObjectDictCatalogue/Entities/fc_informationbinding.h"
 #include "../ObjectDictCatalogue/Entities/fc_featurebinding.h"
 
+#include <QDebug>
+
 using std::string;
 using std::vector;
 
@@ -33,8 +35,9 @@ bool PortrayalMain(const sol::state &lua, const vector<string> &featureIDs)
 void PortrayalInitializeContextParameters(const sol::state &lua, const vector<ContextParameter> &contextParameters)
 {
     vector<sol::object> luaContextParameters;
-
-    throw "Нереализованная функциональность";
+    
+    qDebug() << __FUNCTION__;
+    //throw "Нереализованная функциональность";
     //TODO: заполнение luaContextParameters
 
     lua["PortrayalInitializeContextParameters"](luaContextParameters);
