@@ -1,0 +1,46 @@
+#pragma once
+
+#include <QString>
+
+using Integer = int;
+using PositiveInteger = unsigned int;
+using NonNegativeInteger = unsigned int;
+using Real = float;
+using Boolean = bool;
+using CharacterString = QString;
+using Date = QString;
+using Time = QString;
+using DateTime = QString;
+using TruncatedDate = QString;
+
+using ValueEnumAttrType = int;
+using AttrCode = CharacterString;
+using RoleCode = CharacterString;
+using FeatureAssociationCode = CharacterString;
+using FeatureTypeCode = CharacterString;
+using InformationAssociationCode = CharacterString;
+using InformationTypeCode = CharacterString;
+
+//Booleaan(QString str) {
+//    return str == "true";
+//}
+
+struct UnlimitedInteger {
+    UnlimitedInteger() = default;
+    UnlimitedInteger(Boolean infinite, Integer value = 0)
+        : infinite(infinite), value(value) {}
+
+    Boolean infinite;
+    Integer value;
+};
+
+
+struct Multiplicity {
+    Multiplicity() = default;
+    Multiplicity(NonNegativeInteger lower, UnlimitedInteger upper)
+        :lower(lower), upper(upper) {}
+    NonNegativeInteger lower;
+    UnlimitedInteger upper;
+};
+
+

@@ -1,0 +1,318 @@
+#include "feature.h"
+#include <iostream>
+
+Attribute::Attribute()
+{
+
+}
+
+Attribute::Attribute(int code, std::string alias, Attribute::AttrTypes type, QVariant value)
+    :m_code(code), m_alias(alias), m_type(type), m_value(value)
+{
+
+}
+
+int Attribute::code() const
+{
+    return m_code;
+}
+
+std::string Attribute::alias() const
+{
+    return m_alias;
+}
+
+Attribute::AttrTypes Attribute::type() const
+{
+    return m_type;
+}
+
+QVariant Attribute::value() const
+{
+    return m_value;
+}
+
+void Attribute::setCode(int code)
+{
+    std::cout << "code: " << code << std::endl;
+    m_code = code;
+}
+
+void Attribute::setAlias(std::string alias)
+{
+    std::cout << "alias: " << alias << std::endl;
+    m_alias = alias;
+}
+
+void Attribute::setType(const AttrTypes &type)
+{
+    m_type = type;
+}
+
+void Attribute::setValue(const QVariant &value)
+{
+    std::cout << "code: " << value.toString().toStdString() << std::endl;
+    m_value = value;
+}
+
+Fe2spRef::Fe2spRef()
+{
+
+}
+
+Fe2spRef::Fe2spRef(int refId, int refType, int orientation, int scamin, int scamax)
+    :m_refId(refId), m_refType(refType), m_orientation(orientation), m_scamin(scamin),  m_scamax(scamax)
+{
+
+}
+
+int Fe2spRef::refId() const
+{
+    return m_refId;
+}
+
+int Fe2spRef::refType() const
+{
+    return m_refType;
+}
+
+int Fe2spRef::orientation() const
+{
+    return m_orientation;
+}
+
+int Fe2spRef::scamin() const
+{
+    return m_scamin;
+}
+
+int Fe2spRef::scamax() const
+{
+    return m_scamax;
+}
+
+void Fe2spRef::setRefId(int refId)
+{
+    m_refId = refId;
+}
+
+void Fe2spRef::setRefType(int refType)
+{
+    m_refType = refType;
+}
+
+void Fe2spRef::setOrientation(int orientation)
+{
+    m_orientation = orientation;
+}
+
+void Fe2spRef::setScamin(int scamin)
+{
+    m_scamin = scamin;
+}
+
+void Fe2spRef::setScamax(int scamax)
+{
+    m_scamax = scamax;
+}
+
+IsolatedPoint::IsolatedPoint(float latitude, float longitude)
+    :m_lat(latitude), m_lon(longitude)
+{
+
+}
+
+IsolatedPoint::IsolatedPoint()
+{
+
+}
+
+float IsolatedPoint::lat() const
+{
+    return m_lat;
+}
+
+float IsolatedPoint::lon() const
+{
+    return m_lon;
+}
+
+void IsolatedPoint::setLat(float lat)
+{
+    m_lat = lat;
+}
+
+void IsolatedPoint::setLon(float lon)
+{
+    m_lon = lon;
+}
+
+Feature::Feature(int id
+                , int classId
+                , std::string alias
+                , std::vector<Attribute> intAttrs
+                , std::vector<ComplexAttribute> complexAttrs
+                , Fe2spRef fe2sp
+                /*, IsolatedPoint isolatedPoint*/)
+    : m_id(id)
+    , m_class(classId)
+    , m_classAlias(alias)
+    , m_intAttrs(intAttrs)
+    , m_complexAttrs(complexAttrs)
+    , m_fe2spRef(fe2sp)
+    /*, m_isolatedPoint(isolatedPoint)*/
+{
+
+    for (auto attr : intAttrs)
+        m_code_to_attr.insert(std::make_pair(attr.alias(), attr));
+    for (auto attr : complexAttrs)
+        m_code_to_cAttr.insert(std::make_pair(attr.alias(), attr));
+}
+
+Feature::Feature()
+{
+
+}
+
+int Feature::id() const
+{
+    return m_id;
+}
+
+std::string Feature::classAlias() const{
+    return m_classAlias;
+}
+
+std::vector<Attribute> Feature::intAttrs() const
+{
+    return m_intAttrs;
+}
+
+IsolatedPoint Feature::isolatedPoint() const
+{
+    return m_isolatedPoint;
+}
+
+void Feature::setId(int id)
+{
+    m_id = id;
+}
+
+void Feature::setIntAttrs(std::vector<Attribute> intAttrs)
+{
+    m_intAttrs = intAttrs;
+    for (auto attr : intAttrs)
+        m_code_to_attr.insert(std::make_pair(attr.alias(), attr));
+}
+
+void Feature::setComplexAttrs(const std::vector<ComplexAttribute> &complexAttrs)
+{
+    m_complexAttrs = complexAttrs;
+    for (auto attr : complexAttrs)
+        m_code_to_cAttr.insert(std::make_pair(attr.alias(), attr));
+}
+
+void Feature::setIsolatedPoint(const IsolatedPoint &isolatedPoint)
+{
+    m_isolatedPoint = isolatedPoint;
+}
+
+void Feature::addIntAttr(Attribute attr)
+{
+    m_intAttrs.push_back(attr);
+    m_code_to_attr.insert(std::make_pair(attr.alias(), attr));
+}
+
+void Feature::addComplexAttr(ComplexAttribute attr)
+{
+    m_complexAttrs.push_back(attr);
+    m_code_to_cAttr.insert(std::make_pair(attr.alias(), attr));
+}
+
+Attribute Feature::getAttributeByCode(std::string code) const
+{
+    return m_code_to_attr.at(code);
+}
+
+ComplexAttribute Feature::getComplexAttributeByCode(std::string code) const
+{
+    return m_code_to_cAttr.at(code);
+}
+
+Fe2spRef Feature::fe2spRef() const
+{
+    return m_fe2spRef;
+}
+
+void Feature::setFe2spRef(const Fe2spRef &fe2spRef)
+{
+    m_fe2spRef = fe2spRef;
+}
+
+void Feature::setClass(int classId)
+{
+    m_class = classId;
+}
+
+void Feature::setClassAlias(std::string classAlias)
+{
+    m_classAlias = classAlias;
+}
+
+std::vector<ComplexAttribute> Feature::complexAttrs() const
+{
+    return m_complexAttrs;
+}
+
+int Feature::classId() const
+{
+    return m_class;
+}
+
+ComplexAttribute::ComplexAttribute()
+{
+
+}
+
+ComplexAttribute::ComplexAttribute(int code, std::string alias, const std::vector<Attribute> &attrs)
+    : m_code(code), m_alias(alias), m_attrs(attrs)
+{
+    for (auto attr : attrs)
+        m_code_to_attr.insert(std::make_pair(attr.alias(), attr));
+}
+
+int ComplexAttribute::code() const
+{
+    return m_code;
+}
+
+std::string ComplexAttribute::alias() const
+{
+    return m_alias;
+}
+
+std::vector<Attribute> ComplexAttribute::attibutes() const
+{
+    return m_attrs;
+}
+
+Attribute ComplexAttribute::getAttributeByCode(std::string code) const
+{
+    return m_code_to_attr.at(code);
+}
+
+void ComplexAttribute::setCode(int code)
+{
+    m_code = code;
+}
+
+void ComplexAttribute::setAlias(std::string alias)
+{
+    m_alias = alias;
+}
+
+void ComplexAttribute::addAttribute(Attribute attr)
+{
+    m_attrs.push_back(attr);
+    m_code_to_attr.insert(std::make_pair(attr.alias(), attr));
+}
