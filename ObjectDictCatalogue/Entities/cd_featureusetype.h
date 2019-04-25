@@ -33,7 +33,7 @@ class CD_FeatureUseType : public EnumType<CD_FeatureUseTypes>
   public:
     CD_FeatureUseType() = default;
     CD_FeatureUseType(CD_FeatureUseTypes type);
-    CD_FeatureUseType(QString type);
+    CD_FeatureUseType(std::string type);
 
   private:
     void initMaps();
