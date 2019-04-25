@@ -3,6 +3,7 @@
 #include <QDataStream>
 
 #include "../Entries/feature.h"
+#include "../Controllers/featurescontroller.h"
 
 class Feature;
 class QXmlStreamReader;
@@ -19,6 +20,7 @@ class FeatureMapXMLBuilder
 public:
     FeatureMapXMLBuilder(QFile * const inputFile);
 
+    FeatureMapController build();
     std::vector<Feature> parse2();
 
 private:

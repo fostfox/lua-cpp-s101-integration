@@ -38,7 +38,7 @@ void FeatureMapController::setFeatures(std::vector<Feature> fs)
     }
 }
 
-std::vector<std::string> FeatureMapController::getFeaturesIDs()
+std::vector<std::string> FeatureMapController::getFeaturesIDs() const
 {
     std::vector<std::string> ids;
     for (auto f : fs_){
@@ -47,14 +47,14 @@ std::vector<std::string> FeatureMapController::getFeaturesIDs()
     return ids;
 }
 
-std::string FeatureMapController::getCodeById(std::string id)
+const std::string &FeatureMapController::getCodeById(std::string id) const
 {
-    return id_to_f_[id].classAlias();
+    return id_to_f_.at(id).classAlias();
 }
 
-Attribute FeatureMapController::getSimpleAttribute(std::string id, std::string path)
+Attribute FeatureMapController::getSimpleAttribute(std::string id, std::string path) const
 {
-    Feature f = id_to_f_[id];
+    Feature f = id_to_f_.at(id);
     std::vector<std::pair<std::string, std::string> > attrsFull
             = getAttributeNames(path);
 

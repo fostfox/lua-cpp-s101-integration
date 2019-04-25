@@ -27,6 +27,14 @@ FeatureMapXMLBuilder::FeatureMapXMLBuilder(QFile * const inputFile)
     m_xmlReader = new QXmlStreamReader(inputFile);
 }
 
+FeatureMapController FeatureMapXMLBuilder::build()
+{
+    auto v = parse2();
+    FeatureMapController fFontroller;
+    fFontroller.setFeatures(v);
+    return fFontroller;
+}
+
 
 std::vector<Feature> FeatureMapXMLBuilder::parse2()
 {

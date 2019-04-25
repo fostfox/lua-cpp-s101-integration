@@ -12,22 +12,22 @@ Attribute::Attribute(int code, std::string alias, Attribute::AttrTypes type, QVa
 
 }
 
-int Attribute::code() const
+const int &Attribute::code() const
 {
     return m_code;
 }
 
-std::string Attribute::alias() const
+const std::string &Attribute::alias() const
 {
     return m_alias;
 }
 
-Attribute::AttrTypes Attribute::type() const
+const Attribute::AttrTypes &Attribute::type() const
 {
     return m_type;
 }
 
-QVariant Attribute::value() const
+const QVariant &Attribute::value() const
 {
     return m_value;
 }
@@ -179,7 +179,7 @@ int Feature::id() const
     return m_id;
 }
 
-std::string Feature::classAlias() const{
+const std::string& Feature::classAlias() const{
     return m_classAlias;
 }
 

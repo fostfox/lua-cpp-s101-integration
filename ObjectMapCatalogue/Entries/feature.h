@@ -10,10 +10,10 @@ public:
     enum class AttrTypes { INT, DOUBLE, STRING };
     Attribute();
     Attribute(int code, std::string alias, AttrTypes type, QVariant value);
-    int code() const;
-    std::string alias() const;
-    AttrTypes type() const;
-    QVariant value() const;
+    const int& code() const;
+    const std::string& alias() const;
+    const AttrTypes& type() const;
+    const QVariant& value() const;
     void setCode(int code);
     void setAlias(std::string alias);
     void setType(const AttrTypes &type);
@@ -97,7 +97,7 @@ public:
 
     int id() const;
     int classId() const;
-    std::string classAlias() const;
+    const std::string &classAlias() const;
     std::vector<Attribute> intAttrs() const;
     std::vector<ComplexAttribute> complexAttrs() const;
     IsolatedPoint isolatedPoint() const;

@@ -10,9 +10,9 @@ class FeatureMapController
 public:
     FeatureMapController();
     void setFeatures(std::vector<Feature> fs);
-    std::vector<std::string> getFeaturesIDs();
-    std::string getCodeById(std::string id);
-    Attribute getSimpleAttribute(std::string id, std::string path);
+    std::vector<std::string> getFeaturesIDs() const;
+    const std::string& getCodeById(std::string id) const;
+    Attribute getSimpleAttribute(std::string id, std::string path) const;
 
 private:
     std::vector<Feature> fs_;

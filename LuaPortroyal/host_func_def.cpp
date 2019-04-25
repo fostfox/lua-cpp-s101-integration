@@ -3,31 +3,35 @@
 #include <QDebug>
 
 
+#include "ObjectDictCatalogue/Controllers/entitycontroller.h"
+#include "ObjectMapCatalogue/Controllers/featurescontroller.h"
+#include "drawing_instructions_controller.h"
+
+
 LuaHostFunc::LuaHostFunc(
-        FeatureMapController *mapObjCtrl
-      , FeatureCatalogueController *dictObjCtrl
-      , DrawingInstructionsController *drawInstrCtrl)
-    :m_mapObjCtrl(mapObjCtrl)
+        sol::state& lua
+        ,const FeatureCatalogueController &dictObjCtrl
+        ,const FeatureMapController &mapObjCtrl
+        ,DrawingInstructionsController &drawInstrCtrl)
+    :m_lua(lua)
+    ,m_mapObjCtrl(mapObjCtrl)
     ,m_dictObjCtrl(dictObjCtrl)
     ,m_drawInstrCtrl(drawInstrCtrl)
 {
-
-    std::cout << "=== opening a state ===" << std::endl;
-
-
-
-    m_lua->open_libraries(sol::lib::base, sol::lib::package, sol::lib::string, sol::lib::table);
-
-
-
     loadFunctions();
+}
+
+bool LuaHostFunc::doPortrayal()
+{
+    auto featuresIDs = m_mapObjCtrl.getFeaturesIDs();
+    bool isSuccess = PortrayalMain(m_lua, featuresIDs);
+    return isSuccess;
 }
 
 
 
 void LuaHostFunc::loadFunctions()
 {
-    sol::state m_lua;
     using std::string;
     using std::vector;
 

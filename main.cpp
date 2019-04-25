@@ -5,7 +5,7 @@
 
 #include "ObjectDictCatalogue/Builder/xmlbuilder.h"
 #include "ObjectMapCatalogue/Builder/xmlparser.h"
-//#include "LuaPortroyal/LuaRuleMashine.h"
+#include "LuaPortroyal/LuaRuleMashine.h"
 
 
 int main(int argc, char *argv[])
@@ -43,17 +43,22 @@ int main(int argc, char *argv[])
 
 
     FeatureMapXMLBuilder mapBuilder(&mapFile);
-    auto mapController = mapBuilder.parse2();
+    auto mapController = mapBuilder.build();
     mapFile.close();
 
     FeatureCatalogueXMLBuilder dictBuilder;
     auto dictController = dictBuilder.build(&dictFile);
     dictFile.close();
 
-    //const QString luaMainEntry("../LuaPortroyal/Rules/main.lua");
-    //LuaRuleMashine luaPortoyal(luaMainEntry, dictController, mapController);
+    QString luaMainEntry("../LuaPortroyal/Rules/main.lua");
+    if (!QFile::exists(luaMainEntry)) {
+        errorStream << QString(
+                           "File %1 does not exist.\n"
+                           ).arg(luaMainEntry);
+        return -1;
+    }
+    LuaRuleMashine luaPortoyal(luaMainEntry, dictController, mapController);
 
-    //TODO
 
     //return a.exec();
 }
