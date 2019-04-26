@@ -2,7 +2,6 @@
 #include "lua_portrayal_api.h"
 #include <QDebug>
 
-
 #include "ObjectDictCatalogue/Controllers/featurecataloguecontroller.h"
 #include "ObjectMapCatalogue/Controllers/featurescontroller.h"
 #include "drawing_instructions_controller.h"
@@ -130,7 +129,7 @@ void LuaHostFunc::loadFunctions()
                      , [&]()
                        -> vector<string>
     {
-        vector<string> featuresIds;
+        vector<string> featuresIds = m_mapObjCtrl.getFeaturesIDs();
         return featuresIds;
     });
 
@@ -149,7 +148,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &featureID)
                        -> string
     {
-        string featureCode = "";
+        string featureCode = m_mapObjCtrl.getCodeById(featureID);
         return featureCode;
     });
 
@@ -635,21 +634,27 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostDebuggerEntry"
                      , [&](const string &debugAction, const string &message)
     {
-        std::cerr << debugAction << " " << message << std::endl;
+        static int level = 0;
+        string str;
 
         if ("break" == debugAction){
             m_isActionState = false;
         } else if ("trace" == debugAction) {
 
         } else if ("start_performance" == debugAction) {
+            str.assign(++level * 5, ' ');
 
         } else if ("stop_performance" == debugAction) {
+            str.assign(level-- * 5, ' ');
 
         } else if ("reset_performance" == debugAction) {
 
         } else {
             throw "Undefined debugger action\n";
         }
+
+        std::cerr << str << debugAction << " # " << message << std::endl;
+
     });
 }
 

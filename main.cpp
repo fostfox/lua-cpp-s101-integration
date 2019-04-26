@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     QTextStream errorStream(stderr);
     //QCoreApplication a(argc, argv);
 
-    QString mapFileName = "../XMLData/dataset_map.xml";
+    QString mapFileName = "../XMLData/test_dataset_map.xml";
     QFile mapFile(mapFileName);
     if (!QFile::exists(mapFileName)) {
         errorStream << QString(

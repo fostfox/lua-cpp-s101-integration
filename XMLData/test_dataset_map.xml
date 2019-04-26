@@ -1,0 +1,17 @@
+<features>
+  <ID>831</ID>
+  <Class>72</Class>
+  <Classalias>DepthNoBottomFound</Classalias>
+  <int_attrs>
+    <int_attr>
+      <code>169</code>
+      <alias>scaleMinimum</alias>
+      <value>80000</value>
+    </int_attr>
+    <int_attr>
+      <code>195</code>
+      <alias>techniqueOfVerticalMeasurement</alias>
+      <value>5</value>
+    </int_attr>
+  </int_attrs>
+</features>
