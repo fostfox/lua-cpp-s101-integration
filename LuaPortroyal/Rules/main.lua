@@ -22,7 +22,7 @@ function PortrayalMain(featureIDs)
 		Debug.StartPerformance('Lua Code - Dataset processing')
 
 		local feature = featurePortrayalItem.Feature
-
+		
 		--Debug.Break()
 
 		local featurePortrayal = featurePortrayalItem:NewFeaturePortrayal()
@@ -63,10 +63,12 @@ function PortrayalMain(featureIDs)
 			end
 
 			Debug.StartPerformance('Lua Code - Rules processing')
-
+			Debug.Trace("####")
 			local scaleMinimum = feature['!scaleMinimum']
 			local scaleMaximum = feature['!scaleMaximum']
-
+			
+			
+			Debug.Trace("####")
 			if scaleMinimum and not contextParameters.IGNORE_SCAMIN then
 				featurePortrayal:AddInstructions('ScaleMinimum:' .. scaleMinimum)
 			end
@@ -74,7 +76,7 @@ function PortrayalMain(featureIDs)
 			if scaleMaximum then
 				featurePortrayal:AddInstructions('ScaleMaximum:' .. scaleMaximum)
 			end
-
+			
 			require(feature.Code)
 			_G[feature.Code](feature, featurePortrayal, contextParameters)
 

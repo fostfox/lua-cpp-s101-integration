@@ -25,7 +25,15 @@ LuaRuleMashine::LuaRuleMashine(
     m_lua = new sol::state();
     std::cout << "=== opening a state ===" << std::endl;
 
-    m_lua->open_libraries(sol::lib::base, sol::lib::package, sol::lib::string, sol::lib::table);
+    m_lua->open_libraries(
+                sol::lib::base,
+                sol::lib::package,
+                sol::lib::coroutine,
+                sol::lib::string,
+                sol::lib::os,
+                sol::lib::io,
+                sol::lib::table
+                );
     m_lua->script_file(fileNameEntryPoint.toStdString());
 
     m_luaHostFunc = new LuaHostFunc(*m_lua, m_dictObjCtrl, m_mapObjCtrl, *m_drawController);

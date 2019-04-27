@@ -1,5 +1,7 @@
 #include "lua_portrayal_api.h"
 
+#include <algorithm>
+
 #include "../ObjectDictCatalogue/DataTypes/datatypes.h"
 #include "../ObjectDictCatalogue/Entities/fc_item.h"
 #include "../ObjectDictCatalogue/Entities/fc_role.h"
@@ -24,6 +26,7 @@ sol::object createUpperMuliplicity(const sol::state& lua, const UnlimitedInteger
             : sol::make_object(lua, ui.value);
     return upperMult;
 }
+
 
 
 bool PortrayalMain(const sol::state &lua, const vector<string> &featureIDs)
@@ -60,7 +63,7 @@ sol::object luaCreateItem(const sol::state &lua, const FC_Item *item)
                 item->name(),
                 item->defenition(),
                 item->remarks(),
-                item->remarks()
+                item->alias()
                 );
     return luaItem;
 }
@@ -77,7 +80,7 @@ sol::object luaCreateAttributeBinding(const sol::state &lua, const FC_AttributeB
        return luaAttributeBinding;
 }
 
-sol::object luaCreateNamedType(const sol::state &lua, const sol::object &luaItem, const vector<sol::object> &luaAttributeBindingArr)
+sol::object luaCreateNamedType(const sol::state &lua, const sol::object &luaItem, const sol::table& luaAttributeBindingArr)
 {
     sol::object luaNamedType = lua["CreateNamedType"](
                 luaItem,
@@ -100,7 +103,7 @@ sol::object luaCreateInformationBinding(const sol::state &lua, const FC_Informat
     return luaInformationBinding;
 }
 
-sol::object luaCreateObjectType(const sol::state& lua, sol::object LuaNamedType, std::vector<sol::object> LuaInformationBindings)
+sol::object luaCreateObjectType(const sol::state& lua, const sol::object& LuaNamedType, const sol::table& LuaInformationBindings)
 {
     sol::object luaObjectType = lua["CreateObjectType"](
                 LuaNamedType,
@@ -167,6 +170,7 @@ sol::object luaCreateInformationType(const sol::state &lua, sol::object luaObjec
                 luaSuperType,
                 luaSubTypes
                 );
+    return infType;
 }
 
 sol::object luaCreateSimpleAttribute(const sol::state &lua, const FC_SimpleAttribute *sa)
@@ -217,4 +221,49 @@ sol::object luaCreateComplexAttribute(const sol::state &lua, const FC_ComplexAtt
                 subAttributeBindings
                 );
     return complAttr;
+}
+
+
+sol::table helpCreateAttributeBindings(sol::state &lua, const QVector<FC_AttributeBinding> &atrBinds)
+{
+    sol::table luaAttributeBindings = lua.create_table();
+    for (const auto &attrBind : atrBinds){
+        auto attributeBinding = luaCreateAttributeBinding(lua, &attrBind);
+        luaAttributeBindings.add(attributeBinding);
+    }
+    return luaAttributeBindings;
+}
+
+sol::table helpCreateInformationBindings(sol::state &lua, const QVector<FC_InformationBinding> &infBinds)
+{
+    sol::table luaInformationBindings = lua.create_table();
+    for (const auto &infBind: infBinds){
+        auto luaInformationBinding = luaCreateInformationBinding(lua, &infBind);
+        luaInformationBindings.add(luaInformationBinding);
+    }
+    return luaInformationBindings;
+}
+
+sol::table helpCreateFeatureBindings(sol::state &lua, const QVector<FC_FeatureBinding> &featBinds)
+{
+    sol::table luaFeatureBindings = lua.create_table();
+    for (const auto &featureBind : featBinds){
+        auto luaFeatureBind = luaCreateFeatureBinding(lua, &featureBind);
+        luaFeatureBindings.add(luaFeatureBind);
+    }
+    return luaFeatureBindings;
+}
+
+sol::table luaCreateFeatureType(const sol::state &lua, const sol::object &luaObjectType, const std::string &featureUseType, const std::vector<std::string> &permittedPrimitives, const sol::table &luaFeatureBindings, sol::object luaSuperType, sol::table luaSubType)
+{
+    sol::table featureType = lua["CreateFeatureType"](
+                luaObjectType,
+                featureUseType,
+                permittedPrimitives,
+                luaFeatureBindings,
+                luaSuperType,
+                luaSubType
+                );
+    return featureType;
+
 }

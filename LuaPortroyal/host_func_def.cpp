@@ -18,6 +18,7 @@
 //#include "../ObjectDictCatalogue/Entities/fc_featurebinding.h"
 
 
+
 LuaHostFunc::LuaHostFunc(
         sol::state& lua
         ,const FeatureCatalogueController &dictObjCtrl
@@ -514,39 +515,32 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostGetFeatureTypeInfo"
                      , [&](string featureCode)
+                       -> sol::table
     {
-        const auto &featureType = m_dictObjCtrl.featureTypeCtrl().type(featureCode);
+        FC_FeatureType featureType = m_dictObjCtrl.featureTypeCtrl().type(featureCode);
 
-        vector<sol::object> luaAttributeBindingArr;
-        for (const auto &attrBind : featureType.attributeBindings()){
-            luaAttributeBindingArr.push_back(luaCreateAttributeBinding(m_lua, &attrBind));
-        }
-        vector<sol::object> luaInformationBindings;
-//        for (const auto &infBind: featureType.informationBindings()){
-//            auto luaInformationBinding = luaCreateInformationBinding(m_lua, &infBind);
-//            luaInformationBindings.push_back(luaInformationBindings);
-//        }
-        vector<sol::object> luaFeatureBindings;
-        for (const auto &featureBind : featureType.featureBindings()){
-            auto luaFeatureBind = luaCreateFeatureBinding(m_lua, &featureBind);
-            luaFeatureBindings.push_back(luaFeatureBind);
-        }
+
+        auto luaAttributeBindings = helpCreateAttributeBindings(m_lua, featureType.attributeBindings());
+        auto luaInformationBindings = helpCreateInformationBindings(m_lua, featureType.informationBindings());
+        auto luaFeatureBindings = helpCreateFeatureBindings(m_lua, featureType.featureBindings());
 
         auto luaItem = luaCreateItem(m_lua, &featureType.header());
-        auto luaNamedType = luaCreateNamedType(m_lua, luaItem, luaAttributeBindingArr);
+        auto luaNamedType = luaCreateNamedType(m_lua, luaItem, luaAttributeBindings);
         auto luaObjectType = luaCreateObjectType(m_lua, luaNamedType, luaInformationBindings);
 
-//        auto luaFeatureType = luaCreateFeatureType(
-//                    m_lua,
-//                    luaObjectType,
-//                    featureType.featureUseType().toQString().toStdString(),
-//                    featureType.permittedPrimitives(), //TODO: need in vector<string>
-//                    luaFeatureBindings
-//                    );
-//        return luaFeatureType;
-        qDebug() << __FUNCTION__;
-        throw ;
-        return sol::object();
+        vector<string> permittedPrimitives;
+        for (const auto& pp : featureType.permittedPrimitives()) {
+            permittedPrimitives.push_back(pp.toQString());
+        }
+
+        auto luaFeatureType = luaCreateFeatureType(
+                    m_lua,
+                    luaObjectType,
+                    featureType.featureUseType().toQString(),
+                    permittedPrimitives,
+                    luaFeatureBindings
+                    );
+        return luaFeatureType;
     });
     /*!
      * \brief HostGetInformationTypeInfo
@@ -562,14 +556,10 @@ void LuaHostFunc::loadFunctions()
 
         const auto &infType = m_dictObjCtrl.informationTypeCrtl().type(informationCode);
 
-        vector<sol::object> luaAttributeBindingArr;
-        luaAttributeBindingArr.reserve(infType.attributeBindings().size());
-        for (const auto &attrBind : infType.attributeBindings()){
-            luaAttributeBindingArr.push_back(luaCreateAttributeBinding(m_lua, &attrBind));
-        }
+        auto luaAttributeBindings = helpCreateAttributeBindings(m_lua, infType.attributeBindings());
 
         auto luaItem = luaCreateItem(m_lua, &infType.header());
-        auto luaNamedType = luaCreateNamedType(m_lua, luaItem, luaAttributeBindingArr);
+        auto luaNamedType = luaCreateNamedType(m_lua, luaItem, luaAttributeBindings);
         auto luaObjectType = luaCreateObjectType(m_lua, luaNamedType);
 
         auto luaInfType = luaCreateInformationType(m_lua, luaObjectType);
@@ -632,13 +622,25 @@ void LuaHostFunc::loadFunctions()
      *          Host implementation of this function is optional.
      */
     m_lua.set_function("HostDebuggerEntry"
-                     , [&](const string &debugAction, const string &message)
+                     , [&](const string &debugAction, const sol::object &msg)
     {
+        string message;
+        if (msg.is<int>() ||msg.is<double>() ){
+            message = std::to_string(msg.as<int>());
+        } else if (msg.is<bool>()){
+            message = msg.as<bool>() ? "True" : "False";
+        } else if (msg == sol::nil){
+            message = "nil";
+        } else if (msg.is<string>()){
+            message = msg.as<string>();
+        }
+
         static int level = 0;
         string str;
 
         if ("break" == debugAction){
             m_isActionState = false;
+            throw "Break LUA";
         } else if ("trace" == debugAction) {
 
         } else if ("start_performance" == debugAction) {
