@@ -10,23 +10,23 @@ class FC_AttributeBinding
     FC_AttributeBinding() = default;
     FC_AttributeBinding(Multiplicity multiplicity
                         ,Boolean sequentional
-                        ,const QVector<ValueEnumAttrType> &permittedValues
-                        ,const QVector<AttrCode> &attribute);
+                        ,const std::vector<ValueEnumAttrType> &permittedValues
+                        ,const AttrCode &attribute);
 
     Multiplicity multiplicity() const;
     Boolean sequentional() const;
-    QVector<ValueEnumAttrType> permittedValues() const;
-    QVector<AttrCode> attributeCode() const;
+    std::vector<ValueEnumAttrType> permittedValues() const;
+    const AttrCode& attributeCode() const;
 
     void setSequentional(const Boolean &sequentional);
     void setMultiplicity(const Multiplicity &multiplicity);
+    void setAttributeCode(const AttrCode &attribute);
     void addPermittedValues(const ValueEnumAttrType &permittedValue);
-    void addAttributeCode(const AttrCode &attribute);
 
 private:
     Multiplicity m_multiplicity;
     Boolean m_sequentional;
-    QVector<ValueEnumAttrType> m_permittedValues; //permitter values of FC_Attribute code's
-    QVector<AttrCode> m_attribute;
+    std::vector<ValueEnumAttrType> m_permittedValues; //permitter values of FC_Attribute code's
+    AttrCode m_attribute;
 };
 

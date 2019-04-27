@@ -18,8 +18,8 @@ class FC_ListedValue
     CharacterString label() const;
     CharacterString defenition() const;
     PositiveInteger code() const;
-    QVector<CharacterString> remarks() const;
-    QVector<CharacterString> alias() const;
+    std::vector<CharacterString> remarks() const;
+    std::vector<CharacterString> alias() const;
 
     void setLabel(const CharacterString &label);
     void setDefenition(const CharacterString &defenition);
@@ -31,6 +31,6 @@ private:
     CharacterString m_label;
     CharacterString m_defenition;
     PositiveInteger m_code;
-    QVector<CharacterString> m_remarks;
-    QVector<CharacterString> m_alias;
+    std::vector<CharacterString> m_remarks;
+    std::vector<CharacterString> m_alias;
 };

@@ -8,19 +8,18 @@ class FC_Item
 {
 public:
     FC_Item() = default;
-    FC_Item(
-            CharacterString name
-           ,CharacterString defenition
-           ,CharacterString code
-           ,QVector<CharacterString> remarks
-           ,QVector<CharacterString> alias
+    FC_Item(CharacterString name
+           , CharacterString defenition
+           , CharacterString code
+           , std::vector<CharacterString> remarks
+           , std::vector<CharacterString> alias
             );
 
     CharacterString name() const;
     CharacterString defenition() const;
     CharacterString code() const;
-    QVector<CharacterString> remarks() const;
-    QVector<CharacterString> alias() const;
+    const std::vector<CharacterString>& remarks() const;
+    const std::vector<CharacterString>& alias() const;
 
     void setName(const CharacterString &name);
     void setDefenition(const CharacterString &defenition);
@@ -32,6 +31,6 @@ private:
     CharacterString m_name;
     CharacterString m_defenition;
     CharacterString m_code;
-    QVector<CharacterString> m_remarks;
-    QVector<CharacterString> m_alias;
+    std::vector<CharacterString> m_remarks;
+    std::vector<CharacterString> m_alias;
 };

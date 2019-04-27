@@ -2,8 +2,8 @@
 
 FC_AttributeBinding::FC_AttributeBinding(Multiplicity multiplicity
         , Boolean sequentional
-        , const QVector<ValueEnumAttrType> &permittedValues
-        , const QVector<AttrCode> &attribute)
+        , const std::vector<ValueEnumAttrType> &permittedValues
+        , const AttrCode &attribute)
     :m_multiplicity(multiplicity)
     ,m_sequentional(sequentional)
     ,m_permittedValues(permittedValues)
@@ -22,12 +22,12 @@ Boolean FC_AttributeBinding::sequentional() const
     return m_sequentional;
 }
 
-QVector<ValueEnumAttrType> FC_AttributeBinding::permittedValues() const
+std::vector<ValueEnumAttrType> FC_AttributeBinding::permittedValues() const
 {
     return m_permittedValues;
 }
 
-QVector<AttrCode> FC_AttributeBinding::attributeCode() const
+const AttrCode& FC_AttributeBinding::attributeCode() const
 {
     return m_attribute;
 }
@@ -47,7 +47,7 @@ void FC_AttributeBinding::addPermittedValues(const ValueEnumAttrType &permittedV
     m_permittedValues.push_back(permittedValue);
 }
 
-void FC_AttributeBinding::addAttributeCode(const AttrCode &attribute)
+void FC_AttributeBinding::setAttributeCode(const AttrCode &attribute)
 {
-    m_attribute.push_back(attribute);
+    m_attribute = attribute;
 }

@@ -448,7 +448,7 @@ FC_AttributeBinding FeatureCatalogueXMLBuilder::buildAttributeBinding()
             } break;
             case Attribute: {
                 auto atrCode = readAttrValue("ref");
-                attrBind.addAttributeCode(atrCode);
+                attrBind.setAttributeCode(atrCode);
             } break;
             default : // Тег не подходит
                 return attrBind;

@@ -4,8 +4,8 @@
 FC_Item::FC_Item(CharacterString name
                  ,CharacterString defenition
                  ,CharacterString code
-                 ,QVector<CharacterString> remarks
-                 ,QVector<CharacterString> alias)
+                 ,std::vector<CharacterString> remarks
+                 ,std::vector<CharacterString> alias)
     :m_name(name)
     ,m_defenition(defenition)
     ,m_code(code)
@@ -30,12 +30,12 @@ CharacterString FC_Item::code() const
     return m_code;
 }
 
-QVector<CharacterString> FC_Item::remarks() const
+const std::vector<CharacterString> &FC_Item::remarks() const
 {
     return m_remarks;
 }
 
-QVector<CharacterString> FC_Item::alias() const
+const std::vector<CharacterString> &FC_Item::alias() const
 {
     return m_alias;
 }
