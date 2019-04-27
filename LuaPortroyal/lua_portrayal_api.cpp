@@ -173,14 +173,14 @@ sol::object luaCreateInformationType(const sol::state &lua, sol::object luaObjec
     return infType;
 }
 
-sol::object luaCreateSimpleAttribute(const sol::state &lua, const FC_SimpleAttribute *sa)
+sol::object luaCreateSimpleAttribute(sol::state &lua, const FC_SimpleAttribute *sa)
 {
     auto luaItem = luaCreateItem(lua, &sa->header());
 
-    vector<sol::object> luaListedValues;
+    sol::table luaListedValues = lua.create_table();
     for (const auto& listedValue : sa->listedValues()){
         auto luaListedValue = luaCreateListedValue(lua, &listedValue);
-        luaListedValues.push_back(luaListedValue);
+        luaListedValues.add(luaListedValue);
     }
 
     auto simplAttr = lua["CreateSimpleAttribute"](

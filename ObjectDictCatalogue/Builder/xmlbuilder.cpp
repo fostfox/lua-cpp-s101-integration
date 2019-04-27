@@ -352,7 +352,7 @@ FC_Item FeatureCatalogueXMLBuilder::buildItem()
             } break;
             case Remarks : {
                 std::string element = reader.readElementText().toStdString();
-                item.addRemarks(element);
+                item.setRemarks(element);
             } break;
             case Alias : {
                 std::string element = reader.readElementText().toStdString();

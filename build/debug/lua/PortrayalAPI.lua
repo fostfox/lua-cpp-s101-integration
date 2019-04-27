@@ -497,6 +497,16 @@ local function CreateSimpleAttributeExact(item, valueType, uom, quantitySpecific
 	CheckTypeOrNil(attributeContraints, 'AttributeConstraints')
 	CheckType(listedValues, 'array:ListedValue')
 
+	Debug.Trace("CreateSimpleAttributeExact")
+	Debug.Trace(item.Code)
+	Debug.Trace(valueType)
+	Debug.Trace(uom)
+	Debug.Trace(quantitySpecification)
+	Debug.Trace(attributeContraints == nil)
+	--Debug.Trace(listedValues[1].Code)
+	Debug.Trace(#listedValues)
+	Debug.Trace("######################################################")
+
 	return DerivedType{ Type = 'SimpleAttribute', Base = item, ValueType = valueType, Uom = uom, QuantitySpecification = quantitySpecification, AttributeContraints = attributeContraints, ListedValues = listedValues }
 end
 
@@ -506,9 +516,9 @@ function CreateSimpleAttribute(...)
 	local ptype = type(params[1])
 
 	if ptype == 'table' then
-		return CreateSimpleAttributeExact(unpack(params, 1, 6))
+		return CreateSimpleAttributeExact(table.unpack(params, 1, 6))
 	else
-		return CreateSimpleAttributeExact(CreateItem(unpack(params, 1, 5)), unpack(params, 6, 10))
+		return CreateSimpleAttributeExact(CreateItem(table.unpack(params, 1, 5)), table.unpack(params, 6, 10))
 	end
 end
 
@@ -549,6 +559,13 @@ function CreateListedValue(label, definition, code, remarks, aliases)
 	CheckType(code, 'number')
 	CheckTypeOrNil(remarks, 'string')
 	CheckTypeOrNil(aliases, 'array:string')
+	Debug.Trace("CreateListedValue")
+	Debug.Trace(label)
+	Debug.Trace(definition)
+	Debug.Trace(code)
+	Debug.Trace(remarks)
+	Debug.Trace(aliases[1])
+	Debug.Trace("###")
 
 	return { Type = 'ListedValue', Label = label, Definition = definition, Code = code, Remarks = remarks, Aliases = aliases }
 end

@@ -133,7 +133,7 @@ sol::object luaCreateFeatureAssociation(const sol::state &lua, const FC_FeatureA
 sol::object luaCreateRole(const sol::state &lua, const FC_Role  *role);
 
 //13-8.1.2.9
-sol::object luaCreateSimpleAttribute(const sol::state &lua, const FC_SimpleAttribute *simpleAttr);
+sol::object luaCreateSimpleAttribute(sol::state &lua, const FC_SimpleAttribute *simpleAttr);
 
 //13-8.1.2.10
 sol::object luaCreateComplexAttribute(const sol::state &lua, const FC_ComplexAttribute *complAttr);

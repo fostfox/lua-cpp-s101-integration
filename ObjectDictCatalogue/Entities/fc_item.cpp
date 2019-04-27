@@ -4,7 +4,7 @@
 FC_Item::FC_Item(CharacterString name
                  ,CharacterString defenition
                  ,CharacterString code
-                 ,std::vector<CharacterString> remarks
+                 ,CharacterString remarks
                  ,std::vector<CharacterString> alias)
     :m_name(name)
     ,m_defenition(defenition)
@@ -30,7 +30,7 @@ CharacterString FC_Item::code() const
     return m_code;
 }
 
-const std::vector<CharacterString> &FC_Item::remarks() const
+const CharacterString &FC_Item::remarks() const
 {
     return m_remarks;
 }
@@ -55,9 +55,9 @@ void FC_Item::setCode(const CharacterString &code)
     m_code = code;
 }
 
-void FC_Item::addRemarks(const CharacterString &remark)
+void FC_Item::setRemarks(const CharacterString &remark)
 {
-    m_remarks.push_back(remark);
+    m_remarks = remark;
 }
 
 void FC_Item::addAlias(const CharacterString &alias)

@@ -188,7 +188,7 @@ void LuaHostFunc::loadFunctions()
      *          path path for the feature instance identified by featureID. An empty array is returned if the
      *          requested attribute is not present
      */
-    m_lua.set_function("HostFeatureGetSimpleAttribute"
+    m_lua.set_function("HostFeatureGetSimpleAttribute" //TODO: rename in LUA HostGetSimpleAttribute
                      , [&](const string &featureID, const string &path, const string &attributeCode)
                        -> vector<string>
     {
