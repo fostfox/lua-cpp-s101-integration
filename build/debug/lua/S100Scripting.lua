@@ -248,6 +248,7 @@ end
 --
 
 function DerivedType(derived)
+	Debug.Trace("DerivedType")
 	local derivedMetatable =
 	{
 		__index = function (t, k)
@@ -389,6 +390,7 @@ TypeSystemChecks(false)
 typeInfo = nil
 
 function GetTypeInfo()
+	Debug.Trace("GetTypeInfo")
 	if not typeInfo then
 		local ti = {}
 		Debug.StopPerformance('Lua Code - Total')
@@ -451,6 +453,7 @@ function GetTypeInfo()
 end
 
 function GetFeatureTypeInfo(code)
+	Debug.Trace("GetFeatureTypeInfo")
 	local typeInfo = GetTypeInfo()
 
 	if not typeInfo.FeatureTypeInfos[code] then
@@ -483,6 +486,7 @@ function GetInformationTypeInfo(code)
 end
 
 function GetSimpleAttributeTypeInfo(code)
+	Debug.Trace("GetSimpleAttributeTypeInfo")
 	local typeInfo = GetTypeInfo()
 
 	if not typeInfo.SimpleAttributeInfos[code] then

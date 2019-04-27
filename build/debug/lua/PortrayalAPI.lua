@@ -56,6 +56,7 @@ end
 local nilAttribute = {}
 
 local function LookupAttributeValue(container, attributeCode, HostGetSimpleAttribute, HostGetComplexAttributeCount)
+	Debug.Trace("LookupAttributeValue")
 	local attributeMetatable =
 	{
 		__index = function (container, attributeCode)
@@ -246,6 +247,13 @@ function CreateItem(code, name, definition, remarks, alias)
 	CheckType(definition, 'string')
 	CheckTypeOrNil(remarks, 'string')
 	CheckTypeOrNil(alias, 'array:string')
+	Debug.Trace("CreateItem")
+	Debug.Trace(code)
+	Debug.Trace(name)
+	Debug.Trace(definition)
+	Debug.Trace(remarks)
+	Debug.Trace(alias[1])
+	Debug.Trace("###")
 
 	return { Type = 'Item', Code = code, Name = name, Definition = definition, Remarks = remarks, Alias  = alias }
 end
@@ -258,38 +266,50 @@ local function CreateNamedTypeExact(item, abstract, attributeBindings)
 	CheckType(item, 'Item')
 	CheckType(abstract, 'boolean')
 	CheckType(attributeBindings, 'array:AttributeBinding')
+	Debug.Trace("CreateNamedTypeExact")
+	Debug.Trace(item.Code)
+	Debug.Trace(abstract)
+	Debug.Trace(#attributeBindings)
+	Debug.Trace(attributeBindings[1].AttributeCode)
+	Debug.Trace("###")
 
 	for _, ab in ipairs(attributeBindings) do
 		attributeBindings[ab.AttributeCode] = ab
+		Debug.Trace(ab.AttributeCode)
 	end
 
 	return DerivedType{ Type = 'NamedType', Base = item, Abstract = abstract, AttributeBindings = attributeBindings }
 end
 
 function CreateNamedType(...)
+	Debug.Trace("CreateNamedType")
 	local params = {...}
 
 	local ptype = type(params[1])
-
 	if ptype == 'table' then
-		return CreateNamedTypeExact(unpack(params, 1, 3))
+		return CreateNamedTypeExact(table.unpack(params, 1, 3))
 	else
-		return CreateNamedTypeExact(CreateItem(unpack(params, 1, 5)), unpack(params, 6, 7))
+		return CreateNamedTypeExact(CreateItem(table.unpack(params, 1, 5)), table.unpack(params, 6, 7))
 	end
 end
+
 
 --
 --
 --
 
 local function CreateObjectTypeExact(namedType, informationBindings)
+	Debug.Trace("CreateObjectTypeExact")
 	CheckType(namedType, 'NamedType')
 	CheckType(informationBindings, 'array:InformationBinding')
-
+	Debug.Trace(namedType.Base.Code)
+	Debug.Trace(#informationBindings)
+	Debug.Trace("###")
 	return DerivedType{ Type = 'ObjectType', Base = namedType, InformationBindings = informationBindings }
 end
 
 function CreateObjectType(...)
+	Debug.Trace("CreateObjectType")
 	local params = {...}
 
 	local ptype = type(params[1])
@@ -298,12 +318,12 @@ function CreateObjectType(...)
 		local ttype = params[1].Type
 
 		if ttype == 'NamedType' then
-			return CreateObjectTypeExact(unpack(params, 1, 2))
+			return CreateObjectTypeExact(table.unpack(params, 1, 2))
 		else -- should be Item.  Checked in CreateNamedType call.
-			return CreateObjectTypeExact(CreateNamedType(unpack(params, 1, 3)), unpack(params, 4, 4))
+			return CreateObjectTypeExact(CreateNamedType(table.unpack(params, 1, 3)), table.unpack(params, 4, 4))
 		end
 	else
-		return CreateObjectTypeExact(CreateNamedType(unpack(params, 1, 7)), unpack(params, 8, 8))
+		return CreateObjectTypeExact(CreateNamedType(table.unpack(params, 1, 7)), table.unpack(params, 8, 8))
 	end
 end
 
@@ -342,17 +362,26 @@ end
 --
 
 local function CreateFeatureTypeExact(objectType, featureUseType, permittedPrimitives, featureBindings, superType, subType)
+	Debug.Trace("CreateFeatureType")
 	CheckType(objectType, 'ObjectType')
 	CheckType(featureUseType, 'string')
 	CheckType(permittedPrimitives, 'array:string')
 	CheckType(featureBindings, 'array:FeatureBinding')
 	CheckTypeOrNil(superType, 'FeatureType')
 	CheckTypeOrNil(subType, 'array:FeatureType')
+	Debug.Trace(objectType.Base.Base.Code)
+	Debug.Trace(featureUseType)
+	Debug.Trace(permittedPrimitives[1])
+	Debug.Trace(#featureBindings)
+	Debug.Trace(superType == nil)
+	Debug.Trace(subType == nil)
+	Debug.Trace("###")
 
 	return DerivedType{ Type = 'FeatureType', Base = objectType, FeatureUseType = featureUseType, PermittedPrimitives = permittedPrimitives, FeatureBindings = featureBindings, SuperType = superType, SubType = subType }
 end
 
 function CreateFeatureType(...)
+	
 	local params = {...}
 
 	local ptype = type(params[1])
@@ -361,12 +390,12 @@ function CreateFeatureType(...)
 		local ttype = params[1].Type
 
 		if ttype == 'ObjectType' then
-			return CreateFeatureTypeExact(unpack(params, 1, 6))
+			return CreateFeatureTypeExact(table.unpack(params, 1, 6))
 		else
 			Debug.Break()
 		end
 	else
-		return CreateFeatureTypeExact(CreateObjectType(unpack(params, 1, 8)), unpack(params, 9, 13))
+		return CreateFeatureTypeExact(CreateObjectType(table.unpack(params, 1, 8)), table.unpack(params, 9, 13))
 	end
 end
 
@@ -582,7 +611,13 @@ function CreateAttributeBinding(attributeCode, multiplicityLower, multiplicityUp
 	CheckTypeOrNil(multiplicityLower, 'number')
 	CheckType(sequential, 'boolean')
 	CheckTypeOrNil(permittedValues, 'array:number')
-
+	Debug.Trace("CreateAttributeBinding")
+	Debug.Trace(attributeCode)
+	Debug.Trace(multiplicityLower)
+	Debug.Trace(multiplicityUpper)
+	Debug.Trace(sequential)
+	Debug.Trace(permittedValues[1])
+	Debug.Trace("###")
 	return { Type = 'AttributeBinding', AttributeCode = attributeCode, MultiplicityLower = multiplicityLower, MultiplicityUpper = multiplicityUpper, Sequential = sequential, PermittedValues = permittedValues }
 end
 
