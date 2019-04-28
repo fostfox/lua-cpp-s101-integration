@@ -60,7 +60,7 @@ public:
     void setScamin(int scamin);
     void setScamax(int scamax);
 private:
-    int m_refId;
+    int m_refId = -1;
     int m_refType;
     int m_orientation;
     int m_scamin;

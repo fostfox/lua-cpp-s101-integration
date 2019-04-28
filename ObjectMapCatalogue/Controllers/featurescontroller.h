@@ -14,8 +14,10 @@ public:
     const std::string& getCodeById(std::string id) const;
     Attribute getSimpleAttribute(std::string id, std::string path) const;
     Feature getFeatureById(std::string id) const;
+    Fe2spRef getFe2spRefByRefId(std::string refId);
 private:
     std::vector<Feature> fs_;
     std::map<std::string, Feature> id_to_f_;
+    std::map<std::string, Fe2spRef> refId_to_Fe2SpRef;
 };
 
