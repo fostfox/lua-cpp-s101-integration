@@ -82,7 +82,7 @@ Feature FeatureMapController::getFeatureById(std::string id) const
     return id_to_f_.at(id);
 }
 
-Fe2spRef FeatureMapController::getFe2spRefByRefId(std::string refId)
+Fe2spRef FeatureMapController::getFe2spRefByRefId(std::string refId) const
 {
     return refId_to_Fe2SpRef.at(refId);
 }

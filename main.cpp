@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     QTextStream errorStream(stderr);
     //QCoreApplication a(argc, argv);
 
-    QString mapFileName = "E:/dplm/code/lua-cpp-s101-integration/XMLData/dataset_map.xml";
+    QString mapFileName = "../XMLData/test_dataset_map.xml";
     QFile mapFile(mapFileName);
     if (!QFile::exists(mapFileName)) {
         errorStream << QString(
@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    QString dictFileName = "E:/dplm/code/lua-cpp-s101-integration/XMLData/S-101_FC_0_8_8.xml";
+    QString dictFileName = "../XMLData/S-101_FC_0_8_8.xml";
     QFile dictFile(dictFileName);
     if (!QFile::exists(dictFileName)) {
         errorStream << QString(

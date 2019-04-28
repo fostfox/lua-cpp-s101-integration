@@ -278,11 +278,13 @@ sol::object luaCreateSpatialAssociation(const sol::state &lua, const Fe2spRef &s
 
     switch (spAssociation.refType()) {
     case 110: spType = "Point"; break;
-    case 120: spType = "MultiPoint"; break;
-    case 130: spType = "Curve"; break;
-    case 140: spType = "CompositeCurve"; break;
-    case 150: spType = "Surface"; break;
+    //case : spType = "MultiPoint"; break;
+    case 120: spType = "Curve"; break;
+    case 125: spType = "Curve"; break;
+    //case : spType = "CompositeCurve"; break;
+    case 130: spType = "Surface"; break;
     default:
+        qDebug() << "ref Type " << spAssociation.refType();
         throw "Unsupported Spatial type (refType)";
     }
 
@@ -305,5 +307,41 @@ sol::object luaCreateSpatialAssociation(const sol::state &lua, const Fe2spRef &s
                 spAssociation.scamax()
                 );
     return featureType;
+
+}
+
+sol::object luaCreatePoint(const sol::state &lua, std::string x, std::string y, const sol::object &z)
+{
+    sol::object luaPoint  = lua["CreatePoint"] (
+                x,
+                y,
+                z
+                );
+
+    return luaPoint;
+}
+
+sol::object luaCreateMultiPoint(const sol::state &lua, const sol::table &points)
+{
+
+}
+
+sol::object luaCreateCurveSegment(const sol::state &lua, const sol::table &controlPoints, std::string interpolation)
+{
+
+}
+
+sol::object luaCreateCurve(const sol::state &lua, const sol::object &startPoint, const sol::object &endPoint, const sol::table &segments)
+{
+
+}
+
+sol::object luaCreateCompositeCurve(const sol::state &lua, const sol::table &curveAssociations)
+{
+
+}
+
+sol::object luaCreateSurface(const sol::state &lua, const sol::object &exteriorRing, const sol::object &interiorRings)
+{
 
 }

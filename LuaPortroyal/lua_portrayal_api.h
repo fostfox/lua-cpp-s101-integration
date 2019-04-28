@@ -112,6 +112,25 @@ sol::object PortrayalCreateContextParameter(const sol::state &lua, const Context
 //13-8.1.1.1
 sol::object luaCreateSpatialAssociation(const sol::state &lua, const Fe2spRef& spAssociation);
 
+//13-8.1.1.2
+sol::object luaCreatePoint(const sol::state &lua, std::string x, std::string y, const sol::object& z);
+
+//13-8.1.1.3
+sol::object luaCreateMultiPoint(const sol::state &lua, const sol::table& points);
+
+//13-8.1.1.4
+sol::object luaCreateCurveSegment(const sol::state &lua, const sol::table& controlPoints, std::string interpolation);
+
+//13-8.1.1.5
+sol::object luaCreateCurve(const sol::state &lua, const sol::object& startPoint, const sol::object& endPoint, const sol::table& segments);
+
+//13-8.1.1.6
+sol::object luaCreateCompositeCurve(const sol::state &lua, const sol::table &curveAssociations);
+
+//13-8.1.1.7
+sol::object luaCreateSurface(const sol::state &lua, const sol::object& exteriorRing, const sol::object& interiorRings);
+
+
 
 //-----------------------------------------------------------------------------
 // 13-8.1.2 Type Information Creation Functions

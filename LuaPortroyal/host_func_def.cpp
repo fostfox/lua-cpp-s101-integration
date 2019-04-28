@@ -195,9 +195,8 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &featureID, const string &path, const string &attributeCode)
                        -> vector<string>
     {
-        auto atrValue = m_mapObjCtrl.getSimpleAttribute(featureID, path, attributeCode);
-        std::vector<string> atrValues = { atrValue.value().toString().toStdString() };
-        return atrValues;
+        auto atribute = m_mapObjCtrl.getSimpleAttribute(featureID, path, attributeCode);
+        return atribute.value();
     });
 
     /*!
@@ -240,11 +239,15 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostFeatureGetSpatialAssociations" //TODO: Точно на хосте всегда только один SpAss?
                      , [&](const string &featureID)
-                       -> sol::object
+                       -> sol::table
     {
-        Fe2spRef featureSpatioalAss;
-        auto luaFeatureSpatialAss = luaCreateSpatialAssociation(m_lua, featureSpatioalAss);
-        return luaFeatureSpatialAss;
+        Fe2spRef featureSpatioalAss = m_mapObjCtrl.getFeatureById(featureID).fe2spRef();
+
+        auto luaFSpatialAssociations = m_lua.create_table();
+        auto luaFSAss = luaCreateSpatialAssociation(m_lua, featureSpatioalAss);
+        luaFSpatialAssociations.add(luaFSAss);
+
+        return luaFSpatialAssociations;
     });
 
     /*!
@@ -314,8 +317,30 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &spatialID)
                        -> sol::object  //TODO: impl
     {
-        sol::object spatial;
-        return spatial;
+        auto spatialId = m_mapObjCtrl.getFe2spRefByRefId(spatialID);
+
+        sol::object luaSpatial;
+
+        //13-8.1.1.2
+        //luaSpatial = luaCreatePoint(m_lua, std::string x, std::string y, const sol::object& z);
+
+        //13-8.1.1.3
+        //luaSpatial = luaCreateMultiPoint(m_lua, const sol::table& points);
+
+        //13-8.1.1.4
+        //luaSpatial = luaCreateCurveSegment(m_lua, const sol::table& controlPoints, std::string interpolation);
+
+        //13-8.1.1.5
+        //luaSpatial = luaCreateCurve(m_lua, const sol::object& startPoint, const sol::object& endPoint, const sol::table& segments);
+
+        //13-8.1.1.6
+        //luaSpatial = luaCreateCompositeCurve(m_lua, const sol::table &curveAssociations);
+
+        //13-8.1.1.7
+        //luaSpatial = luaCreateSurface(m_lua, const sol::object& exteriorRing, const sol::object& interiorRings);
+
+
+        return luaSpatial;
     });
 
 

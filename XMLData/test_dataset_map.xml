@@ -1,5 +1,5 @@
 <features>
-  <ID>831</ID>
+  <ID>1</ID>
   <Class>72</Class>
   <Classalias>DepthNoBottomFound</Classalias>
   <int_attrs>
@@ -14,4 +14,13 @@
       <value>5</value>
     </int_attr>
   </int_attrs>
+  <fe2sp_ref>
+     <ref_id>1</ref_id>
+     <ref_type>110</ref_type>
+     <orientation>1</orientation>
+     <scamin>-1</scamin>
+     <scamax>0</scamax>
+     <surface>
+     </surface>
+  </fe2sp_ref>
 </features>

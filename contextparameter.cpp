@@ -28,6 +28,7 @@ ContexParametrController::ContexParametrController()
 {
     m_contextParameters = {
         ContextParameter("IGNORE_SCAMIN", ContextParameter::BOOLEAN, "false"),
+        ContextParameter("RADAR_OVERLAY", ContextParameter::BOOLEAN, "true")
     };
 }
 
