@@ -13,6 +13,13 @@
 #include "../ObjectDictCatalogue/Entities/fc_informationbinding.h"
 #include "../ObjectDictCatalogue/Entities/fc_featurebinding.h"
 
+#include "../Geometry/gm_point.h"
+#include "../Geometry/gm_multipoint.h"
+#include "../Geometry/gm_curve.h"
+#include "../Geometry/gm_curvesegment.h"
+#include "../Geometry/gm_compositecurve.h"
+#include "../Geometry/gm_surface.h"
+
 
 #include "../ObjectMapCatalogue/Entries/feature.h"
 
@@ -30,6 +37,55 @@ sol::object createUpperMuliplicity(const sol::state& lua, const UnlimitedInteger
     return upperMult;
 }
 
+
+sol::table helpCreateAttributeBindings(sol::state &lua, const QVector<FC_AttributeBinding> &atrBinds)
+{
+    sol::table luaAttributeBindings = lua.create_table();
+    for (const auto &attrBind : atrBinds){
+        auto attributeBinding = luaCreateAttributeBinding(lua, &attrBind);
+        luaAttributeBindings.add(attributeBinding);
+    }
+    return luaAttributeBindings;
+}
+
+sol::table helpCreateInformationBindings(sol::state &lua, const QVector<FC_InformationBinding> &infBinds)
+{
+    sol::table luaInformationBindings = lua.create_table();
+    for (const auto &infBind: infBinds){
+        auto luaInformationBinding = luaCreateInformationBinding(lua, &infBind);
+        luaInformationBindings.add(luaInformationBinding);
+    }
+    return luaInformationBindings;
+}
+
+sol::table helpCreateFeatureBindings(sol::state &lua, const QVector<FC_FeatureBinding> &featBinds)
+{
+    sol::table luaFeatureBindings = lua.create_table();
+    for (const auto &featureBind : featBinds){
+        auto luaFeatureBind = luaCreateFeatureBinding(lua, &featureBind);
+        luaFeatureBindings.add(luaFeatureBind);
+    }
+    return luaFeatureBindings;
+}
+
+sol::table helpCreatePointsArray(sol::state &lua, const QVector<GM_Point> &points)
+{
+    sol::table luaPoints = lua.create_table();
+    for(const auto & p : points) {
+        luaPoints.add(luaCreatePoint(lua, p));
+    }
+    return luaPoints;
+}
+
+
+sol::table helpCreateSpatialAssociations(sol::state &lua, const QVector<Fe2spRef> &spatialAssociations)
+{
+    sol::table luaspAss = lua.create_table();
+    for(const auto & spAss : spatialAssociations) {
+        luaspAss.add(luaCreateSpatialAssociation(lua, spAss));
+    }
+    return luaspAss;
+}
 
 
 bool PortrayalMain(const sol::state &lua, const vector<string> &featureIDs)
@@ -228,35 +284,6 @@ sol::object luaCreateComplexAttribute(const sol::state &lua, const FC_ComplexAtt
 }
 
 
-sol::table helpCreateAttributeBindings(sol::state &lua, const QVector<FC_AttributeBinding> &atrBinds)
-{
-    sol::table luaAttributeBindings = lua.create_table();
-    for (const auto &attrBind : atrBinds){
-        auto attributeBinding = luaCreateAttributeBinding(lua, &attrBind);
-        luaAttributeBindings.add(attributeBinding);
-    }
-    return luaAttributeBindings;
-}
-
-sol::table helpCreateInformationBindings(sol::state &lua, const QVector<FC_InformationBinding> &infBinds)
-{
-    sol::table luaInformationBindings = lua.create_table();
-    for (const auto &infBind: infBinds){
-        auto luaInformationBinding = luaCreateInformationBinding(lua, &infBind);
-        luaInformationBindings.add(luaInformationBinding);
-    }
-    return luaInformationBindings;
-}
-
-sol::table helpCreateFeatureBindings(sol::state &lua, const QVector<FC_FeatureBinding> &featBinds)
-{
-    sol::table luaFeatureBindings = lua.create_table();
-    for (const auto &featureBind : featBinds){
-        auto luaFeatureBind = luaCreateFeatureBinding(lua, &featureBind);
-        luaFeatureBindings.add(luaFeatureBind);
-    }
-    return luaFeatureBindings;
-}
 
 sol::table luaCreateFeatureType(const sol::state &lua, const sol::object &luaObjectType, const std::string &featureUseType, const std::vector<std::string> &permittedPrimitives, const sol::table &luaFeatureBindings, sol::object luaSuperType, sol::table luaSubType)
 {
@@ -310,65 +337,75 @@ sol::object luaCreateSpatialAssociation(const sol::state &lua, const Fe2spRef &s
 
 }
 
-sol::object luaCreatePoint(const sol::state &lua, std::string x, std::string y, const sol::object &z)
+sol::object luaCreatePoint(const sol::state &lua, const GM_Point& point)
 {
+    sol::object z = point.hasZ()
+            ? sol::make_object(lua, point.z())
+            : sol::nil;
+
     sol::object luaPoint  = lua["CreatePoint"] (
-                x,
-                y,
+                std::to_string(point.x()),
+                std::to_string(point.y()),
                 z
                 );
 
     return luaPoint;
 }
 
-sol::object luaCreateMultiPoint(const sol::state &lua, const sol::table &points)
+sol::object luaCreateMultiPoint(sol::state &lua, const GM_MultiPoint& mp)
 {
     sol::object luaPoint  = lua["CreateMultiPoint"] (
-                points
+                helpCreatePointsArray(lua, mp.points())
                 );
-
     return luaPoint;
 }
 
-sol::object luaCreateCurveSegment(const sol::state &lua, const sol::table &controlPoints, std::string interpolation)
+sol::object luaCreateCurveSegment(sol::state &lua, const GM_CurveSegment& cs)
 {
     sol::object luaPoint  = lua["CreateCurveSegment"] (
-                controlPoints,
-                interpolation
+                helpCreatePointsArray(lua, cs.controlPoints()),
+                cs.interpolation().toQString()
                 );
 
     return luaPoint;
 }
 
-sol::object luaCreateCurve(const sol::state &lua, const sol::object &startPoint, const sol::object &endPoint, const sol::table &segments)
+sol::object luaCreateCurve(sol::state &lua, const GM_Curve& c)
 {
+    sol::object luaStartPoint = luaCreatePoint(lua, c.startPoint());
+    sol::object luaEndPoint = luaCreatePoint(lua, c.endPoint());
+
+    sol::table luaSeqments = lua.create_table();
+    for (const auto& segm : c.segments()) {
+        luaSeqments.add(luaCreateCurveSegment(lua, segm));
+    }
     sol::object luaPoint  = lua["CreateCurve"] (
-                x,
-                y,
-                z
+                luaStartPoint,
+                luaEndPoint,
+                luaSeqments
                 );
 
     return luaPoint;
 }
 
-sol::object luaCreateCompositeCurve(const sol::state &lua, const sol::table &curveAssociations)
+sol::object luaCreateCompositeCurve(sol::state &lua, const GM_CompositeCurve& cc)
 {
     sol::object luaPoint  = lua["CreateCompositeCurve"] (
-                x,
-                y,
-                z
+                helpCreateSpatialAssociations(lua, cc.curveAssociations())
                 );
-
     return luaPoint;
 }
 
-sol::object luaCreateSurface(const sol::state &lua, const sol::object &exteriorRing, const sol::object &interiorRings)
+sol::object luaCreateSurface(sol::state &lua, const GM_Surface& ss)
 {
-    sol::object luaPoint  = lua["CreateSurface"] (
-                x,
-                y,
-                z
-                );
+    sol::table lueInteriorRings = ss.hasInteriorRings()
+            ? helpCreateSpatialAssociations(lua, ss.interiorRings())
+            : sol::nil;
 
+    sol::object luaPoint  = lua["CreateSurface"] (
+                ss.exteriorRing(),
+                lueInteriorRings
+                );
     return luaPoint;
 }
+
