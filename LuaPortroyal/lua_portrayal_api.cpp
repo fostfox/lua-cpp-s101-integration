@@ -323,25 +323,52 @@ sol::object luaCreatePoint(const sol::state &lua, std::string x, std::string y, 
 
 sol::object luaCreateMultiPoint(const sol::state &lua, const sol::table &points)
 {
+    sol::object luaPoint  = lua["CreateMultiPoint"] (
+                points
+                );
 
+    return luaPoint;
 }
 
 sol::object luaCreateCurveSegment(const sol::state &lua, const sol::table &controlPoints, std::string interpolation)
 {
+    sol::object luaPoint  = lua["CreateCurveSegment"] (
+                controlPoints,
+                interpolation
+                );
 
+    return luaPoint;
 }
 
 sol::object luaCreateCurve(const sol::state &lua, const sol::object &startPoint, const sol::object &endPoint, const sol::table &segments)
 {
+    sol::object luaPoint  = lua["CreateCurve"] (
+                x,
+                y,
+                z
+                );
 
+    return luaPoint;
 }
 
 sol::object luaCreateCompositeCurve(const sol::state &lua, const sol::table &curveAssociations)
 {
+    sol::object luaPoint  = lua["CreateCompositeCurve"] (
+                x,
+                y,
+                z
+                );
 
+    return luaPoint;
 }
 
 sol::object luaCreateSurface(const sol::state &lua, const sol::object &exteriorRing, const sol::object &interiorRings)
 {
+    sol::object luaPoint  = lua["CreateSurface"] (
+                x,
+                y,
+                z
+                );
 
+    return luaPoint;
 }

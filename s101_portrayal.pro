@@ -44,7 +44,13 @@ SOURCES += \
     ObjectMapCatalogue/Entries/information.cpp \
     contextparameter.cpp \
     drawing_instructions_controller.cpp \
-    main.cpp
+    main.cpp \
+    Geometry/gm_point.cpp \
+    Geometry/gm_multipoint.cpp \
+    Geometry/gm_curvesegment.cpp \
+    Geometry/gm_curve.cpp \
+    Geometry/gm_compositecurve.cpp \
+    Geometry/gm_surface.cpp
 
 
 HEADERS += \
@@ -78,4 +84,10 @@ HEADERS += \
     ObjectMapCatalogue/Entries/feature.h \
     ObjectMapCatalogue/Entries/information.h \
     contextparameter.h \
-    drawing_instructions_controller.h
+    drawing_instructions_controller.h \
+    Geometry/gm_curve.h \
+    Geometry/gm_point.h \
+    Geometry/gm_multipoint.h \
+    Geometry/gm_curvesegment.h \
+    Geometry/gm_compositecurve.h \
+    Geometry/gm_surface.h
