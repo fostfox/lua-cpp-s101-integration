@@ -35,6 +35,8 @@ void FeatureMapController::setFeatures(std::vector<Feature> fs)
     fs_ = fs;
     for (auto f : fs){
         id_to_f_.insert(std::make_pair(std::to_string(f.id()), f));
+        if (f.fe2spRef().refId() != -1)
+            refId_to_Fe2SpRef.insert(std::make_pair(std::to_string(f.fe2spRef().refId()), f.fe2spRef()));
     }
 }
 
@@ -73,6 +75,16 @@ Attribute FeatureMapController::getSimpleAttribute(std::string id, std::string p
     }
 
     return attr;
+}
+
+Feature FeatureMapController::getFeatureById(std::string id) const
+{
+    return id_to_f_.at(id);
+}
+
+Fe2spRef FeatureMapController::getFe2spRefByRefId(std::string refId)
+{
+    return refId_to_Fe2SpRef.at(refId);
 }
 
 
