@@ -560,12 +560,13 @@ end
 --
 
 function CreateListedValue(label, definition, code, remarks, aliases)
+	Debug.Trace("CreateListedValue")
 	CheckType(label, 'string')
 	CheckType(definition, 'string')
 	CheckType(code, 'number')
 	CheckTypeOrNil(remarks, 'string')
+	Debug.Trace("CheckTypeOrNil(aliases, 'array:string')")
 	CheckTypeOrNil(aliases, 'array:string')
-	Debug.Trace("CreateListedValue")
 	Debug.Trace(label)
 	Debug.Trace(definition)
 	Debug.Trace(code)
@@ -581,10 +582,12 @@ end
 --
 
 function CreateAttributeBinding(attributeCode, lowerMultiplicity, upperMultiplicity, sequential, permittedValues)
+	Debug.Trace("CreateAttributeBinding")
 	CheckType(attributeCode, 'string')
 	CheckType(lowerMultiplicity, 'number')
 	CheckTypeOrNil(upperMultiplicity, 'number')
 	CheckType(sequential, 'boolean')
+	Debug.Trace("CheckType(permittedValues, 'array:number')")
 	CheckType(permittedValues, 'array:number')
 
 	return { Type = 'AttributeBinding', AttributeCode = attributeCode, LowerMultiplicity = lowerMultiplicity, UpperMultiplicity = upperMultiplicity, Sequential = sequential, PermittedValues = permittedValues }
@@ -629,12 +632,13 @@ local informationCache = {}
 spatialCache = {}
 
 function CreateAttributeBinding(attributeCode, multiplicityLower, multiplicityUpper, sequential, permittedValues)
+	Debug.Trace("CreateAttributeBinding")
 	CheckType(attributeCode, 'string')
 	CheckType(multiplicityLower, 'number')
 	CheckTypeOrNil(multiplicityLower, 'number')
 	CheckType(sequential, 'boolean')
+	Debug.Trace("CheckTypeOrNil(permittedValues, 'array:number')")
 	CheckTypeOrNil(permittedValues, 'array:number')
-	Debug.Trace("CreateAttributeBinding")
 	Debug.Trace(attributeCode)
 	Debug.Trace(multiplicityLower)
 	Debug.Trace(multiplicityUpper)
@@ -658,6 +662,9 @@ function CreateFeature(featureID, featureCode)
 				--end
 
 				if k == 'Spatial' or spatial.SpatialType.Name == k then
+					Debug.Trace("----------------------")
+					Debug.Trace(spatial.SpatialType.Name)
+					Debug.Trace("----------------------")
 					return spatial
 				end
 			elseif k == 'PrimitiveType' then
@@ -675,6 +682,10 @@ function CreateFeature(featureID, featureCode)
 						pt = PrimitiveType.Surface
 					end
 				end
+
+				Debug.Trace(sa)
+				Debug.Trace(sa.SpatialType.Name)
+				Debug.Trace("#########")
 				
 				t['PrimitiveType'] = pt
 
@@ -808,9 +819,10 @@ function CreateFeature(featureID, featureCode)
 		CheckSelf(self, 'Feature')
 
 		local sas = rawget(self, 'SpatialAssociations')
-
+		Debug.Trace(sas)
 		Debug.StopPerformance('Lua Code - Total')
-		sas = sas or HostFeatureGetSpatialAssociations(self.ID)
+		sas = sas or HostFeatureGetSpatialAssociations(self.ID)  
+
 		Debug.StartPerformance('Lua Code - Total')
 
 		self['SpatialAssociations'] = sas
@@ -951,7 +963,9 @@ end
 
 function CreateSpatialAssociation(spatialType, spatialID, orientation, scaleMinimum, scaleMaximum)
 	Debug.StartPerformance('Lua Code - Total')
-
+	Debug.Trace("CreateSpatialAssociation")
+	Debug.Trace(spatialType)
+	Debug.Trace("###")
 	local spatialAssociationMetatable =
 	{
 		__index = function (t, k)
