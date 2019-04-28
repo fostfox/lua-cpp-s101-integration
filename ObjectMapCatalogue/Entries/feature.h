@@ -7,22 +7,22 @@
 class Attribute
 {
 public:
-    enum class AttrTypes { INT, DOUBLE, STRING };
+    enum class AttrTypes { INT, DOUBLE, STRING, LIST };
     Attribute();
-    Attribute(int code, std::string alias, AttrTypes type, QVariant value);
+    Attribute(int code, std::string alias, AttrTypes type, std::vector<std::string> value);
     const int& code() const;
     const std::string& alias() const;
     const AttrTypes& type() const;
-    const QVariant& value() const;
+    const std::vector<std::string>& value() const;
     void setCode(int code);
     void setAlias(std::string alias);
     void setType(const AttrTypes &type);
-    void setValue(const QVariant &value);
+    void setValue(const std::vector<std::string> &value);
 private:
     int m_code;
     std::string m_alias;
     AttrTypes m_type;
-    QVariant m_value;
+    std::vector<std::string> m_value;
 };
 
 class ComplexAttribute

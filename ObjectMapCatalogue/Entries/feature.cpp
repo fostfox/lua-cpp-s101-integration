@@ -6,7 +6,7 @@ Attribute::Attribute()
 
 }
 
-Attribute::Attribute(int code, std::string alias, Attribute::AttrTypes type, QVariant value)
+Attribute::Attribute(int code, std::string alias, Attribute::AttrTypes type, std::vector<std::string> value)
     :m_code(code), m_alias(alias), m_type(type), m_value(value)
 {
 
@@ -27,7 +27,7 @@ const Attribute::AttrTypes &Attribute::type() const
     return m_type;
 }
 
-const QVariant &Attribute::value() const
+const std::vector<std::string> &Attribute::value() const
 {
     return m_value;
 }
@@ -49,7 +49,7 @@ void Attribute::setType(const AttrTypes &type)
     m_type = type;
 }
 
-void Attribute::setValue(const QVariant &value)
+void Attribute::setValue(const std::vector<std::string> &value)
 {
     //std::cout << "code: " << value.toString().toStdString() << std::endl;
     m_value = value;

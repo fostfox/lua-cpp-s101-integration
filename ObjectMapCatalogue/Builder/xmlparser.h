@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
+#include <sstream>
 #include <QDataStream>
+#include <QVariant>
 
 #include "../Entries/feature.h"
 #include "../Controllers/featurescontroller.h"
@@ -28,4 +30,7 @@ private:
     QFile* m_inputFile;
     std::vector<Attribute> m_atr;
     std::vector<Feature> features;
+
+private:
+    std::vector<std::string> getListAttrByString(std::string strVal);
 };

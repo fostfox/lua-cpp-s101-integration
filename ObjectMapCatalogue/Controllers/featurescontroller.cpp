@@ -75,4 +75,9 @@ Attribute FeatureMapController::getSimpleAttribute(std::string id, std::string p
     return attr;
 }
 
+Feature FeatureMapController::getFeatureById(std::string id) const
+{
+    return id_to_f_.at(id);
+}
+
 

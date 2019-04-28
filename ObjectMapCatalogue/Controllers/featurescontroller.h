@@ -13,10 +13,9 @@ public:
     std::vector<std::string> getFeaturesIDs() const;
     const std::string& getCodeById(std::string id) const;
     Attribute getSimpleAttribute(std::string id, std::string path) const;
-
+    Feature getFeatureById(std::string id) const;
 private:
     std::vector<Feature> fs_;
     std::map<std::string, Feature> id_to_f_;
-
 };
 

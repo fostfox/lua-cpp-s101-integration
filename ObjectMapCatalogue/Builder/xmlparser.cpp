@@ -75,7 +75,8 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
                 readNext2(m_xmlReader);
                 attr.setAlias(m_xmlReader->readElementText().toStdString());
                 readNext2(m_xmlReader);
-                attr.setValue(m_xmlReader->readElementText().toInt());
+                std::vector<std::string> val = {m_xmlReader->readElementText().toStdString()};
+                attr.setValue(val);
 
                 feature.addIntAttr(attr);
 
@@ -98,7 +99,8 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
                 readNext2(m_xmlReader);
                 attr.setAlias(m_xmlReader->readElementText().toStdString());
                 readNext2(m_xmlReader);
-                attr.setValue(m_xmlReader->readElementText().toDouble());
+                std::vector<std::string> val = {m_xmlReader->readElementText().toStdString()};
+                attr.setValue(val);
 
                 feature.addIntAttr(attr);
 
@@ -121,7 +123,8 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
                 readNext2(m_xmlReader);
                 attr.setAlias(m_xmlReader->readElementText().toStdString());
                 readNext2(m_xmlReader);
-                attr.setValue(m_xmlReader->readElementText());
+                std::vector<std::string> val = {m_xmlReader->readElementText().toStdString()};
+                attr.setValue(val);
 
                 feature.addIntAttr(attr);
 
@@ -136,16 +139,28 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
             }
 
 
-            // SKIP list_attrs
             if (typeOfAttrs == "list_attrs"){
+            do {
+                Attribute attr;
+                attr.setType(Attribute::AttrTypes::LIST);
                 readNext2(m_xmlReader);
-                while(m_xmlReader->name() != "list_attrs"){
-                    readNext1(m_xmlReader);
-                }
+                attr.setCode(m_xmlReader->readElementText().toInt());
+                readNext2(m_xmlReader);
+                attr.setAlias(m_xmlReader->readElementText().toStdString());
+                readNext2(m_xmlReader);
+                std::vector<std::string> vals = getListAttrByString(m_xmlReader->readElementText().toStdString());
+                attr.setValue(vals);
+
+                feature.addIntAttr(attr);
 
                 readNext2(m_xmlReader);
-                typeOfAttrs = m_xmlReader->name().toString().toStdString();
                 readNext2(m_xmlReader);
+            } while (m_xmlReader->name() != "list_attrs");
+            readNext2(m_xmlReader);
+
+            // TAG NAME AFTER </list_attrs>
+            typeOfAttrs = m_xmlReader->name().toString().toStdString();
+            readNext2(m_xmlReader);
             }
 
 
@@ -174,7 +189,8 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
                 readNext2(m_xmlReader);
                 attr.setAlias(m_xmlReader->readElementText().toStdString());
                 readNext2(m_xmlReader);
-                attr.setValue(m_xmlReader->readElementText().toInt());
+                std::vector<std::string> val = {m_xmlReader->readElementText().toStdString()};
+                attr.setValue(val);
 
                 complexAttr.addAttribute(attr);
 
@@ -197,7 +213,8 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
                 readNext2(m_xmlReader);
                 attr.setAlias(m_xmlReader->readElementText().toStdString());
                 readNext2(m_xmlReader);
-                attr.setValue(m_xmlReader->readElementText().toDouble());
+                std::vector<std::string> val = {m_xmlReader->readElementText().toStdString()};
+                attr.setValue(val);
 
                 complexAttr.addAttribute(attr);
 
@@ -220,7 +237,8 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
                 readNext2(m_xmlReader);
                 attr.setAlias(m_xmlReader->readElementText().toStdString());
                 readNext2(m_xmlReader);
-                attr.setValue(m_xmlReader->readElementText());
+                std::vector<std::string> val = {m_xmlReader->readElementText().toStdString()};
+                attr.setValue(val);
 
                 complexAttr.addAttribute(attr);
 
@@ -233,6 +251,32 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
             typeOfAttrs = m_xmlReader->name().toString().toStdString();
             readNext2(m_xmlReader);
             }
+
+
+            if (typeOfAttrs == "list_attrs"){
+            do {
+                Attribute attr;
+                attr.setType(Attribute::AttrTypes::LIST);
+                readNext2(m_xmlReader);
+                attr.setCode(m_xmlReader->readElementText().toInt());
+                readNext2(m_xmlReader);
+                attr.setAlias(m_xmlReader->readElementText().toStdString());
+                readNext2(m_xmlReader);
+                std::vector<std::string> val = getListAttrByString(m_xmlReader->readElementText().toStdString());
+                attr.setValue(val);
+
+                complexAttr.addAttribute(attr);
+
+                readNext2(m_xmlReader);
+                readNext2(m_xmlReader);
+            } while (m_xmlReader->name() != "list_attrs");
+            readNext2(m_xmlReader);
+
+            // TAG NAME AFTER </complex_attrs::list_attrs>
+            typeOfAttrs = m_xmlReader->name().toString().toStdString();
+            readNext2(m_xmlReader);
+            }
+
 
             feature.addComplexAttr(complexAttr);
 
@@ -299,4 +343,17 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
     return features;
 }
 
+std::vector<std::string> FeatureMapXMLBuilder::getListAttrByString(std::string strVal)
+{
+    std::vector<std::string> words;
+    std::istringstream ist(strVal);
+    std::string tmp;
+    while ( ist >> tmp ) {
+        words.push_back(tmp);
+    }
+    for (unsigned int i = 0; i < words.size() - 1; ++i){
+        words[i][words[i].size() - 1] = '\0';
+    }
+    return words;
+}
 
