@@ -137,7 +137,7 @@ sol::object luaCreateCurve(sol::state &lua, const GM_Curve& c);
 sol::object luaCreateCompositeCurve(sol::state &lua, const GM_CompositeCurve& cc);
 
 //13-8.1.1.7
-sol::object luaCreateSurface(const sol::state &lua, const GM_Surface& ss);
+sol::object luaCreateSurface(sol::state &lua, const GM_Surface& ss);
 
 
 

@@ -35,6 +35,7 @@ class InterpolationType : public EnumType<InterpolationTypes>
 class GM_CurveSegment
 {
 public:
+    GM_CurveSegment() = default;
     GM_CurveSegment(const QVector<GM_Point>& controlPoints, const InterpolationType& interpolation);
 
     void addControlPoint(const GM_Point &controlPoint);

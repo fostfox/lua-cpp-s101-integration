@@ -43,6 +43,8 @@ LuaHostFunc::LuaHostFunc(
 
     ContexParametrController contextParamControl;
     PortrayalInitializeContextParameters(m_lua, contParamController);
+
+    //m_lua["TypeSystemChecks"]("true");
 }
 
 bool LuaHostFunc::doPortrayal()
@@ -332,11 +334,11 @@ void LuaHostFunc::loadFunctions()
         GM_Point tmp_GM_Point(0, 0, 0);
         sol::object tmpPoint = luaCreatePoint(m_lua, tmp_GM_Point);
 
-        QVector<GM_Point> controlPoints{tmp_GM_Point, tmp_GM_Point};
-        GM_CurveSegment tmp_GM_Curve_Segment(controlPoints, GM_CurveSegment::Conic);
+        QVector<GM_Point> controlPoints = {tmp_GM_Point, tmp_GM_Point};
+        GM_CurveSegment tmp_GM_Curve_Segment(controlPoints, InterpolationTypes::CONIC);
         sol::object tmpCurveSegment = luaCreateCurveSegment(m_lua, tmp_GM_Curve_Segment);
 
-        QVector<GM_CurveSegment> segments{tmp_GM_Curve_Segment, tmp_GM_Curve_Segment};
+        QVector<GM_CurveSegment> segments = {tmp_GM_Curve_Segment, tmp_GM_Curve_Segment};
         GM_Curve tmp_GM_Curve(tmp_GM_Point, tmp_GM_Point, segments);
         sol::object tmpCurve = luaCreateCurve(m_lua, tmp_GM_Curve);
 

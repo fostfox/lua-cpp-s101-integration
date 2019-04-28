@@ -13,6 +13,7 @@ class optional;
 class GM_Point
 {
 public:
+    GM_Point() = default;
     GM_Point(Real x, Real y);
     GM_Point(Real x, Real y, Real z);
 
