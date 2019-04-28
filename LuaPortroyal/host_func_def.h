@@ -10,6 +10,7 @@ class state;
 
 class FeatureMapController;
 class FeatureCatalogueController;
+class ContexParametrController;
 class DrawingInstructionsController;
 
 
@@ -19,6 +20,7 @@ private:
 
     const FeatureMapController& m_mapObjCtrl;
     const FeatureCatalogueController& m_dictObjCtrl;
+    const ContexParametrController & m_contParamCtrl;
     DrawingInstructionsController& m_drawInstrCtrl;
 
     bool m_isActionState;
@@ -27,6 +29,7 @@ public:
     LuaHostFunc(sol::state &lua
             , const FeatureCatalogueController &dictObjCtrl
             , const FeatureMapController &mapObjCtrl
+            , const ContexParametrController &contParamController
             , DrawingInstructionsController &drawInstrCtrl
             );
 

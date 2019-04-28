@@ -2,7 +2,9 @@
 
 class FeatureMapController;
 class FeatureCatalogueController;
+class ContexParametrController;
 class DrawingInstructionsController;
+
 
 class LuaHostFunc;
 class QString;
@@ -18,6 +20,7 @@ public:
             const QString& fileNameEntryPoint
             , const FeatureCatalogueController &dictObjController
             , const FeatureMapController &mapObjController
+            , const ContexParametrController &contParamController
             );
 
 	~LuaRuleMashine();
@@ -38,6 +41,7 @@ public:
 private:
     const FeatureCatalogueController & m_dictObjCtrl;
     const FeatureMapController & m_mapObjCtrl;
+    const ContexParametrController & m_contParamCtrl;
     DrawingInstructionsController* m_drawController;
 
     LuaHostFunc* m_luaHostFunc;

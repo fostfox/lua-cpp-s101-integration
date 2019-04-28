@@ -52,7 +52,7 @@ const std::string &FeatureMapController::getCodeById(std::string id) const
     return id_to_f_.at(id).classAlias();
 }
 
-Attribute FeatureMapController::getSimpleAttribute(std::string id, std::string path) const
+Attribute FeatureMapController::getSimpleAttribute(std::string id, std::string path, std::string attrCode) const
 {
     Feature f = id_to_f_.at(id);
     std::vector<std::pair<std::string, std::string> > attrsFull
@@ -63,10 +63,10 @@ Attribute FeatureMapController::getSimpleAttribute(std::string id, std::string p
     // такая реализация пока что, так как у нас в xml complex содержит только simple
     if (attrsFull.size() == 2){
         cAttr = f.getComplexAttributeByCode(attrsFull[0].first);
-        attr = cAttr.getAttributeByCode(attrsFull[1].first);
+        attr = cAttr.getAttributeByCode(attrCode);
     }
     else if (attrsFull.size() == 1){
-        attr = f.getAttributeByCode(attrsFull[0].first);
+        attr = f.getAttributeByCode(attrCode);
     }
     else{
         assert(false);

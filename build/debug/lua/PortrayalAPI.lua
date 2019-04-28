@@ -20,6 +20,9 @@ function PortrayalInitializeContextParameters(contextParameters)
 	for _, cp in ipairs(contextParameters) do
 		pccp[cp.Name] = cp.DefaultValue
 		pccp._parameterTypes[cp.Name] = cp.ParameterType
+		Debug.Trace(cp.Name)
+		Debug.Trace(cp.DefaultValue)
+		Debug.Trace(cp.ParameterType)
 	end
 
 	Debug.StopPerformance('Lua Code - PortrayalInitializeContextParameters')
@@ -158,6 +161,7 @@ local function LookupAttributeValue(container, attributeCode, HostGetSimpleAttri
 			container[attributeCode] = values
 		end
 	else
+		Debug.Trace(HostGetSimpleAttribute == nil)
 		Debug.StopPerformance('Lua Code - Total')
 		local values = HostGetSimpleAttribute(container.ID, attributePath, attributeCode)
 		Debug.StartPerformance('Lua Code - Total')
@@ -166,6 +170,7 @@ local function LookupAttributeValue(container, attributeCode, HostGetSimpleAttri
 
 		if containerTypeInfo.AttributeBindings[attributeCode].MultiplicityUpper == 1 then
 			-- Single valued
+			Debug.Trace("Single valued")
 			local value = ConvertEncodedValue(simpleAttributeTypeInfo.ValueType, values[1])
 
 			container['@' .. attributeCode] = value
@@ -177,6 +182,7 @@ local function LookupAttributeValue(container, attributeCode, HostGetSimpleAttri
 			container[attributeCode] = value
 			container['!' .. attributeCode] = value
 		else
+			Debug.Trace("Array")
 			-- Array
 			local convertedValues = {}
 
@@ -643,6 +649,7 @@ function CreateFeature(featureID, featureCode)
 	local featureMetatable =
 	{
 		__index = function (t, k)
+			Debug.Trace("### Feature:__index: "..tostring(t).." "..tostring(k))
 			if k == 'Spatial' or k == 'Point' or k == 'MultiPoint' or k == 'Curve' or k == 'CompositeCurve' or k == 'Surface' then
 				local spatial = t:GetSpatial()
 

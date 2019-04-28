@@ -6,7 +6,7 @@
 #include "ObjectDictCatalogue/Builder/xmlbuilder.h"
 #include "ObjectMapCatalogue/Builder/xmlparser.h"
 #include "LuaPortroyal/LuaRuleMashine.h"
-
+#include "contextparameter.h"
 
 int main(int argc, char *argv[])
 {
@@ -50,6 +50,8 @@ int main(int argc, char *argv[])
     auto dictController = dictBuilder.build(&dictFile);
     dictFile.close();
 
+    ContexParametrController contextParamCtrl;
+
     QString luaMainEntry("../LuaPortroyal/Rules/main.lua");
     if (!QFile::exists(luaMainEntry)) {
         errorStream << QString(
@@ -57,7 +59,7 @@ int main(int argc, char *argv[])
                            ).arg(luaMainEntry);
         return -1;
     }
-    LuaRuleMashine luaPortoyal(luaMainEntry, dictController, mapController);
+    LuaRuleMashine luaPortoyal(luaMainEntry, dictController, mapController, contextParamCtrl);
     qDebug() << luaPortoyal.doPortrayal();
 
     //return a.exec();

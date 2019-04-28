@@ -23,15 +23,18 @@ LuaHostFunc::LuaHostFunc(
         sol::state& lua
         ,const FeatureCatalogueController &dictObjCtrl
         ,const FeatureMapController &mapObjCtrl
+        ,const ContexParametrController &contParamController
         ,DrawingInstructionsController &drawInstrCtrl)
     :m_lua(lua)
     ,m_mapObjCtrl(mapObjCtrl)
     ,m_dictObjCtrl(dictObjCtrl)
+    ,m_contParamCtrl(contParamController)
     ,m_drawInstrCtrl(drawInstrCtrl)
 {
     loadFunctions();
 
-    PortrayalInitializeContextParameters(m_lua, std::vector<ContextParameter>()); // TODO:empty contex parametrs
+    ContexParametrController contextParamControl;
+    PortrayalInitializeContextParameters(m_lua, contParamController);
 }
 
 bool LuaHostFunc::doPortrayal()
@@ -188,12 +191,13 @@ void LuaHostFunc::loadFunctions()
      *          path path for the feature instance identified by featureID. An empty array is returned if the
      *          requested attribute is not present
      */
-    m_lua.set_function("HostFeatureGetSimpleAttribute" //TODO: rename in LUA HostGetSimpleAttribute
+    m_lua.set_function("HostFeatureGetSimpleAttribute"
                      , [&](const string &featureID, const string &path, const string &attributeCode)
                        -> vector<string>
     {
-        vector<string> featureSAValues;
-        return featureSAValues;
+        auto atrValue = m_mapObjCtrl.getSimpleAttribute(featureID, path, attributeCode);
+        std::vector<string> atrValues = { atrValue.value().toString().toStdString() };
+        return atrValues;
     });
 
     /*!
@@ -234,12 +238,13 @@ void LuaHostFunc::loadFunctions()
      *          catalogue function CreateSpatialAssociation to create the SpatialAssociation object.
      *          The host should return an empty array if the feature has no spatial associations.
      */
-    m_lua.set_function("HostFeatureGetSpatialAssociations" //TODO: implementations
+    m_lua.set_function("HostFeatureGetSpatialAssociations" //TODO: Точно на хосте всегда только один SpAss?
                      , [&](const string &featureID)
                        -> sol::object
     {
-        sol::object featureSpAs;
-        return featureSpAs;
+        Fe2spRef featureSpatioalAss;
+        auto luaFeatureSpatialAss = luaCreateSpatialAssociation(m_lua, featureSpatioalAss);
+        return luaFeatureSpatialAss;
     });
 
     /*!

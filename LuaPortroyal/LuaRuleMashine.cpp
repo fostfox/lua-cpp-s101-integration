@@ -15,11 +15,12 @@ LuaRuleMashine::LuaRuleMashine(
         const QString &fileNameEntryPoint
         , const FeatureCatalogueController & dictObjController
         , const FeatureMapController & mapObjController
+        , const ContexParametrController &contParamController
         )
     :m_dictObjCtrl(dictObjController)
     ,m_mapObjCtrl(mapObjController)
+    ,m_contParamCtrl(contParamController)
 {
-
     m_drawController = new DrawingInstructionsController();
 
     m_lua = new sol::state();
@@ -36,7 +37,7 @@ LuaRuleMashine::LuaRuleMashine(
                 );
     m_lua->script_file(fileNameEntryPoint.toStdString());
 
-    m_luaHostFunc = new LuaHostFunc(*m_lua, m_dictObjCtrl, m_mapObjCtrl, *m_drawController);
+    m_luaHostFunc = new LuaHostFunc(*m_lua, m_dictObjCtrl, m_mapObjCtrl, m_contParamCtrl, *m_drawController);
 }
 
 bool LuaRuleMashine::doPortrayal()

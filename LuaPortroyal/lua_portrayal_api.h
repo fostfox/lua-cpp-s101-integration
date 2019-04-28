@@ -19,6 +19,7 @@ class FC_AttributeBinding;
 class FC_InformationBinding;
 class FC_FeatureBinding;
 
+class Fe2spRef;
 
 //-----------------------------------------------------------------------------
 // Helper Host Create Functions
@@ -74,7 +75,7 @@ bool PortrayalMain(const sol::state& lua, const std::vector<std::string> &featur
  *          uncached featureIDs, or featureIDs associated with context parameters whose values have
  *          changed.
  */
-void PortrayalInitializeContextParameters(const sol::state &lua, const std::vector<ContextParameter> &contextParameters );
+void PortrayalInitializeContextParameters(sol::state &lua, const ContexParametrController &contextParameters );
 
 
 /*!
@@ -97,8 +98,19 @@ void PortrayalInitializeContextParameters(const sol::state &lua, const std::vect
  * \remarks
  *          Creates a ContextParameter object for use within the scripting environment.
  */
-sol::object PortrayalCreateContextParameter(const sol::state &lua, std::string name, std::string type, std::string defaultValue);
+sol::object PortrayalCreateContextParameter(const sol::state &lua, const ContextParameter& param);
 
+
+//-----------------------------------------------------------------------------
+//13-8.1.1 Object Creation Functions
+/** These functions relieve the host from the burden of constructing Lua tables corresponding to
+ * complex types used within the scripting catalogue. They allow the host to create objects
+ * which will be passed into the scripting catalogue. The schema and contents of the created
+ * objects are opaque to the host – they are only intended for use within the scripting catalogue.
+*/
+
+//13-8.1.1.1
+sol::object luaCreateSpatialAssociation(const sol::state &lua, const Fe2spRef& spAssociation);
 
 
 //-----------------------------------------------------------------------------

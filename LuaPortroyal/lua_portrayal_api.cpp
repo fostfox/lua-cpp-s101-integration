@@ -13,6 +13,9 @@
 #include "../ObjectDictCatalogue/Entities/fc_informationbinding.h"
 #include "../ObjectDictCatalogue/Entities/fc_featurebinding.h"
 
+
+#include "../ObjectMapCatalogue/Entries/feature.h"
+
 #include <QDebug>
 
 using std::string;
@@ -35,23 +38,24 @@ bool PortrayalMain(const sol::state &lua, const vector<string> &featureIDs)
    return isSuccessPortrayal;
 }
 
-void PortrayalInitializeContextParameters(const sol::state &lua, const vector<ContextParameter> &contextParameters)
+void PortrayalInitializeContextParameters(sol::state &lua, const ContexParametrController &contextParameters)
 {
-    vector<sol::object> luaContextParameters;
-    
-    qDebug() << __FUNCTION__;
-    //throw "Нереализованная функциональность";
-    //TODO: заполнение luaContextParameters
-
-    lua["PortrayalInitializeContextParameters"](luaContextParameters);
+    sol::table luaContextParameters = lua.create_table();
+    for (const auto& cp : contextParameters.contextParameters()){
+        auto luaCP = PortrayalCreateContextParameter(lua, cp);
+        luaContextParameters.add(luaCP);
+    }
+    lua["PortrayalInitializeContextParameters"](
+                luaContextParameters
+                );
 }
 
-sol::object PortrayalCreateContextParameter(const sol::state &lua, std::string name, string type, string defaultValue)
+sol::object PortrayalCreateContextParameter(const sol::state &lua, const ContextParameter &param)
 {
     sol::object luaContextParameter = lua["PortrayalCreateContextParameter"](
-                name,
-                type,
-                defaultValue
+                param.id(),
+                param.type(),
+                param.defaultValue()
                 );
     return luaContextParameter;
 }
@@ -263,6 +267,42 @@ sol::table luaCreateFeatureType(const sol::state &lua, const sol::object &luaObj
                 luaFeatureBindings,
                 luaSuperType,
                 luaSubType
+                );
+    return featureType;
+
+}
+
+sol::object luaCreateSpatialAssociation(const sol::state &lua, const Fe2spRef &spAssociation)
+{
+    string spType;
+
+    switch (spAssociation.refType()) {
+    case 110: spType = "Point"; break;
+    case 120: spType = "MultiPoint"; break;
+    case 130: spType = "Curve"; break;
+    case 140: spType = "CompositeCurve"; break;
+    case 150: spType = "Surface"; break;
+    default:
+        throw "Unsupported Spatial type (refType)";
+    }
+
+    string orient;
+    switch (spAssociation.orientation()) {
+    case 1: orient = "Forward"; break;
+    case 2: orient = "Forward"; break;
+    case 255: spType = "Reverse"; break;
+    default:
+        throw "Unsupported Spatial orientation (orientation)";
+    }
+
+    string spatialID = std::to_string(spAssociation.refId());
+
+    sol::object featureType = lua["CreateSpatialAssociation"](
+                spType,
+                spatialID,
+                orient,
+                spAssociation.scamin(),
+                spAssociation.scamax()
                 );
     return featureType;
 

@@ -66,7 +66,8 @@ function PortrayalMain(featureIDs)
 			Debug.Trace("####")
 			local scaleMinimum = feature['!scaleMinimum']
 			local scaleMaximum = feature['!scaleMaximum']
-			
+			Debug.Trace(scaleMinimum)
+			Debug.Trace(scaleMaximum)
 			
 			Debug.Trace("####")
 			if scaleMinimum and not contextParameters.IGNORE_SCAMIN then
