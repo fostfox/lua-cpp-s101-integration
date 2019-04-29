@@ -3,6 +3,8 @@
 #include "contextparameter.h"
 
 #include <sol/sol.hpp>
+#include <QVector>
+
 #include <vector>
 #include <string>
 
@@ -16,6 +18,23 @@ class FC_ListedValue;
 class FC_AttributeBinding;
 class FC_InformationBinding;
 class FC_FeatureBinding;
+
+class GM_Point;
+class GM_Curve;
+class GM_MultiPoint;
+class GM_CurveSegment;
+class GM_CompositeCurve;
+class GM_Surface;
+
+class Fe2spRef;
+
+//-----------------------------------------------------------------------------
+// Helper Host Create Functions
+sol::table helpCreateAttributeBindings(sol::state &lua, const QVector<FC_AttributeBinding> &atrBinds);
+sol::table helpCreateInformationBindings(sol::state &lua, const QVector<FC_InformationBinding> &infBinds);
+sol::table helpCreateFeatureBindings(sol::state &lua, const QVector<FC_FeatureBinding> &featBinds);
+sol::table helpCreatePointsArray(sol::state &lua, const QVector<GM_Point>& points);
+sol::table helpCreateSpatialAssociations(sol::state &lua, const QVector<Fe2spRef> &spatialAssociations);
 
 //-----------------------------------------------------------------------------
 // 9a-14.1 Portrayal Domain Specific Catalogue Functions
@@ -65,7 +84,7 @@ bool PortrayalMain(const sol::state& lua, const std::vector<std::string> &featur
  *          uncached featureIDs, or featureIDs associated with context parameters whose values have
  *          changed.
  */
-void PortrayalInitializeContextParameters(const sol::state &lua, const std::vector<ContextParameter> &contextParameters );
+void PortrayalInitializeContextParameters(sol::state &lua, const ContexParametrController &contextParameters );
 
 
 /*!
@@ -88,7 +107,37 @@ void PortrayalInitializeContextParameters(const sol::state &lua, const std::vect
  * \remarks
  *          Creates a ContextParameter object for use within the scripting environment.
  */
-sol::object PortrayalCreateContextParameter(const sol::state &lua, std::string name, std::string type, std::string defaultValue);
+sol::object PortrayalCreateContextParameter(const sol::state &lua, const ContextParameter& param);
+
+
+//-----------------------------------------------------------------------------
+//13-8.1.1 Object Creation Functions
+/** These functions relieve the host from the burden of constructing Lua tables corresponding to
+ * complex types used within the scripting catalogue. They allow the host to create objects
+ * which will be passed into the scripting catalogue. The schema and contents of the created
+ * objects are opaque to the host – they are only intended for use within the scripting catalogue.
+*/
+
+//13-8.1.1.1
+sol::object luaCreateSpatialAssociation(const sol::state &lua, const Fe2spRef& spAssociation);
+
+//13-8.1.1.2
+sol::object luaCreatePoint(const sol::state &lua, const GM_Point& point);
+
+//13-8.1.1.3
+sol::object luaCreateMultiPoint(sol::state &lua, const GM_MultiPoint& mp);
+
+//13-8.1.1.4
+sol::object luaCreateCurveSegment(sol::state &lua, const GM_CurveSegment& cs);
+
+//13-8.1.1.5
+sol::object luaCreateCurve(sol::state &lua, const GM_Curve& c);
+
+//13-8.1.1.6
+sol::object luaCreateCompositeCurve(sol::state &lua, const GM_CompositeCurve& cc);
+
+//13-8.1.1.7
+sol::object luaCreateSurface(sol::state &lua, const GM_Surface& ss);
 
 
 
@@ -103,16 +152,16 @@ sol::object PortrayalCreateContextParameter(const sol::state &lua, std::string n
 sol::object luaCreateItem(const sol::state& lua, const FC_Item *item);
 
 //13-8.1.2.2
-sol::object luaCreateNamedType(const sol::state& lua, const sol::object& luaItem, const std::vector<sol::object> &luaAttributeBindingArr = std::vector<sol::object>());
+sol::object luaCreateNamedType(const sol::state& lua, const sol::object &luaItem, const sol::table& luaAttributeBindingArr);
 
 //13-8.1.2.3
-sol::object luaCreateObjectType(const sol::state& lua, sol::object LuaNamedType, std::vector<sol::object> LuaInformationBindings = std::vector<sol::object>());
+sol::object luaCreateObjectType(const sol::state& lua, const sol::object &LuaNamedType, const sol::table &LuaInformationBindings = sol::table());
 
 //13-8.1.2.4
 sol::object luaCreateInformationType(const sol::state& lua, sol::object luaObjectType, sol::object luaSuperType = sol::nil, std::vector<sol::object> luaSubTypes = std::vector<sol::object>());
 
 //13-8.1.2.5
-sol::object luaCreateFeatureType(const sol::state& lua, sol::object luaObjectType, std::string featureUseType, std::vector<std::string> permittedPrimitives, std::vector<sol::object> luaFeatureBindings, sol::object luaSuperType = sol::nil, std::vector<sol::object> luaSubType = std::vector<sol::object>());
+sol::table luaCreateFeatureType(const sol::state& lua, const sol::object& luaObjectType, const std::string &featureUseType, const std::vector<std::string> &permittedPrimitives, const sol::table &luaFeatureBindings, sol::object luaSuperType = sol::nil, sol::table luaSubType = sol::table());
 
 //13-8.1.2.6
 sol::object luaCreateInformationAssociation(sol::object namedType, std::vector<sol::object> roles, sol::object superType, std::vector<sol::object> subType);
@@ -124,7 +173,7 @@ sol::object luaCreateFeatureAssociation(const sol::state &lua, const FC_FeatureA
 sol::object luaCreateRole(const sol::state &lua, const FC_Role  *role);
 
 //13-8.1.2.9
-sol::object luaCreateSimpleAttribute(const sol::state &lua, const FC_SimpleAttribute *simpleAttr);
+sol::object luaCreateSimpleAttribute(sol::state &lua, const FC_SimpleAttribute *simpleAttr);
 
 //13-8.1.2.10
 sol::object luaCreateComplexAttribute(const sol::state &lua, const FC_ComplexAttribute *complAttr);

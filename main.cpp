@@ -5,15 +5,16 @@
 
 #include "ObjectDictCatalogue/Builder/xmlbuilder.h"
 #include "ObjectMapCatalogue/Builder/xmlparser.h"
-//#include "LuaPortroyal/LuaRuleMashine.h"
-
+#include "LuaPortroyal/LuaRuleMashine.h"
+#include "drawing_instructions_controller.h"
+#include "contextparameter.h"
 
 int main(int argc, char *argv[])
 {
     QTextStream errorStream(stderr);
     //QCoreApplication a(argc, argv);
 
-    QString mapFileName = "../XMLData/dataset_map.xml";
+    QString mapFileName = "../XMLData/test_dataset_map.xml";
     QFile mapFile(mapFileName);
     if (!QFile::exists(mapFileName)) {
         errorStream << QString(
@@ -43,17 +44,39 @@ int main(int argc, char *argv[])
 
 
     FeatureMapXMLBuilder mapBuilder(&mapFile);
-    auto mapController = mapBuilder.parse2();
+    auto mapController = mapBuilder.build();
     mapFile.close();
 
     FeatureCatalogueXMLBuilder dictBuilder;
     auto dictController = dictBuilder.build(&dictFile);
     dictFile.close();
 
-    //const QString luaMainEntry("../LuaPortroyal/Rules/main.lua");
-    //LuaRuleMashine luaPortoyal(luaMainEntry, dictController, mapController);
+    ContexParametrController contextParamCtrl;
 
-    //TODO
+
+    QString luaMainEntry("../LuaPortroyal/Rules/main.lua");
+    if (!QFile::exists(luaMainEntry)) {
+        errorStream << QString(
+                           "File %1 does not exist.\n"
+                           ).arg(luaMainEntry);
+        return -1;
+    }
+    LuaRuleMashine luaPortoyal(luaMainEntry, dictController, mapController, contextParamCtrl);
+
+
+
+
+    qDebug() << " \n\n--- DO PORTRAYAL STATUS: ---"<< luaPortoyal.doPortrayal();
+
+    auto drawInstCtrl = luaPortoyal.drawController();
+    for (const auto& featureID : mapController.getFeaturesIDs()){
+        std::string featureCode = mapController.getFeatureById(featureID).classAlias();
+        std::string drawInstr = drawInstCtrl.drawInstr(stoi(featureID)).drawingInstruction();
+
+        qDebug() << "Feature : " << QString::fromStdString(featureCode)
+                 << "\n " << QString::fromStdString(drawInstr)
+                 << "\n---------------------------------------";
+    }
 
     //return a.exec();
 }

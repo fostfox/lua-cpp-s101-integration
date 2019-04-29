@@ -16,7 +16,7 @@ class FC_SpatialPrimitiveType : public EnumType<FC_SpatialPrimitiveTypes>
 {
   public:
     FC_SpatialPrimitiveType() = default;
-    FC_SpatialPrimitiveType(const QString& type);
+    FC_SpatialPrimitiveType(const std::string& type);
     FC_SpatialPrimitiveType(FC_SpatialPrimitiveTypes type);
 
 private:

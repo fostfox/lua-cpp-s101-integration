@@ -4,32 +4,36 @@
 #include <string>
 #include <vector>
 
-#include "../ObjectDictCatalogue/Controllers/featurecataloguecontroller.h"
-#include "../ObjectMapCatalogue/Controllers/featurescontroller.h"
-#include "drawing_instructions_controller.h"
-
-
 namespace sol {
 class state;
 }
 
+class FeatureMapController;
+class FeatureCatalogueController;
+class ContexParametrController;
+class DrawingInstructionsController;
+
 
 class LuaHostFunc {
 private:
-    std::shared_ptr<FeatureMapController> m_mapObjCtrl;
-    std::shared_ptr<FeatureCatalogueController> m_dictObjCtrl;
-    std::shared_ptr<DrawingInstructionsController> m_drawInstrCtrl;
+    sol::state& m_lua;
+
+    const FeatureMapController& m_mapObjCtrl;
+    const FeatureCatalogueController& m_dictObjCtrl;
+    const ContexParametrController & m_contParamCtrl;
+    DrawingInstructionsController& m_drawInstrCtrl;
 
     bool m_isActionState;
-    sol::state* m_lua;
 
 public:
-    LuaHostFunc(FeatureMapController *mapObjCtrl
-                ,FeatureCatalogueController *dictObjCtrl
-                ,DrawingInstructionsController *drawInstrCtrl
-                );
+    LuaHostFunc(sol::state &lua
+            , const FeatureCatalogueController &dictObjCtrl
+            , const FeatureMapController &mapObjCtrl
+            , const ContexParametrController &contParamController
+            , DrawingInstructionsController &drawInstrCtrl
+            );
 
-    void doPortrayal();
+    bool doPortrayal();
 
     void loadFunctions();
     

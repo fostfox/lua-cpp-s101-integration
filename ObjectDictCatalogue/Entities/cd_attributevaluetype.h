@@ -42,7 +42,7 @@ class CD_AttributeValueType : public EnumType<CD_AttributeValueTypes>
   public:
     CD_AttributeValueType() = default;
     CD_AttributeValueType(CD_AttributeValueTypes t);
-    CD_AttributeValueType(QString t);
+    CD_AttributeValueType(std::string t);
 
   private:
     void initMaps();

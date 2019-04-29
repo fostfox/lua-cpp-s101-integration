@@ -7,22 +7,22 @@
 class Attribute
 {
 public:
-    enum class AttrTypes { INT, DOUBLE, STRING };
+    enum class AttrTypes { INT, DOUBLE, STRING, LIST };
     Attribute();
-    Attribute(int code, std::string alias, AttrTypes type, QVariant value);
-    int code() const;
-    std::string alias() const;
-    AttrTypes type() const;
-    QVariant value() const;
+    Attribute(int code, std::string alias, AttrTypes type, std::vector<std::string> value);
+    const int& code() const;
+    const std::string& alias() const;
+    const AttrTypes& type() const;
+    const std::vector<std::string>& value() const;
     void setCode(int code);
     void setAlias(std::string alias);
     void setType(const AttrTypes &type);
-    void setValue(const QVariant &value);
+    void setValue(const std::vector<std::string> &value);
 private:
     int m_code;
     std::string m_alias;
     AttrTypes m_type;
-    QVariant m_value;
+    std::vector<std::string> m_value;
 };
 
 class ComplexAttribute
@@ -60,7 +60,7 @@ public:
     void setScamin(int scamin);
     void setScamax(int scamax);
 private:
-    int m_refId;
+    int m_refId = -1;
     int m_refType;
     int m_orientation;
     int m_scamin;
@@ -97,7 +97,7 @@ public:
 
     int id() const;
     int classId() const;
-    std::string classAlias() const;
+    const std::string &classAlias() const;
     std::vector<Attribute> intAttrs() const;
     std::vector<ComplexAttribute> complexAttrs() const;
     IsolatedPoint isolatedPoint() const;

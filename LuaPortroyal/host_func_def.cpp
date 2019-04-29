@@ -1,33 +1,64 @@
 #include "host_func_def.h"
 #include "lua_portrayal_api.h"
+#include "Geometry/gm_compositecurve.h"
+#include "Geometry/gm_curve.h"
+#include "Geometry/gm_curvesegment.h"
+#include "Geometry/gm_multipoint.h"
+#include "Geometry/gm_point.h"
+#include "Geometry/gm_surface.h"
+#include <QVector>
+
 #include <QDebug>
+
+#include "ObjectDictCatalogue/Controllers/featurecataloguecontroller.h"
+#include "ObjectMapCatalogue/Controllers/featurescontroller.h"
+#include "drawing_instructions_controller.h"
+
+//#include "../ObjectDictCatalogue/DataTypes/datatypes.h"
+//#include "../ObjectDictCatalogue/Entities/fc_item.h"
+//#include "../ObjectDictCatalogue/Entities/fc_role.h"
+//#include "../ObjectDictCatalogue/Entities/fc_featureassociation.h"
+//#include "../ObjectDictCatalogue/Entities/fc_simpleattribute.h"
+//#include "../ObjectDictCatalogue/Entities/fc_complexattribute.h"
+//#include "../ObjectDictCatalogue/Entities/fc_listedvalue.h"
+//#include "../ObjectDictCatalogue/Entities/fc_attributebinding.h"
+//#include "../ObjectDictCatalogue/Entities/fc_informationbinding.h"
+//#include "../ObjectDictCatalogue/Entities/fc_featurebinding.h"
+
 
 
 LuaHostFunc::LuaHostFunc(
-        FeatureMapController *mapObjCtrl
-      , FeatureCatalogueController *dictObjCtrl
-      , DrawingInstructionsController *drawInstrCtrl)
-    :m_mapObjCtrl(mapObjCtrl)
+        sol::state& lua
+        ,const FeatureCatalogueController &dictObjCtrl
+        ,const FeatureMapController &mapObjCtrl
+        ,const ContexParametrController &contParamController
+        ,DrawingInstructionsController &drawInstrCtrl)
+    :m_lua(lua)
+    ,m_mapObjCtrl(mapObjCtrl)
     ,m_dictObjCtrl(dictObjCtrl)
+    ,m_contParamCtrl(contParamController)
     ,m_drawInstrCtrl(drawInstrCtrl)
 {
-
-    std::cout << "=== opening a state ===" << std::endl;
-
-
-
-    m_lua->open_libraries(sol::lib::base, sol::lib::package, sol::lib::string, sol::lib::table);
-
-
-
     loadFunctions();
+
+    ContexParametrController contextParamControl;
+    PortrayalInitializeContextParameters(m_lua, contParamController);
+
+    //m_lua["TypeSystemChecks"]("true");
+}
+
+bool LuaHostFunc::doPortrayal()
+{
+    auto featuresIDs = m_mapObjCtrl.getFeaturesIDs();
+    bool isSuccess = PortrayalMain(m_lua, featuresIDs);
+
+    return isSuccess;
 }
 
 
 
 void LuaHostFunc::loadFunctions()
 {
-    sol::state m_lua;
     using std::string;
     using std::vector;
 
@@ -63,7 +94,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &featureID, const string &drawingInstructions, const string &observedParameters)
                        -> bool
     {
-        m_drawInstrCtrl->setDrawInstr(stoi(featureID),
+        m_drawInstrCtrl.setDrawInstr(stoi(featureID),
                                       DrawingInstructions (drawingInstructions)
                                       );
         return m_isActionState;
@@ -112,7 +143,7 @@ void LuaHostFunc::loadFunctions()
                      , [&]()
                        -> vector<string>
     {
-        vector<string> featuresIds;
+        vector<string> featuresIds = m_mapObjCtrl.getFeaturesIDs();
         return featuresIds;
     });
 
@@ -131,7 +162,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &featureID)
                        -> string
     {
-        string featureCode = "";
+        string featureCode = m_mapObjCtrl.getCodeById(featureID);
         return featureCode;
     });
 
@@ -174,8 +205,8 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &featureID, const string &path, const string &attributeCode)
                        -> vector<string>
     {
-        vector<string> featureSAValues;
-        return featureSAValues;
+        auto atribute = m_mapObjCtrl.getSimpleAttribute(featureID, path, attributeCode);
+        return atribute.value();
     });
 
     /*!
@@ -216,12 +247,17 @@ void LuaHostFunc::loadFunctions()
      *          catalogue function CreateSpatialAssociation to create the SpatialAssociation object.
      *          The host should return an empty array if the feature has no spatial associations.
      */
-    m_lua.set_function("HostFeatureGetSpatialAssociations" //TODO: implementations
+    m_lua.set_function("HostFeatureGetSpatialAssociations" //TODO: Точно на хосте всегда только один SpAss?
                      , [&](const string &featureID)
-                       -> sol::object
+                       -> sol::table
     {
-        sol::object featureSpAs;
-        return featureSpAs;
+        Fe2spRef featureSpatioalAss = m_mapObjCtrl.getFeatureById(featureID).fe2spRef();
+
+        auto luaFSpatialAssociations = m_lua.create_table();
+        auto luaFSAss = luaCreateSpatialAssociation(m_lua, featureSpatioalAss);
+        luaFSpatialAssociations.add(luaFSAss);
+
+        return luaFSpatialAssociations;
     });
 
     /*!
@@ -291,8 +327,58 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &spatialID)
                        -> sol::object  //TODO: impl
     {
-        sol::object spatial;
-        return spatial;
+        auto tmpFe2sp = m_mapObjCtrl.getFe2spRefByRefId(spatialID);
+
+        sol::object luaSpatial;
+
+        GM_Point tmp_GM_Point(0, 0, 0);
+        sol::object tmpPoint = luaCreatePoint(m_lua, tmp_GM_Point);
+
+        QVector<GM_Point> controlPoints = {tmp_GM_Point, tmp_GM_Point};
+        GM_CurveSegment tmp_GM_Curve_Segment(controlPoints, InterpolationTypes::CONIC);
+        sol::object tmpCurveSegment = luaCreateCurveSegment(m_lua, tmp_GM_Curve_Segment);
+
+        QVector<GM_CurveSegment> segments = {tmp_GM_Curve_Segment, tmp_GM_Curve_Segment};
+        GM_Curve tmp_GM_Curve(tmp_GM_Point, tmp_GM_Point, segments);
+        sol::object tmpCurve = luaCreateCurve(m_lua, tmp_GM_Curve);
+
+        GM_MultiPoint tmp_GM_MultiPoint(controlPoints);
+        sol::object tmpMultiPoint = luaCreateMultiPoint(m_lua, tmp_GM_MultiPoint);
+
+        QVector<Fe2spRef> tmpVecFe2spRef = {tmpFe2sp, tmpFe2sp};
+        GM_CompositeCurve tmp_GM_CompositeCurve(tmpVecFe2spRef);
+        sol::object tmpCompositeCurve = luaCreateCompositeCurve(m_lua, tmp_GM_CompositeCurve);
+
+        GM_Surface tmp_GM_Surface(tmpFe2sp);
+        sol::object tmpSurface = luaCreateSurface(m_lua, tmp_GM_Surface);
+
+        switch(tmpFe2sp.refType()){
+        case 110:
+            luaSpatial = tmpPoint;
+            break;
+//      case xxx:
+//          luaSpatial = tmpMultiPoint;
+//          break;
+        case 120:
+            luaSpatial = tmpCurve;
+            break;
+        case 125:
+            luaSpatial = tmpCurve;
+            break;
+//       case xxx:
+//           luaSpatial = tmpCurveSegment;
+//           break;
+//       case xxx:
+//           luaSpatial = tmpCompositeCurve;
+//           break;
+        case 130:
+            luaSpatial = tmpSurface;
+            break;
+        default:
+            throw "Orange it's not my life, but I'm gangster";
+        }
+
+        return luaSpatial;
     });
 
 
@@ -416,7 +502,7 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetFeatureTypeCodes"
                      , [&]()
     {
-        auto featureTypeCodes = m_dictObjCtrl->featureTypeCtrl().codes();
+        auto featureTypeCodes = m_dictObjCtrl.featureTypeCtrl().codes();
         return featureTypeCodes;
     });
     /*!
@@ -427,7 +513,7 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetInformationTypeCodes"
                      , [&]()
     {
-        auto informTypeCodes = m_dictObjCtrl->informationTypeCrtl().codes();
+        auto informTypeCodes = m_dictObjCtrl.informationTypeCrtl().codes();
         return informTypeCodes;
     });
     /*!
@@ -438,7 +524,7 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetSimpleAttributeTypeCodes"
                      , [&]()
     {
-        auto simpleAtrTypeCodes = m_dictObjCtrl->simpleAttributeCtrl().codes();
+        auto simpleAtrTypeCodes = m_dictObjCtrl.simpleAttributeCtrl().codes();
         return simpleAtrTypeCodes;
     });
     /*!
@@ -450,7 +536,7 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetComplexAttributeTypeCodes"
                      , [&]()
     {
-        auto complexAttrTypeCodes = m_dictObjCtrl->simpleAttributeCtrl().codes();
+        auto complexAttrTypeCodes = m_dictObjCtrl.simpleAttributeCtrl().codes();
         return complexAttrTypeCodes;
     });
     /*!
@@ -461,7 +547,7 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetRoleTypeCodes"
                      , [&]()
     {
-        auto roleTypeCodes = m_dictObjCtrl->rolesCtrl().codes();
+        auto roleTypeCodes = m_dictObjCtrl.rolesCtrl().codes();
         return roleTypeCodes;
     });
     /*!
@@ -473,7 +559,7 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetInformationAssociationTypeCodes"
                      , [&]()
     {
-        auto infAssTypeCodes = m_dictObjCtrl->informationAssociationCtrl().codes();
+        auto infAssTypeCodes = m_dictObjCtrl.informationAssociationCtrl().codes();
         return infAssTypeCodes;
     });
     /*!
@@ -485,7 +571,7 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetFeatureAssociationTypeCodes"
                      , [&]()
     {
-        auto featureAssTypeCodes = m_dictObjCtrl->featureAssociationCtrl().codes();
+        auto featureAssTypeCodes = m_dictObjCtrl.featureAssociationCtrl().codes();
         return featureAssTypeCodes;
     });
     /*!
@@ -497,38 +583,32 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostGetFeatureTypeInfo"
                      , [&](string featureCode)
+                       -> sol::table
     {
-        const auto &featureType = m_dictObjCtrl->featureTypeCtrl().type(featureCode);
+        FC_FeatureType featureType = m_dictObjCtrl.featureTypeCtrl().type(featureCode);
 
-        vector<sol::object> luaAttributeBindingArr;
-        for (const auto &attrBind : featureType.attributeBindings()){
-            luaAttributeBindingArr.push_back(luaCreateAttributeBinding(m_lua, &attrBind));
-        }
-        vector<sol::object> luaInformationBindings;
-//        for (const auto &infBind: featureType.informationBindings()){
-//            auto luaInformationBinding = luaCreateInformationBinding(m_lua, &infBind);
-//            luaInformationBindings.push_back(luaInformationBindings);
-//        }
-        vector<sol::object> luaFeatureBindings;
-        for (const auto &featureBind : featureType.featureBindings()){
-            auto luaFeatureBind = luaCreateFeatureBinding(m_lua, &featureBind);
-            luaFeatureBindings.push_back(luaFeatureBind);
-        }
+
+        auto luaAttributeBindings = helpCreateAttributeBindings(m_lua, featureType.attributeBindings());
+        auto luaInformationBindings = helpCreateInformationBindings(m_lua, featureType.informationBindings());
+        auto luaFeatureBindings = helpCreateFeatureBindings(m_lua, featureType.featureBindings());
 
         auto luaItem = luaCreateItem(m_lua, &featureType.header());
-        auto luaNamedType = luaCreateNamedType(m_lua, luaItem, luaAttributeBindingArr);
+        auto luaNamedType = luaCreateNamedType(m_lua, luaItem, luaAttributeBindings);
         auto luaObjectType = luaCreateObjectType(m_lua, luaNamedType, luaInformationBindings);
 
-//        auto luaFeatureType = luaCreateFeatureType(
-//                    m_lua,
-//                    luaObjectType,
-//                    featureType.featureUseType().toQString().toStdString(),
-//                    featureType.permittedPrimitives(), //TODO: need in vector<string>
-//                    luaFeatureBindings
-//                    );
-//        return luaFeatureType;
-        throw ;
-        return sol::object();
+        vector<string> permittedPrimitives;
+        for (const auto& pp : featureType.permittedPrimitives()) {
+            permittedPrimitives.push_back(pp.toQString());
+        }
+
+        auto luaFeatureType = luaCreateFeatureType(
+                    m_lua,
+                    luaObjectType,
+                    featureType.featureUseType().toQString(),
+                    permittedPrimitives,
+                    luaFeatureBindings
+                    );
+        return luaFeatureType;
     });
     /*!
      * \brief HostGetInformationTypeInfo
@@ -542,16 +622,12 @@ void LuaHostFunc::loadFunctions()
                        -> sol::object
     {
 
-        const auto &infType = m_dictObjCtrl->informationTypeCrtl().type(informationCode);
+        const auto &infType = m_dictObjCtrl.informationTypeCrtl().type(informationCode);
 
-        vector<sol::object> luaAttributeBindingArr;
-        luaAttributeBindingArr.reserve(infType.attributeBindings().size());
-        for (const auto &attrBind : infType.attributeBindings()){
-            luaAttributeBindingArr.push_back(luaCreateAttributeBinding(m_lua, &attrBind));
-        }
+        auto luaAttributeBindings = helpCreateAttributeBindings(m_lua, infType.attributeBindings());
 
         auto luaItem = luaCreateItem(m_lua, &infType.header());
-        auto luaNamedType = luaCreateNamedType(m_lua, luaItem, luaAttributeBindingArr);
+        auto luaNamedType = luaCreateNamedType(m_lua, luaItem, luaAttributeBindings);
         auto luaObjectType = luaCreateObjectType(m_lua, luaNamedType);
 
         auto luaInfType = luaCreateInformationType(m_lua, luaObjectType);
@@ -569,7 +645,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &attributeCode)
                        -> sol::object
     {
-        const auto &simplAttrType = m_dictObjCtrl->simpleAttributeCtrl().type(attributeCode);
+        const auto &simplAttrType = m_dictObjCtrl.simpleAttributeCtrl().type(attributeCode);
         auto simpleAttrs = luaCreateSimpleAttribute(m_lua, &simplAttrType);
         return simpleAttrs;
     });
@@ -584,7 +660,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &attributeCode)
                        -> sol::object
     {
-        const auto &complAttrType = m_dictObjCtrl->simpleAttributeCtrl().type(attributeCode);
+        const auto &complAttrType = m_dictObjCtrl.simpleAttributeCtrl().type(attributeCode);
         auto simpleAttrs = luaCreateSimpleAttribute(m_lua, &complAttrType);
         return simpleAttrs;
     });
@@ -614,21 +690,41 @@ void LuaHostFunc::loadFunctions()
      *          Host implementation of this function is optional.
      */
     m_lua.set_function("HostDebuggerEntry"
-                     , [&](const string &debugAction, const string &message)
+                     , [&](const string &debugAction, const sol::object &msg)
     {
-        std::cerr << debugAction << " " << message << std::endl;
+        string message;
+        if (msg.is<int>() ||msg.is<double>() ){
+            message = std::to_string(msg.as<int>());
+        } else if (msg.is<bool>()){
+            message = msg.as<bool>() ? "True" : "False";
+        } else if (msg == sol::nil){
+            message = "nil";
+        } else if (msg.is<string>()){
+            message = msg.as<string>();
+        }
+
+        static int level = 0;
+        string str;
 
         if ("break" == debugAction){
             m_isActionState = false;
-        } else if ("Trace" == debugAction) {
+            throw "Break LUA";
+        } else if ("trace" == debugAction) {
+            return;
+        } else if ("start_performance" == debugAction) {
+            str.assign(++level * 5, ' ');
 
-        } else if ("Start_profiler" == debugAction) {
+        } else if ("stop_performance" == debugAction) {
+            str.assign(level-- * 5, ' ');
 
-        } else if ("Stop_profiler" == debugAction) {
+        } else if ("reset_performance" == debugAction) {
 
         } else {
             throw "Undefined debugger action\n";
         }
+
+        std::cerr << str << debugAction << " # " << message << std::endl;
+
     });
 }
 

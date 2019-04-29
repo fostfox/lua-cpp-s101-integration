@@ -10,13 +10,14 @@ class FeatureMapController
 public:
     FeatureMapController();
     void setFeatures(std::vector<Feature> fs);
-    std::vector<std::string> getFeaturesIDs();
-    std::string getCodeById(std::string id);
-    Attribute getSimpleAttribute(std::string id, std::string path);
-
+    std::vector<std::string> getFeaturesIDs() const;
+    const std::string& getCodeById(std::string id) const;
+    Attribute getSimpleAttribute(std::string id, std::string path, std::string attributeCode) const;
+    Feature getFeatureById(std::string id) const;
+    Fe2spRef getFe2spRefByRefId(std::string refId) const;
 private:
     std::vector<Feature> fs_;
     std::map<std::string, Feature> id_to_f_;
-
+    std::map<std::string, Fe2spRef> refId_to_Fe2SpRef;
 };
 

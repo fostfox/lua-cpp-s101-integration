@@ -1,8 +1,14 @@
+#Visual Code
+/.vscode
+
+#bin files 
+*.exe
+
 # C++ objects and libs
 *.slo
 *.lo
 *.o
-*.a
+#*.a
 *.la
 *.lai
 *.so

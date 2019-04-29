@@ -1,21 +1,34 @@
 #pragma once
 
-#include "../ObjectDictCatalogue/Controllers/featurecataloguecontroller.h"
-#include "../ObjectMapCatalogue/Controllers/featurescontroller.h"
+class FeatureMapController;
+class FeatureCatalogueController;
+class ContexParametrController;
+class DrawingInstructionsController;
 
 
-class lua_State;
+class LuaHostFunc;
+class QString;
+
+namespace sol {
+class state;
+}
 
 
 class LuaRuleMashine {
 public:
     LuaRuleMashine(
-            const QString &fileNameEntryPoint
+            const QString& fileNameEntryPoint
             , const FeatureCatalogueController &dictObjController
             , const FeatureMapController &mapObjController
+            , const ContexParametrController &contParamController
             );
 
 	~LuaRuleMashine();
+
+    bool doPortrayal();
+
+    const DrawingInstructionsController &drawController() const;
+
 
     //void getPortrayal(std::string);
 
@@ -23,8 +36,16 @@ public:
 
     //static void initializeObjectController();
 
+
+
 private:
-    FeatureCatalogueController m_dictObjCtrl;
-    FeatureMapController m_mapObjCtrl;
+    const FeatureCatalogueController & m_dictObjCtrl;
+    const FeatureMapController & m_mapObjCtrl;
+    const ContexParametrController & m_contParamCtrl;
+    DrawingInstructionsController* m_drawController;
+
+    LuaHostFunc* m_luaHostFunc;
+
+    sol::state* m_lua;
 };
 

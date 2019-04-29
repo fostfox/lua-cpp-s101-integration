@@ -5,9 +5,9 @@
 
 
 template<typename Type>
-QMap<Type, QString>& modEnumToStrMap(const QMap<Type, QString>& enumToStrMap)
+QMap<Type, std::string>& modEnumToStrMap(const QMap<Type, std::string>& enumToStrMap)
 {
-    return const_cast<QMap<Type, QString>&>(enumToStrMap);
+    return const_cast<QMap<Type, std::string>&>(enumToStrMap);
 }
 
 
@@ -16,25 +16,25 @@ template <typename Type> class EnumType
   public:
     EnumType() = default;
     EnumType(Type t);
-    EnumType(QString t);
+    EnumType(std::string t);
 
     Type type() const;
-    QString toQString() const;
+    std::string toQString() const;
 
   protected:
     // Должна вызываться после инициазизации m_qstrToEnumMap из класса наследника
     void initEnumToStrMap();
 
   private:
-    QString toQString(Type t) const;
-    Type toEnum(const QString& t) const;
+    std::string toQString(Type t) const;
+    Type toEnum(const std::string& t) const;
 
   protected:
-    QMap<Type, QString> m_enumToStrMap;
+    QMap<Type, std::string> m_enumToStrMap;
   private:
-    QMap<QString, Type> m_qstrToEnumMap;
+    QMap<std::string, Type> m_qstrToEnumMap;
     Type m_type;
-    QString m_strType;
+    std::string m_strType;
 };
 
 
@@ -46,7 +46,7 @@ EnumType<Type>::EnumType(Type t)
 }
 
 template<typename Type>
-EnumType<Type>::EnumType(QString t)
+EnumType<Type>::EnumType(std::string t)
 {
     m_strType = t;
 }
@@ -58,7 +58,7 @@ Type EnumType<Type>::type() const
 }
 
 template<typename Type>
-QString EnumType<Type>::toQString() const
+std::string EnumType<Type>::toQString() const
 {
     return toQString(m_type);
 }
@@ -71,7 +71,7 @@ void EnumType<Type>::initEnumToStrMap()
         auto newVal = it.key();
         m_qstrToEnumMap[newKey] = newVal;
     }
-    if (!m_strType.isEmpty()){
+    if (!m_strType.empty()){
         m_type = toEnum(m_strType);
     } else {
         m_strType = toQString(m_type);
@@ -79,13 +79,13 @@ void EnumType<Type>::initEnumToStrMap()
 }
 
 template<typename Type>
-QString EnumType<Type>::toQString(Type t) const
+std::string EnumType<Type>::toQString(Type t) const
 {
     return m_enumToStrMap[t];
 }
 
 template<typename Type>
-Type EnumType<Type>::toEnum(const QString &t) const
+Type EnumType<Type>::toEnum(const std::string &t) const
 {
     return m_qstrToEnumMap[t];
 }

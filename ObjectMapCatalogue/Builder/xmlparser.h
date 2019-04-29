@@ -1,8 +1,11 @@
 #pragma once
 #include <vector>
+#include <sstream>
 #include <QDataStream>
+#include <QVariant>
 
 #include "../Entries/feature.h"
+#include "../Controllers/featurescontroller.h"
 
 class Feature;
 class QXmlStreamReader;
@@ -19,6 +22,7 @@ class FeatureMapXMLBuilder
 public:
     FeatureMapXMLBuilder(QFile * const inputFile);
 
+    FeatureMapController build();
     std::vector<Feature> parse2();
 
 private:
@@ -26,4 +30,7 @@ private:
     QFile* m_inputFile;
     std::vector<Attribute> m_atr;
     std::vector<Feature> features;
+
+private:
+    std::vector<std::string> getListAttrByString(std::string strVal);
 };

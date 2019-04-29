@@ -14,9 +14,9 @@ class FeatureCatalogueXMLBuilder
     FeatureCatalogueController build(QFile* xmlPath);
 
   private:
-    bool isStartElementAndAllowed(QString tag);
+    bool isStartElementAndAllowed(std::string tag);
     void printErrorIfHapend();
-    QString readAttrValue(QString tag); //возвращает value
+    std::string readAttrValue(QString tag); //возвращает value
 
     inline void readNext1(QXmlStreamReader *reader);
     inline void readNext2(QXmlStreamReader *reader);

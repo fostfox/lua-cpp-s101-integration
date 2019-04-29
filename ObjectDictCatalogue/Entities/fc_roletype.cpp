@@ -3,7 +3,7 @@
 using Type = FC_RoleTypes;
 
 
-FC_RoleType::FC_RoleType(QString type)
+FC_RoleType::FC_RoleType(std::string type)
     :EnumType<Type> (type)
 {
     initMaps();

@@ -1,59 +1,59 @@
 #include "LuaRuleMashine.h"
+
 #include <string>
 #include <iostream>
+#include <QString>
+#include <sol/sol.hpp>
 
-#include "lua_portrayal_api.h"
+#include "ObjectDictCatalogue/Controllers/featurecataloguecontroller.h"
+#include "ObjectMapCatalogue/Controllers/featurescontroller.h"
+#include "drawing_instructions_controller.h"
 
+#include "host_func_def.h"
 
 LuaRuleMashine::LuaRuleMashine(
         const QString &fileNameEntryPoint
-        , const FeatureCatalogueController &dictObjController
-        , const FeatureMapController &mapObjController
+        , const FeatureCatalogueController & dictObjController
+        , const FeatureMapController & mapObjController
+        , const ContexParametrController &contParamController
         )
     :m_dictObjCtrl(dictObjController)
     ,m_mapObjCtrl(mapObjController)
+    ,m_contParamCtrl(contParamController)
 {
+    m_drawController = new DrawingInstructionsController();
 
+    m_lua = new sol::state();
+    std::cout << "=== opening a state ===" << std::endl;
 
+    m_lua->open_libraries(
+                sol::lib::base,
+                sol::lib::package,
+                sol::lib::coroutine,
+                sol::lib::string,
+                sol::lib::os,
+                sol::lib::io,
+                sol::lib::table
+                );
+    m_lua->script_file(fileNameEntryPoint.toStdString());
+
+    m_luaHostFunc = new LuaHostFunc(*m_lua, m_dictObjCtrl, m_mapObjCtrl, m_contParamCtrl, *m_drawController);
 }
 
-//LuaRuleMashine::~LuaRuleMashine() {
-//	lua_close(L_);
-//}
+bool LuaRuleMashine::doPortrayal()
+{
+    bool isSuccess = m_luaHostFunc->doPortrayal();
+    return isSuccess;
+}
 
-//void LuaRuleMashine::getPortrayal(std::string datasetID)
-//{
-//	if(lua_getglobal(L_, "PortrayalInitializeContextParameters") != LUA_TFUNCTION) {								//stack: PortrayalInitializeContextParameters()
-//		std::cout << "Error: 'PortrayalInitializeContextParameter()' function is not found!" << std::endl;
-//	}
-//	lua_pushstring(L_, datasetID.c_str());																			//stack: datasetID, PortrayalInitializeContextParameters()
-//	lua_pushnil(L_);																								//stack: nil, datasetID, PortrayalInitializeContextParameters()
-//	if(lua_pcall(L_, 2, 0, 0) != LUA_OK) {																			//stack:
-//		std::string message = luaStackGetString(L_);
-//		std::cout << "Error: lua_pcall is not caled in 'PortrayalInitializeContextParameters() function" << message << std::endl;
-//	}
+const DrawingInstructionsController &LuaRuleMashine::drawController() const
+{
+    return *m_drawController;
+}
 
-//	if(lua_getglobal(L_, "PortrayalMain") != LUA_TFUNCTION) {														//stack: PortrayalMain()
-//		std::cout << "Error: 'PortrayalMain()' function is not found!" << std::endl;
-//	}
-//	lua_pushstring(L_, datasetID.c_str());																			//stack: datasetID, PortrayalMain()
-//	lua_pushstring(L_, datasetID.c_str());																			//stack: datasetID, datasetID, PortrayalMain()
-//	l_DatasetGetFeatureIDs(L_);																						//stack: featureIDs[], datasetID, PortrayalMain()
-//	if(lua_pcall(L_, 2, 1, 0) != LUA_OK) {																			//stack:
-//		std::string message = luaStackGetString(L_);
-//		std::cout << "Error: lua_pcall is not caled in 'PortrayalMain() function" << message << std::endl;
-//	}
-//}
-
-//std::vector<Object> LuaRuleMashine::getCurrentObjects() const
-//{
-//	return objectController_.getObjects();
-//}
-
-
-//bool LuaRuleMashine::isContinueScriptProcess()
-//{
-//	bool continueProcess = true; // Continue script processing. The portrayal engine will continue to process feature instances.
-//								 // = false; // Terminate script processing. No additional feature instances will be processed by the portrayal engine.
-//	return continueProcess;
-//}
+LuaRuleMashine::~LuaRuleMashine()
+{
+    delete m_drawController;
+    delete m_luaHostFunc;
+    delete m_lua;
+}

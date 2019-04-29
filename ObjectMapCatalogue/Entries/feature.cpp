@@ -6,41 +6,41 @@ Attribute::Attribute()
 
 }
 
-Attribute::Attribute(int code, std::string alias, Attribute::AttrTypes type, QVariant value)
+Attribute::Attribute(int code, std::string alias, Attribute::AttrTypes type, std::vector<std::string> value)
     :m_code(code), m_alias(alias), m_type(type), m_value(value)
 {
 
 }
 
-int Attribute::code() const
+const int &Attribute::code() const
 {
     return m_code;
 }
 
-std::string Attribute::alias() const
+const std::string &Attribute::alias() const
 {
     return m_alias;
 }
 
-Attribute::AttrTypes Attribute::type() const
+const Attribute::AttrTypes &Attribute::type() const
 {
     return m_type;
 }
 
-QVariant Attribute::value() const
+const std::vector<std::string> &Attribute::value() const
 {
     return m_value;
 }
 
 void Attribute::setCode(int code)
 {
-    std::cout << "code: " << code << std::endl;
+    //std::cout << "code: " << code << std::endl;
     m_code = code;
 }
 
 void Attribute::setAlias(std::string alias)
 {
-    std::cout << "alias: " << alias << std::endl;
+    //std::cout << "alias: " << alias << std::endl;
     m_alias = alias;
 }
 
@@ -49,9 +49,9 @@ void Attribute::setType(const AttrTypes &type)
     m_type = type;
 }
 
-void Attribute::setValue(const QVariant &value)
+void Attribute::setValue(const std::vector<std::string> &value)
 {
-    std::cout << "code: " << value.toString().toStdString() << std::endl;
+    //std::cout << "code: " << value.toString().toStdString() << std::endl;
     m_value = value;
 }
 
@@ -179,7 +179,7 @@ int Feature::id() const
     return m_id;
 }
 
-std::string Feature::classAlias() const{
+const std::string& Feature::classAlias() const{
     return m_classAlias;
 }
 

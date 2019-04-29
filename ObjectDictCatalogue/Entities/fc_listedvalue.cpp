@@ -16,12 +16,12 @@ PositiveInteger FC_ListedValue::code() const
     return m_code;
 }
 
-QVector<CharacterString> FC_ListedValue::alias() const
+std::vector<CharacterString> FC_ListedValue::alias() const
 {
     return m_alias;
 }
 
-QVector<CharacterString> FC_ListedValue::remarks() const
+std::vector<CharacterString> FC_ListedValue::remarks() const
 {
     return m_remarks;
 }
