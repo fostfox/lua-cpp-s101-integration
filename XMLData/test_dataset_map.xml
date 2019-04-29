@@ -1,3 +1,39 @@
+<feature_set>
+
+<features>
+  <ID>2</ID>
+  <Class>160</Class>
+  <Classalias>BCNSPP</Classalias>
+  <int_attrs>
+    <int_attr>
+      <code>2</code>
+      <alias>beaconShape</alias>
+      <value>0</value>
+    </int_attr>
+    <int_attr>
+      <code>67</code>
+      <alias>categoryOfSpecialPurposeMark</alias>
+      <value>17</value>
+    </int_attr>
+    <int_attr>
+      <code>75</code>
+      <alias>colour</alias>
+      <value>1</value>
+    </int_attr>
+  </int_attrs>
+   <fe2sp_ref>
+     <ref_id>1762</ref_id>
+     <ref_type>110</ref_type>
+     <orientation>255</orientation>
+     <scamin>-1</scamin>
+     <scamax>0</scamax>
+     <isolated_point>
+       <lat>-32.4292</lat>
+       <lon>60.9781</lon>
+     </isolated_point>
+   </fe2sp_ref>
+</features>
+
 <features>
   <ID>1</ID>
   <Class>72</Class>
@@ -24,3 +60,107 @@
      </surface>
   </fe2sp_ref>
 </features>
+
+<features>
+  <ID>49</ID>
+  <Class>28</Class>
+  <Classalias>BRIDGE</Classalias>
+  <int_attrs>
+    <int_attr>
+      <code>9</code>
+      <alias>categoryOfBridge</alias>
+      <value>0</value>
+    </int_attr>
+  </int_attrs>
+   <fe2sp_ref>
+     <ref_id>27</ref_id>
+     <ref_type>130</ref_type>
+     <orientation>1</orientation>
+     <scamin>-1</scamin>
+     <scamax>0</scamax>
+     <surface>
+       <ref_id>27</ref_id>
+       <sp2sp_ref>
+         <ref_id>951</ref_id>
+         <ref_type>125</ref_type>
+         <orientation>1</orientation>
+         <interior>1</interior>
+         <composite_edge>
+           <sp2sp_ref>
+             <ref_id>215</ref_id>
+             <ref_type>120</ref_type>
+             <orientation>2</orientation>
+             <interior>-1</interior>
+             <edge>
+               <index>215</index>
+               <geo_points>
+                 <geo_point>
+                   <lat>-32.3749</lat>
+                   <lon>60.9099</lon>
+                 </geo_point>
+                 <geo_point>
+                   <lat>-32.3749</lat>
+                   <lon>60.9099</lon>
+                 </geo_point>
+                 <geo_point>
+                   <lat>-32.3746</lat>
+                   <lon>60.91</lon>
+                 </geo_point>
+                 <geo_point>
+                   <lat>-32.3743</lat>
+                   <lon>60.909</lon>
+                 </geo_point>
+                 <geo_point>
+                   <lat>-32.3746</lat>
+                   <lon>60.9089</lon>
+                 </geo_point>
+                 <geo_point>
+                   <lat>-32.3746</lat>
+                   <lon>60.9089</lon>
+                 </geo_point>
+               </geo_points>
+             </edge>
+           </sp2sp_ref>
+           <sp2sp_ref>
+             <ref_id>216</ref_id>
+             <ref_type>120</ref_type>
+             <orientation>2</orientation>
+             <interior>-1</interior>
+             <edge>
+               <index>216</index>
+               <geo_points>
+                 <geo_point>
+                   <lat>-32.3746</lat>
+                   <lon>60.9089</lon>
+                 </geo_point>
+                 <geo_point>
+                   <lat>-32.3746</lat>
+                   <lon>60.9089</lon>
+                 </geo_point>
+                 <geo_point>
+                   <lat>-32.3747</lat>
+                   <lon>60.9089</lon>
+                 </geo_point>
+                 <geo_point>
+                   <lat>-32.375</lat>
+                   <lon>60.9099</lon>
+                 </geo_point>
+                 <geo_point>
+                   <lat>-32.3749</lat>
+                   <lon>60.9099</lon>
+                 </geo_point>
+                 <geo_point>
+                   <lat>-32.3749</lat>
+                   <lon>60.9099</lon>
+                 </geo_point>
+               </geo_points>
+             </edge>
+           </sp2sp_ref>
+         </composite_edge>
+       </sp2sp_ref>
+     </surface>
+   </fe2sp_ref>
+</features>
+
+
+</feature_set>

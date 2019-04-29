@@ -1,5 +1,13 @@
 #include "host_func_def.h"
 #include "lua_portrayal_api.h"
+#include "Geometry/gm_compositecurve.h"
+#include "Geometry/gm_curve.h"
+#include "Geometry/gm_curvesegment.h"
+#include "Geometry/gm_multipoint.h"
+#include "Geometry/gm_point.h"
+#include "Geometry/gm_surface.h"
+#include <QVector>
+
 #include <QDebug>
 
 #include "ObjectDictCatalogue/Controllers/featurecataloguecontroller.h"
@@ -35,6 +43,8 @@ LuaHostFunc::LuaHostFunc(
 
     ContexParametrController contextParamControl;
     PortrayalInitializeContextParameters(m_lua, contParamController);
+
+    //m_lua["TypeSystemChecks"]("true");
 }
 
 bool LuaHostFunc::doPortrayal()
@@ -317,28 +327,56 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &spatialID)
                        -> sol::object  //TODO: impl
     {
-        auto spatialId = m_mapObjCtrl.getFe2spRefByRefId(spatialID);
+        auto tmpFe2sp = m_mapObjCtrl.getFe2spRefByRefId(spatialID);
 
         sol::object luaSpatial;
 
-        //13-8.1.1.2
-        //luaSpatial = luaCreatePoint(m_lua, std::string x, std::string y, const sol::object& z);
+        GM_Point tmp_GM_Point(0, 0, 0);
+        sol::object tmpPoint = luaCreatePoint(m_lua, tmp_GM_Point);
 
-        //13-8.1.1.3
-        //luaSpatial = luaCreateMultiPoint(m_lua, const sol::table& points);
+        QVector<GM_Point> controlPoints = {tmp_GM_Point, tmp_GM_Point};
+        GM_CurveSegment tmp_GM_Curve_Segment(controlPoints, InterpolationTypes::CONIC);
+        sol::object tmpCurveSegment = luaCreateCurveSegment(m_lua, tmp_GM_Curve_Segment);
 
-        //13-8.1.1.4
-        //luaSpatial = luaCreateCurveSegment(m_lua, const sol::table& controlPoints, std::string interpolation);
+        QVector<GM_CurveSegment> segments = {tmp_GM_Curve_Segment, tmp_GM_Curve_Segment};
+        GM_Curve tmp_GM_Curve(tmp_GM_Point, tmp_GM_Point, segments);
+        sol::object tmpCurve = luaCreateCurve(m_lua, tmp_GM_Curve);
 
-        //13-8.1.1.5
-        //luaSpatial = luaCreateCurve(m_lua, const sol::object& startPoint, const sol::object& endPoint, const sol::table& segments);
+        GM_MultiPoint tmp_GM_MultiPoint(controlPoints);
+        sol::object tmpMultiPoint = luaCreateMultiPoint(m_lua, tmp_GM_MultiPoint);
 
-        //13-8.1.1.6
-        //luaSpatial = luaCreateCompositeCurve(m_lua, const sol::table &curveAssociations);
+        QVector<Fe2spRef> tmpVecFe2spRef = {tmpFe2sp, tmpFe2sp};
+        GM_CompositeCurve tmp_GM_CompositeCurve(tmpVecFe2spRef);
+        sol::object tmpCompositeCurve = luaCreateCompositeCurve(m_lua, tmp_GM_CompositeCurve);
 
-        //13-8.1.1.7
-        //luaSpatial = luaCreateSurface(m_lua, const sol::object& exteriorRing, const sol::object& interiorRings);
+        GM_Surface tmp_GM_Surface(tmpFe2sp);
+        sol::object tmpSurface = luaCreateSurface(m_lua, tmp_GM_Surface);
 
+        switch(tmpFe2sp.refType()){
+        case 110:
+            luaSpatial = tmpPoint;
+            break;
+//      case xxx:
+//          luaSpatial = tmpMultiPoint;
+//          break;
+        case 120:
+            luaSpatial = tmpCurve;
+            break;
+        case 125:
+            luaSpatial = tmpCurve;
+            break;
+//       case xxx:
+//           luaSpatial = tmpCurveSegment;
+//           break;
+//       case xxx:
+//           luaSpatial = tmpCompositeCurve;
+//           break;
+        case 130:
+            luaSpatial = tmpSurface;
+            break;
+        default:
+            throw "Orange it's not my life, but I'm gangster";
+        }
 
         return luaSpatial;
     });
@@ -672,7 +710,7 @@ void LuaHostFunc::loadFunctions()
             m_isActionState = false;
             throw "Break LUA";
         } else if ("trace" == debugAction) {
-
+            return;
         } else if ("start_performance" == debugAction) {
             str.assign(++level * 5, ' ');
 

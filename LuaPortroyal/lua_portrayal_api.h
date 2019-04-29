@@ -19,6 +19,13 @@ class FC_AttributeBinding;
 class FC_InformationBinding;
 class FC_FeatureBinding;
 
+class GM_Point;
+class GM_Curve;
+class GM_MultiPoint;
+class GM_CurveSegment;
+class GM_CompositeCurve;
+class GM_Surface;
+
 class Fe2spRef;
 
 //-----------------------------------------------------------------------------
@@ -26,6 +33,8 @@ class Fe2spRef;
 sol::table helpCreateAttributeBindings(sol::state &lua, const QVector<FC_AttributeBinding> &atrBinds);
 sol::table helpCreateInformationBindings(sol::state &lua, const QVector<FC_InformationBinding> &infBinds);
 sol::table helpCreateFeatureBindings(sol::state &lua, const QVector<FC_FeatureBinding> &featBinds);
+sol::table helpCreatePointsArray(sol::state &lua, const QVector<GM_Point>& points);
+sol::table helpCreateSpatialAssociations(sol::state &lua, const QVector<Fe2spRef> &spatialAssociations);
 
 //-----------------------------------------------------------------------------
 // 9a-14.1 Portrayal Domain Specific Catalogue Functions
@@ -113,22 +122,22 @@ sol::object PortrayalCreateContextParameter(const sol::state &lua, const Context
 sol::object luaCreateSpatialAssociation(const sol::state &lua, const Fe2spRef& spAssociation);
 
 //13-8.1.1.2
-sol::object luaCreatePoint(const sol::state &lua, std::string x, std::string y, const sol::object& z);
+sol::object luaCreatePoint(const sol::state &lua, const GM_Point& point);
 
 //13-8.1.1.3
-sol::object luaCreateMultiPoint(const sol::state &lua, const sol::table& points);
+sol::object luaCreateMultiPoint(sol::state &lua, const GM_MultiPoint& mp);
 
 //13-8.1.1.4
-sol::object luaCreateCurveSegment(const sol::state &lua, const sol::table& controlPoints, std::string interpolation);
+sol::object luaCreateCurveSegment(sol::state &lua, const GM_CurveSegment& cs);
 
 //13-8.1.1.5
-sol::object luaCreateCurve(const sol::state &lua, const sol::object& startPoint, const sol::object& endPoint, const sol::table& segments);
+sol::object luaCreateCurve(sol::state &lua, const GM_Curve& c);
 
 //13-8.1.1.6
-sol::object luaCreateCompositeCurve(const sol::state &lua, const sol::table &curveAssociations);
+sol::object luaCreateCompositeCurve(sol::state &lua, const GM_CompositeCurve& cc);
 
 //13-8.1.1.7
-sol::object luaCreateSurface(const sol::state &lua, const sol::object& exteriorRing, const sol::object& interiorRings);
+sol::object luaCreateSurface(sol::state &lua, const GM_Surface& ss);
 
 
 

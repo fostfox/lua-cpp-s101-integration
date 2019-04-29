@@ -25,7 +25,10 @@ public:
     std::string type() const;
     std::string defaultValue() const;
 
+    Types enumType() const;
+
 private:
+    Types m_enumType;
     std::string m_id;
     std::string m_type;
     std::string m_defaultValue;
