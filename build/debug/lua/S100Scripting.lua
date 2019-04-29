@@ -52,14 +52,18 @@ end
 --
 
 function StringToScaledDecimal(value)
+	Debug.Trace("StringToScaledDecimal")
+	Debug.Trace(value)
 	if value then
-		local i = value:find('%.')
-
+		--local i = value:find('%.')  //TODO: FIX ME
+		local i = string.find(value, '%.')
 		if i == nil then
 			return CreateScaledDecimal(tonumber(value), 0)
 		else
-			local a = value:sub(1, i - 1)
-			value = value:sub(1, i - 1) .. value:sub(i + 1, #value)
+			--local a = value:sub(1, i - 1)  //TODO: FIX ME
+			--value = value:sub(1, i - 1) .. value:sub(i + 1, #value)  //TODO: FIX ME
+			local a = string.sub(value, 1, i - 1)
+			value = string.sub(value, 1, i - 1) .. string.sub(value, i + 1, #value)
 
 			return CreateScaledDecimal(tonumber(value), #value + 1 - i)
 		end
@@ -93,6 +97,12 @@ local function ScaledDecimalToNumber(scaledDecimal)
 end
 
 function ScaledDecimalCompare(scaledDecimal1, scaledDecimal2)
+	Debug.Trace("ScaledDecimalCompare")
+	Debug.Trace(scaledDecimal1)
+	Debug.Trace(scaledDecimal1.Value)
+	Debug.Trace(scaledDecimal2)
+	Debug.Trace(scaledDecimal2.Value)
+
 	CheckType(scaledDecimal1, 'ScaledDecimal')
 	CheckType(scaledDecimal2, 'ScaledDecimal')
 
@@ -206,6 +216,8 @@ local scaledDecimalMetatable =
 }
 
 function CreateScaledDecimal(value, scale)
+	Debug.Trace("CreateScaledDecimal")
+	Debug.Trace(value)
 	scale = scale or 0
 
 	CheckType(value, 'number')
@@ -454,6 +466,7 @@ end
 
 function GetFeatureTypeInfo(code)
 	Debug.Trace("GetFeatureTypeInfo")
+	Debug.Trace(code)
 	local typeInfo = GetTypeInfo()
 
 	if not typeInfo.FeatureTypeInfos[code] then
@@ -494,9 +507,9 @@ function GetSimpleAttributeTypeInfo(code)
 	end
 
 	if not typeInfo.SimpleAttributeInfos[code].TypeInfo then
-		Debug.StopPerformance('Lua Code - Total')
+		Debug.StopPerformance('Lua Code - Total - HostGetSimpleAttributeTypeInfo')
 		typeInfo.SimpleAttributeInfos[code].TypeInfo = HostGetSimpleAttributeTypeInfo(code)
-		Debug.StartPerformance('Lua Code - Total')
+		Debug.StartPerformance('Lua Code - Total - HostGetSimpleAttributeTypeInfo')
 	end
 
 	return typeInfo.SimpleAttributeInfos[code].TypeInfo
@@ -504,6 +517,8 @@ end
 
 function GetComplexAttributeTypeInfo(code)
 	local typeInfo = GetTypeInfo()
+	Debug.Trace("GetComplexAttributeTypeInfo")
+	Debug.Trace(code)
 
 	if not typeInfo.ComplexAttributeInfos[code] then
 		error('Invalid information type code')

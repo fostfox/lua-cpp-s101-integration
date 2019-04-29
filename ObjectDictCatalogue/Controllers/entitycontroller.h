@@ -14,6 +14,7 @@ class EntityController
     FC_T type(const std::string& featureCode) const;
     const QVector<FC_T>& types() const;
     const std::vector<std::string>& codes() const;
+    bool hasInMap(const std::string code) const;
 
 private:
     QVector<FC_T> m_types;
@@ -42,7 +43,7 @@ void EntityController<FC_T>::addType(const FC_T &ft)
 template<typename FC_T>
 FC_T EntityController<FC_T>::type(const std::string& featureCode) const
 {
-    if (!m_codeToPTypeMap.contains(featureCode)){
+    if (!hasInMap(featureCode)){
         throw "No element in map";
     }
     return m_codeToPTypeMap[featureCode];
@@ -58,4 +59,10 @@ template<typename FC_T>
 const std::vector<std::string>& EntityController<FC_T>::codes() const
 {
     return m_codes;
+}
+
+template<typename FC_T>
+bool EntityController<FC_T>::hasInMap(const std::string code) const
+{
+    return m_codeToPTypeMap.contains(code);
 }

@@ -87,4 +87,33 @@ Fe2spRef FeatureMapController::getFe2spRefByRefId(std::string refId) const
     return refId_to_Fe2SpRef.at(refId);
 }
 
+bool FeatureMapController::hasSimpleAttribute(std::string id, std::string path, std::string attributeCode) const
+{
+    Feature f = id_to_f_.at(id);
+    std::vector<std::pair<std::string, std::string> > attrsFull
+            = getAttributeNames(path);
+
+    ComplexAttribute cAttr;
+    Attribute attr;
+    // такая реализация пока что, так как у нас в xml complex содержит только simple
+    if (attrsFull.size() == 2){
+        if (!f.hasComplexAttribute(attrsFull[0].first)){
+            return false;
+        };        cAttr = f.getComplexAttributeByCode(attrsFull[0].first);
+        if (!cAttr.hasAttribute(attributeCode)){
+            return false;
+        }
+    }
+    else if (attrsFull.size() == 1){
+        if (!f.hasSimpleAttribute(attributeCode)){
+            return false;
+        }
+    }
+    else{
+        assert(false);
+    }
+
+    return true;
+}
+
 

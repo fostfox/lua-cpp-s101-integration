@@ -15,6 +15,9 @@ public:
     Attribute getSimpleAttribute(std::string id, std::string path, std::string attributeCode) const;
     Feature getFeatureById(std::string id) const;
     Fe2spRef getFe2spRefByRefId(std::string refId) const;
+
+    bool hasSimpleAttribute(std::string id, std::string path, std::string attributeCode) const;
+
 private:
     std::vector<Feature> fs_;
     std::map<std::string, Feature> id_to_f_;

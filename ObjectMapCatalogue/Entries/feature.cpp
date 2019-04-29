@@ -239,6 +239,16 @@ ComplexAttribute Feature::getComplexAttributeByCode(std::string code) const
     return m_code_to_cAttr.at(code);
 }
 
+bool Feature::hasComplexAttribute(std::string code) const
+{
+    return m_code_to_cAttr.count(code) != 0;
+}
+
+bool Feature::hasSimpleAttribute(std::string code) const
+{
+    return m_code_to_attr.count(code) != 0;
+}
+
 Fe2spRef Feature::fe2spRef() const
 {
     return m_fe2spRef;
@@ -315,4 +325,9 @@ void ComplexAttribute::addAttribute(Attribute attr)
 {
     m_attrs.push_back(attr);
     m_code_to_attr.insert(std::make_pair(attr.alias(), attr));
+}
+
+bool ComplexAttribute::hasAttribute(std::string code) const
+{
+    return m_code_to_attr.count(code) != 0;
 }

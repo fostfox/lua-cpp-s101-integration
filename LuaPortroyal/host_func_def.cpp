@@ -10,6 +10,8 @@
 
 #include <QDebug>
 
+#include <algorithm>
+
 #include "ObjectDictCatalogue/Controllers/featurecataloguecontroller.h"
 #include "ObjectMapCatalogue/Controllers/featurescontroller.h"
 #include "drawing_instructions_controller.h"
@@ -162,7 +164,24 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &featureID)
                        -> string
     {
+        const auto& featCtrl = m_dictObjCtrl.featureTypeCtrl();
+
         string featureCode = m_mapObjCtrl.getCodeById(featureID);
+        if (!featCtrl.hasInMap(featureCode)){
+            qDebug() << "\n --------------------------------------------------------"
+                     << "\n WARNING: Passed not feature code (" << QString::fromStdString(featureCode) << ") searching in code aliases"
+                     << "\n --------------------------------------------------------";
+            // Попробуем найти среди alias'ов
+            for (const auto& feature : featCtrl.types()){
+                const auto& featAliases = feature.header().alias();
+                auto it = std::find(featAliases.begin(), featAliases.end(), featureCode);
+                // Обновляем на реальный FeatureCode, если alias совпадает
+                if (it != featAliases.end()){
+                    featureCode = feature.header().code();
+                    break;
+                }
+            }
+        }
         return featureCode;
     });
 
@@ -203,10 +222,16 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostFeatureGetSimpleAttribute"
                      , [&](const string &featureID, const string &path, const string &attributeCode)
-                       -> vector<string>
+                       -> sol::table
     {
-        auto atribute = m_mapObjCtrl.getSimpleAttribute(featureID, path, attributeCode);
-        return atribute.value();
+        sol::table simpleAtrValues;
+        if (m_mapObjCtrl.hasSimpleAttribute(featureID, path, attributeCode)){
+            auto atribute = m_mapObjCtrl.getSimpleAttribute(featureID, path, attributeCode);
+            simpleAtrValues = helpLuaTable(m_lua, atribute.value());
+        } else {
+            simpleAtrValues = m_lua.create_table(); // empty value returned, if map has no set attribute
+        }
+        return simpleAtrValues;
     });
 
     /*!
@@ -536,7 +561,8 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostGetComplexAttributeTypeCodes"
                      , [&]()
     {
-        auto complexAttrTypeCodes = m_dictObjCtrl.simpleAttributeCtrl().codes();
+
+        auto complexAttrTypeCodes = m_dictObjCtrl.complexAttributeCtrl().codes();
         return complexAttrTypeCodes;
     });
     /*!
@@ -596,16 +622,16 @@ void LuaHostFunc::loadFunctions()
         auto luaNamedType = luaCreateNamedType(m_lua, luaItem, luaAttributeBindings);
         auto luaObjectType = luaCreateObjectType(m_lua, luaNamedType, luaInformationBindings);
 
-        vector<string> permittedPrimitives;
+        sol::table luaPermittedPrimitives = m_lua.create_table();
         for (const auto& pp : featureType.permittedPrimitives()) {
-            permittedPrimitives.push_back(pp.toQString());
+            luaPermittedPrimitives.add(pp.toQString());
         }
 
         auto luaFeatureType = luaCreateFeatureType(
                     m_lua,
                     luaObjectType,
                     featureType.featureUseType().toQString(),
-                    permittedPrimitives,
+                    luaPermittedPrimitives,
                     luaFeatureBindings
                     );
         return luaFeatureType;
@@ -630,7 +656,7 @@ void LuaHostFunc::loadFunctions()
         auto luaNamedType = luaCreateNamedType(m_lua, luaItem, luaAttributeBindings);
         auto luaObjectType = luaCreateObjectType(m_lua, luaNamedType);
 
-        auto luaInfType = luaCreateInformationType(m_lua, luaObjectType);
+        auto luaInfType = luaCreateInformationType(m_lua, luaObjectType, sol::nil, sol::nil); //TODO: проверить аргументы, точно nil??
         return luaInfType;
 
     });
@@ -658,10 +684,14 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostGetComplexAttributeTypeInfo"
                      , [&](const string &attributeCode)
-                       -> sol::object
+                       -> sol::object   //WARNING: TODO: Not Emplementer
     {
-        const auto &complAttrType = m_dictObjCtrl.simpleAttributeCtrl().type(attributeCode);
-        auto simpleAttrs = luaCreateSimpleAttribute(m_lua, &complAttrType);
+        //const auto &complAttrType = m_dictObjCtrl.simpleAttributeCtrl().type(attributeCode);
+        //auto simpleAttrs = luaCreateSimpleAttribute(m_lua, &complAttrType);
+        qDebug() << "\n --------------------------------------------------------"
+                 << "\n WARNING: HostGetComplexAttributeTypeInfo not working well. attributeCode(" << QString::fromStdString(attributeCode) << ")"
+                 << "\n --------------------------------------------------------";
+        sol::object simpleAttrs = sol::object();
         return simpleAttrs;
     });
 

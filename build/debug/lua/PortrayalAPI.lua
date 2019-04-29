@@ -162,9 +162,9 @@ local function LookupAttributeValue(container, attributeCode, HostGetSimpleAttri
 		end
 	else
 		Debug.Trace(HostGetSimpleAttribute == nil)
-		Debug.StopPerformance('Lua Code - Total')
+		Debug.StopPerformance('Lua Code - Total - HostGetSimpleAttribute')
 		local values = HostGetSimpleAttribute(container.ID, attributePath, attributeCode)
-		Debug.StartPerformance('Lua Code - Total')
+		Debug.StartPerformance('Lua Code - Total - HostGetSimpleAttribute')
 
 		--Debug.Break()
 
@@ -276,7 +276,7 @@ local function CreateNamedTypeExact(item, abstract, attributeBindings)
 	Debug.Trace(item.Code)
 	Debug.Trace(abstract)
 	Debug.Trace(#attributeBindings)
-	Debug.Trace(attributeBindings[1].AttributeCode)
+	--Debug.Trace(attributeBindings[1].AttributeCode)
 	Debug.Trace("###")
 
 	for _, ab in ipairs(attributeBindings) do
@@ -442,15 +442,18 @@ end
 --
 
 local function CreateFeatureAssociationExact(namedType, roles, superType, subType)
+	Debug.Trace("CreateFeatureAssociationExact")
 	CheckType(namedType, 'NamedType')
 	CheckType(roles, 'array:Role')
 	CheckTypeOrNil(superType, 'FeatureAssociation')
 	CheckTypeOrNil(subType, 'array:FeatureAssociation')
+	Debug.Trace("CreateFeatureAssociationExact -- end checks")
 
 	return DerivedType{ Type = 'FeatureAssociation', Base = namedType, Roles = roles, SuperType = superType, SubType = subType }
 end
 
 function CreateFeatureAssociation(...)
+	Debug.Trace("CreateFeatureAssociation")
 	local params = {...}
 
 	local ptype = type(params[1])
@@ -459,13 +462,13 @@ function CreateFeatureAssociation(...)
 		local ttype = params[1].Type
 
 		if ttype == 'NamedType' then
-			Debug.Break()
-			return CreateFeatureAssociationExact(unpack(params, 1, 4))
+			--Debug.Break()
+			return CreateFeatureAssociationExact(table.unpack(params, 1, 4))
 		else
 			Debug.Break()
 		end
 	else
-		return CreateFeatureAssociationExact(CreateNamedType(unpack(params, 1, 7)), unpack(params, 8, 10))
+		return CreateFeatureAssociationExact(CreateNamedType(table.unpack(params, 1, 7)), table.unpack(params, 8, 10))
 	end
 end
 
@@ -562,8 +565,11 @@ end
 function CreateListedValue(label, definition, code, remarks, aliases)
 	Debug.Trace("CreateListedValue")
 	CheckType(label, 'string')
+	Debug.Trace("ok label")
 	CheckType(definition, 'string')
+	Debug.Trace("ok definition")
 	CheckType(code, 'number')
+	Debug.Trace("ok code")
 	CheckTypeOrNil(remarks, 'string')
 	Debug.Trace("CheckTypeOrNil(aliases, 'array:string')")
 	CheckTypeOrNil(aliases, 'array:string')
@@ -684,7 +690,7 @@ function CreateFeature(featureID, featureCode)
 				end
 
 				Debug.Trace(sa)
-				Debug.Trace(sa.SpatialType.Name)
+				--Debug.Trace(sa.SpatialType.Name)
 				Debug.Trace("#########")
 				
 				t['PrimitiveType'] = pt
@@ -1152,6 +1158,8 @@ end
 
 function CreatePoint(x, y, z)
 	Debug.StartPerformance('Lua Code - Total')
+
+	Debug.Trace(type(x))
 
 	CheckType(x, 'string')
 	CheckType(y, 'string')

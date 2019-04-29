@@ -11,12 +11,11 @@ class FC_FeatureBinding
 {
   public:
     FC_FeatureBinding() = default;
-    FC_FeatureBinding(
-            Multiplicity m_multiplicity
-            ,FC_RoleType m_roleType
-            ,FeatureTypeCode m_featureType
-            ,RoleCode m_role
-            ,FeatureAssociationCode m_association
+    FC_FeatureBinding(Multiplicity multiplicity
+            , FC_RoleType roleType
+            , FeatureTypeCode featureType
+            , FC_Role roleRef
+            , FC_FeatureAssociation associationRef
             );
 
 
@@ -29,11 +28,14 @@ class FC_FeatureBinding
     FeatureTypeCode featureType() const;
     void setFeatureType(const FeatureTypeCode &featureType);
 
+
     RoleCode role() const;
-    void setRole(const RoleCode &role);
+    const FC_Role& roleRef() const;
+    void setRoleRef(FC_Role roleRef);
 
     FeatureAssociationCode association() const;
-    void setAssociation(const FeatureAssociationCode &association);
+    const FC_FeatureAssociation &associationRef() const;
+    void setAssociationRef(FC_FeatureAssociation associationRef);
 
 private:
     Multiplicity m_multiplicity;
@@ -41,5 +43,7 @@ private:
 
     FeatureTypeCode m_featureType;
     RoleCode m_role;
+    FC_Role m_roleRef;
     FeatureAssociationCode m_association;
+    FC_FeatureAssociation m_associationRef;
 };

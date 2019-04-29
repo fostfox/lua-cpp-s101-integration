@@ -35,6 +35,10 @@ sol::table helpCreateInformationBindings(sol::state &lua, const QVector<FC_Infor
 sol::table helpCreateFeatureBindings(sol::state &lua, const QVector<FC_FeatureBinding> &featBinds);
 sol::table helpCreatePointsArray(sol::state &lua, const QVector<GM_Point>& points);
 sol::table helpCreateSpatialAssociations(sol::state &lua, const QVector<Fe2spRef> &spatialAssociations);
+sol::table helpCreateRoles(sol::state &lua, const QVector<FC_Role> &roles);
+
+template <typename T>
+sol::table helpLuaTable(sol::state &lua, const std::vector<T> &);
 
 //-----------------------------------------------------------------------------
 // 9a-14.1 Portrayal Domain Specific Catalogue Functions
@@ -149,7 +153,7 @@ sol::object luaCreateSurface(sol::state &lua, const GM_Surface& ss);
  */
 
 //13-8.1.2.1
-sol::object luaCreateItem(const sol::state& lua, const FC_Item *item);
+sol::object luaCreateItem(sol::state &lua, const FC_Item *item);
 
 //13-8.1.2.2
 sol::object luaCreateNamedType(const sol::state& lua, const sol::object &luaItem, const sol::table& luaAttributeBindingArr);
@@ -158,36 +162,36 @@ sol::object luaCreateNamedType(const sol::state& lua, const sol::object &luaItem
 sol::object luaCreateObjectType(const sol::state& lua, const sol::object &LuaNamedType, const sol::table &LuaInformationBindings = sol::table());
 
 //13-8.1.2.4
-sol::object luaCreateInformationType(const sol::state& lua, sol::object luaObjectType, sol::object luaSuperType = sol::nil, std::vector<sol::object> luaSubTypes = std::vector<sol::object>());
+sol::object luaCreateInformationType(const sol::state& lua, sol::object luaObjectType, sol::object luaSuperType, sol::table luaSubTypes);
 
 //13-8.1.2.5
-sol::table luaCreateFeatureType(const sol::state& lua, const sol::object& luaObjectType, const std::string &featureUseType, const std::vector<std::string> &permittedPrimitives, const sol::table &luaFeatureBindings, sol::object luaSuperType = sol::nil, sol::table luaSubType = sol::table());
+sol::table luaCreateFeatureType(const sol::state& lua, const sol::object& luaObjectType, const std::string &featureUseType, const sol::table &permittedPrimitives, const sol::table &luaFeatureBindings, sol::object luaSuperType = sol::nil, sol::table luaSubType = sol::table());
 
 //13-8.1.2.6
 sol::object luaCreateInformationAssociation(sol::object namedType, std::vector<sol::object> roles, sol::object superType, std::vector<sol::object> subType);
 
 //13-8.1.2.7
-sol::object luaCreateFeatureAssociation(const sol::state &lua, const FC_FeatureAssociation *featureAssocoation);
+sol::object luaCreateFeatureAssociation(sol::state &lua, const FC_FeatureAssociation *featureAssocoation);
 
 //13-8.1.2.8
-sol::object luaCreateRole(const sol::state &lua, const FC_Role  *role);
+sol::object luaCreateRole(sol::state &lua, const FC_Role *role);
 
 //13-8.1.2.9
 sol::object luaCreateSimpleAttribute(sol::state &lua, const FC_SimpleAttribute *simpleAttr);
 
 //13-8.1.2.10
-sol::object luaCreateComplexAttribute(const sol::state &lua, const FC_ComplexAttribute *complAttr);
+sol::object luaCreateComplexAttribute(sol::state &lua, const FC_ComplexAttribute *complAttr);
 
 //13-8.1.2.11
-sol::object luaCreateListedValue(const sol::state &lua, const FC_ListedValue *listedValue);
+sol::object luaCreateListedValue(sol::state &lua, const FC_ListedValue *listedValue);
 
 //13-8.1.2.12
-sol::object luaCreateAttributeBinding(const sol::state &lua, const FC_AttributeBinding *attrBind);
+sol::object luaCreateAttributeBinding(sol::state &lua, const FC_AttributeBinding *attrBind);
 
 //13-8.1.2.13
 sol::object luaCreateInformationBinding(const sol::state& lua, const FC_InformationBinding *infBind);
 
 //13-8.1.2.14
-sol::object luaCreateFeatureBinding(const sol::state &lua, const FC_FeatureBinding *featureBinding);
+sol::object luaCreateFeatureBinding(sol::state &lua, const FC_FeatureBinding *featureBinding);
 
 

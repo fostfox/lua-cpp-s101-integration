@@ -37,6 +37,8 @@ public:
     void setCode(int code);
     void setAlias(std::string alias);
     void addAttribute(Attribute attr);
+
+    bool hasAttribute(std::string code) const;
 private:
     int m_code;
     std::string m_alias;
@@ -114,6 +116,9 @@ public:
     void addComplexAttr(ComplexAttribute attr);
     Attribute getAttributeByCode(std::string code) const;
     ComplexAttribute getComplexAttributeByCode(std::string code) const;
+
+    bool hasComplexAttribute(std::string code) const;
+    bool hasSimpleAttribute(std::string code) const;
 
 private:
     int m_id;
