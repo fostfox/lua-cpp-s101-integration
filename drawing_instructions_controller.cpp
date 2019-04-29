@@ -1,5 +1,5 @@
 #include "drawing_instructions_controller.h"
-
+#include <QDebug>
 
 DrawingInstructions::DrawingInstructions(const std::string &drawingInstructionDEF)
     :m_drawingInstruction(drawingInstructionDEF)
@@ -7,7 +7,25 @@ DrawingInstructions::DrawingInstructions(const std::string &drawingInstructionDE
 
 }
 
+std::string DrawingInstructions::drawingInstruction() const
+{
+    return m_drawingInstruction;
+}
+
 void DrawingInstructionsController::setDrawInstr(int featureId, DrawingInstructions drawingInstructions)
 {
-    throw ;
+    if (m_drawInstr.contains(featureId)) {
+        qDebug() << "WARNING: UPDATE DrawInstructions for featureId: " << featureId;
+    }
+    m_drawInstr[featureId] = drawingInstructions;
+}
+
+QMap<int, DrawingInstructions> DrawingInstructionsController::drawInstr() const
+{
+    return m_drawInstr;
+}
+
+DrawingInstructions DrawingInstructionsController::drawInstr(int featureId) const
+{
+    return m_drawInstr[featureId];
 }

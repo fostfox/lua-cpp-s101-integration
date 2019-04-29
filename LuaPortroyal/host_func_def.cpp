@@ -710,7 +710,7 @@ void LuaHostFunc::loadFunctions()
             m_isActionState = false;
             throw "Break LUA";
         } else if ("trace" == debugAction) {
-
+            return;
         } else if ("start_performance" == debugAction) {
             str.assign(++level * 5, ' ');
 

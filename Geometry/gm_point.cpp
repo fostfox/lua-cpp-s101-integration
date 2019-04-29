@@ -21,7 +21,7 @@ GM_Point::GM_Point(Real x, Real y, Real z)
 
 GM_Point::~GM_Point()
 {
-    delete m_z;
+    //delete m_z; TODO: ned fix memory leackage
 }
 
 bool GM_Point::hasZ() const

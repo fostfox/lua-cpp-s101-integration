@@ -80,7 +80,7 @@ function PortrayalMain(featureIDs)
 			
 			require(feature.Code)
 			_G[feature.Code](feature, featurePortrayal, contextParameters)
-
+			
 			if #featurePortrayal.DrawingInstructions == 0 then
 				error('No drawing instructions were emitted for feature ' .. feature.ID)
 			end
@@ -103,13 +103,13 @@ function PortrayalMain(featureIDs)
 
 		featurePortrayalItem.ObservedContextParameters = contextParameters._observed
 		featurePortrayalItem.InUseContextParameters = contextParameters._asTable
-
+		
 		--Debug.Break()
 
 		local observed = ObservedContextParametersAsString(featurePortrayalItem)
-
+		
 		local drawingInstructions = table.concat(featurePortrayal.DrawingInstructions, ';')
-
+		
 		Debug.StopPerformance('Lua Code - HostPortrayalEmit preparation')
 
 		return HostPortrayalEmit(featurePortrayal.FeatureReference, drawingInstructions, observed)

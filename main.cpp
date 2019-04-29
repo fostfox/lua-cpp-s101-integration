@@ -6,6 +6,7 @@
 #include "ObjectDictCatalogue/Builder/xmlbuilder.h"
 #include "ObjectMapCatalogue/Builder/xmlparser.h"
 #include "LuaPortroyal/LuaRuleMashine.h"
+#include "drawing_instructions_controller.h"
 #include "contextparameter.h"
 
 int main(int argc, char *argv[])
@@ -52,6 +53,7 @@ int main(int argc, char *argv[])
 
     ContexParametrController contextParamCtrl;
 
+
     QString luaMainEntry("../LuaPortroyal/Rules/main.lua");
     if (!QFile::exists(luaMainEntry)) {
         errorStream << QString(
@@ -60,7 +62,21 @@ int main(int argc, char *argv[])
         return -1;
     }
     LuaRuleMashine luaPortoyal(luaMainEntry, dictController, mapController, contextParamCtrl);
-    qDebug() << luaPortoyal.doPortrayal();
+
+
+
+
+    qDebug() << " \n\n--- DO PORTRAYAL STATUS: ---"<< luaPortoyal.doPortrayal();
+
+    auto drawInstCtrl = luaPortoyal.drawController();
+    for (const auto& featureID : mapController.getFeaturesIDs()){
+        std::string featureCode = mapController.getFeatureById(featureID).classAlias();
+        std::string drawInstr = drawInstCtrl.drawInstr(stoi(featureID)).drawingInstruction();
+
+        qDebug() << "Feature : " << QString::fromStdString(featureCode)
+                 << "\n " << QString::fromStdString(drawInstr)
+                 << "\n---------------------------------------";
+    }
 
     //return a.exec();
 }
