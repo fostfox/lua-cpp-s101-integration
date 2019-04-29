@@ -2,7 +2,7 @@
 
 #include <QDebug>
 #include <QFile>
-
+#include <QTextStream>
 #include "ObjectDictCatalogue/Builder/xmlbuilder.h"
 #include "ObjectMapCatalogue/Builder/xmlparser.h"
 #include "LuaPortroyal/LuaRuleMashine.h"
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     QTextStream errorStream(stderr);
     //QCoreApplication a(argc, argv);
 
-    QString mapFileName = "../XMLData/test_dataset_map.xml";
+    QString mapFileName = "../XMLData/dataset_map.xml";
     QFile mapFile(mapFileName);
     if (!QFile::exists(mapFileName)) {
         errorStream << QString(
@@ -68,15 +68,25 @@ int main(int argc, char *argv[])
 
     qDebug() << " \n\n--- DO PORTRAYAL STATUS: ---"<< luaPortoyal.doPortrayal();
 
+    QFile portayalFile("OUTPUT.txt");
+    if(!portayalFile.open(QIODevice::WriteOnly | QIODevice::Text)){
+            errorStream << QString(
+                               "Filed to open file %1.\n"
+                               ).arg("OUTPUT.txt");
+            return -1;
+        }
+    QTextStream out(&portayalFile);
+
     auto drawInstCtrl = luaPortoyal.drawController();
     for (const auto& featureID : mapController.getFeaturesIDs()){
         std::string featureCode = mapController.getFeatureById(featureID).classAlias();
         std::string drawInstr = drawInstCtrl.drawInstr(stoi(featureID)).drawingInstruction();
 
-        qDebug() << "Feature : " << QString::fromStdString(featureCode)
+        out << "Feature : [" << QString::fromStdString(featureID) << "] " << QString::fromStdString(featureCode)
                  << "\n " << QString::fromStdString(drawInstr)
-                 << "\n---------------------------------------";
+                 << "\n---------------------------------------\n";
     }
+    portayalFile.close();
 
     //return a.exec();
 }

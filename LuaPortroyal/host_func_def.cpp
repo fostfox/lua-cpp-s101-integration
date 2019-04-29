@@ -733,7 +733,8 @@ void LuaHostFunc::loadFunctions()
             message = msg.as<string>();
         }
 
-        static int level = 0;
+        //static int level = 0;
+        int level = 0;
         string str;
 
         if ("break" == debugAction){

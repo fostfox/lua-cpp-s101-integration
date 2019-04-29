@@ -31,7 +31,7 @@ function DepthNoBottomFound(feature, featurePortrayal, contextParameters)
 			featurePortrayal:AddInstructions('ViewingGroup:33010;DrawingPriority:6;DisplayPlane:UnderRADAR')
 		end
 		local point = feature.Point
-		error('393933')
+
 		local symbols = SNDFRM04(feature, featurePortrayal, contextParameters, point, point.ScaledZ)
 
 		featurePortrayal:AddInstructions('AugmentedPoint:GeographicCRS,' .. point.X .. ',' .. point.Y)
