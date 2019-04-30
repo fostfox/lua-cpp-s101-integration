@@ -9,7 +9,7 @@
 #include <QVector>
 
 #include <QDebug>
-
+#include <QString>
 #include <algorithm>
 
 #include "ObjectDictCatalogue/Controllers/featurecataloguecontroller.h"
@@ -160,7 +160,7 @@ void LuaHostFunc::loadFunctions()
 
         string featureCode = m_mapObjCtrl.getCodeById(featureID);
         if (!featCtrl.hasInMap(featureCode)){
-            qInfo() << "Passed not feature code (" << QString::fromStdString(featureCode) << ") searching in code aliases";
+            qDebug() << "Passed not feature code (" << QString::fromStdString(featureCode) << ") searching in code aliases";
             // Попробуем найти среди alias'ов
             for (const auto& feature : featCtrl.types()){
                 const auto& featAliases = feature.header().alias();
@@ -764,7 +764,8 @@ void LuaHostFunc::loadFunctions()
             m_isActionState = false;
             throw "Break from LUA";
         } else if ("trace" == debugAction) {
-            //return;
+            qCritical() << QString::fromStdString(str + " " + debugAction + " # " + message);
+            return;
         } else if ("start_performance" == debugAction) {
             str.assign(++level * 5, ' ');
 
@@ -774,11 +775,10 @@ void LuaHostFunc::loadFunctions()
         } else if ("reset_performance" == debugAction) {
 
         } else {
-            throw "Undefined debugger action\n";
+            qWarning() << "Undefined debugger action\n";
         }
 
-        std::cerr << str << debugAction << " # " << message << std::endl;
-
+        std::cerr << str << " " << debugAction << " # " << message << std::endl;
     });
 }
 

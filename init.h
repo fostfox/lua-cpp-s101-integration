@@ -22,7 +22,7 @@ char* getLine(const uint N, char D){
     char* line = new char[N];
     for (uint i = 0; i < N-1; ++i)
         line[i] = D;
-    line[N-1]=0;
+    line[N-1] = 0;
     return line;
 }
 
@@ -42,7 +42,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
         break;
     case QtInfoMsg:  // "is used for informational messages.";
         //fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
-        fprintf(stderr, "%s\nInfo: %s\n", line1, localMsg.constData());
+        fprintf(stderr, "%s\nInfo: %s\n\n", line1, localMsg.constData());
         break;
     case QtWarningMsg:  // "is used to report warnings and recoverable errors in your application.";
         fprintf(stderr, "\n%s\nWarning: %s (%s:%u, %s)\n%s\n", line2, localMsg.constData(), file, context.line, function, line2);
