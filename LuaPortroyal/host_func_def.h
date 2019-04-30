@@ -24,6 +24,7 @@ private:
     DrawingInstructionsController& m_drawInstrCtrl;
 
     bool m_isActionState;
+    int m_currentFeatureId_processFeaturePortrayal = -1;
 
 public:
     LuaHostFunc(sol::state &lua
