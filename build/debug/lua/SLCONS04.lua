@@ -24,7 +24,7 @@ function SLCONS04(feature, featurePortrayal, contextParameters)
 			Debug.StartPerformance('Lua Code - SLCONS04')
 			featurePortrayal:AddSpatialReference(curveAssociation)
 
-			local spatialQuality = curveAssociation:GetInformationAssociation(unpack(sqParams))
+			local spatialQuality = curveAssociation:GetInformationAssociation(table.unpack(sqParams))
 			local qualityOfPosition = spatialQuality and spatialQuality.qualityOfHorizontalMeasurement
 
 			if qualityOfPosition and qualityOfPosition ~=1 and qualityOfPosition ~= 10 and qualityOfPosition ~= 11 then

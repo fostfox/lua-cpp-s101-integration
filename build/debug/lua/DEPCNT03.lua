@@ -42,7 +42,7 @@ function DEPCNT03(feature, featurePortrayal, contextParameters)
 		for curveAssociation in feature:GetFlattenedSpatialAssociations() do
 			--Debug.Break()
 			Debug.StartPerformance('Lua Code - DEPCNT03 GetInformationAssociation')
-			local spatialQuality = curveAssociation:GetInformationAssociation(unpack(sqParams))
+			local spatialQuality = curveAssociation:GetInformationAssociation(table.unpack(sqParams))
 			Debug.StopPerformance('Lua Code - DEPCNT03 GetInformationAssociation')
 			local qualityOfPosition = spatialQuality and spatialQuality.qualityOfHorizontalMeasurement
 
