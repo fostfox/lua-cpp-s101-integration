@@ -7,7 +7,7 @@ portrayalContext = nil
 
 function PortrayalInitializeContextParameters(contextParameters)
 	Debug.StartPerformance('Lua Code - Total')
-	CheckType(contextParameters, 'array:ContextParameter')
+	CheckType(contextParameters, 'array:ContextParameter', 2)
 
 	Debug.StartPerformance('Lua Code - PortrayalInitializeContextParameters')
 
@@ -27,8 +27,8 @@ function PortrayalInitializeContextParameters(contextParameters)
 end
 
 function PortrayalCreateContextParameter(contextParameterName, parameterType, defaultValue)
-	CheckType(contextParameterName, 'string')
-	CheckType(parameterType, 'string')
+	CheckType(contextParameterName, 'string', 2)
+	CheckType(parameterType, 'string', 2)
 
 	if parameterType ~= 'boolean' and parameterType ~= 'integer' and parameterType ~= 'real' and parameterType ~= 'text' and parameterType ~= 'date' then
 		error('Invalid parameter type.')
@@ -39,8 +39,8 @@ end
 
 function PortrayalSetContextParameter(contextParameterName, value)
 	Debug.StartPerformance('Lua Code - Total')
-	CheckType(contextParameterName, 'string')
-	CheckType(value, 'string')
+	CheckType(contextParameterName, 'string', 2)
+	CheckType(value, 'string', 2)
 
 	if not portrayalContext then
 		error('Portrayal context not initialized.')
@@ -255,9 +255,9 @@ end
 --
 
 local function CreateNamedTypeExact(item, abstract, attributeBindings)
-	CheckType(item, 'Item')
-	CheckType(abstract, 'boolean')
-	CheckType(attributeBindings, 'array:AttributeBinding')
+	CheckType(item, 'Item', 2)
+	CheckType(abstract, 'boolean', 2)
+	CheckType(attributeBindings, 'array:AttributeBinding', 2)
 
 	for _, ab in ipairs(attributeBindings) do
 		attributeBindings[ab.AttributeCode] = ab
@@ -283,8 +283,8 @@ end
 --
 
 local function CreateObjectTypeExact(namedType, informationBindings)
-	CheckType(namedType, 'NamedType')
-	CheckType(informationBindings, 'array:InformationBinding')
+	CheckType(namedType, 'NamedType', 2)
+	CheckType(informationBindings, 'array:InformationBinding', 2)
 
 	return DerivedType{ Type = 'ObjectType', Base = namedType, InformationBindings = informationBindings }
 end
@@ -312,9 +312,9 @@ end
 --
 
 local function CreateInformationTypeExact(objectType, superType, subType)
-	CheckType(objectType, 'ObjectType')
-	CheckTypeOrNil(superType, 'InformationType')
-	CheckTypeOrNil(subType, 'array:InformationType')
+	CheckType(objectType, 'ObjectType', 2)
+	CheckTypeOrNil(superType, 'InformationType', 2)
+	CheckTypeOrNil(subType, 'array:InformationType', 2)
 
 	return DerivedType{ Type = 'InformationType', Base = objectType, SuperType = superType, SubType = subType }
 end
@@ -343,12 +343,12 @@ end
 --
 
 local function CreateFeatureTypeExact(objectType, featureUseType, permittedPrimitives, featureBindings, superType, subType)
-	CheckType(objectType, 'ObjectType')
-	CheckType(featureUseType, 'string')
-	CheckType(permittedPrimitives, 'array:string')
-	CheckType(featureBindings, 'array:FeatureBinding')
-	CheckTypeOrNil(superType, 'FeatureType')
-	CheckTypeOrNil(subType, 'array:FeatureType')
+	CheckType(objectType, 'ObjectType', 2)
+	CheckType(featureUseType, 'string', 2)
+	CheckType(permittedPrimitives, 'array:string', 2)
+	CheckType(featureBindings, 'array:FeatureBinding', 2)
+	CheckTypeOrNil(superType, 'FeatureType', 2)
+	CheckTypeOrNil(subType, 'array:FeatureType', 2)
 
 	return DerivedType{ Type = 'FeatureType', Base = objectType, FeatureUseType = featureUseType, PermittedPrimitives = permittedPrimitives, FeatureBindings = featureBindings, SuperType = superType, SubType = subType }
 end
@@ -377,10 +377,10 @@ end
 --
 
 local function CreateInformationAssociationExact(namedType, roles, superType, subType)
-	CheckType(namedType, 'NamedType')
-	CheckType(roles, 'array:Role')
-	CheckTypeOrNil(superType, 'InformationAssociation')
-	CheckTypeOrNil(subType, 'array:InformationAssociation')
+	CheckType(namedType, 'NamedType', 2)
+	CheckType(roles, 'array:Role', 2)
+	CheckTypeOrNil(superType, 'InformationAssociation', 2)
+	CheckTypeOrNil(subType, 'array:InformationAssociation', 2)
 
 	return DerivedType{ Type = 'InformationAssociation', Base = namedType, Roles = roles, SuperType = superType, SubType = subType }
 end
@@ -410,10 +410,10 @@ end
 --
 
 local function CreateFeatureAssociationExact(namedType, roles, superType, subType)
-	CheckType(namedType, 'NamedType')
-	CheckType(roles, 'array:Role')
-	CheckTypeOrNil(superType, 'FeatureAssociation')
-	CheckTypeOrNil(subType, 'array:FeatureAssociation')
+	CheckType(namedType, 'NamedType', 2)
+	CheckType(roles, 'array:Role', 2)
+	CheckTypeOrNil(superType, 'FeatureAssociation', 2)
+	CheckTypeOrNil(subType, 'array:FeatureAssociation', 2)
 
 	return DerivedType{ Type = 'FeatureAssociation', Base = namedType, Roles = roles, SuperType = superType, SubType = subType }
 end
@@ -443,7 +443,7 @@ end
 --
 
 local function CreateRoleExact(item)
-	CheckType(item, 'Item')
+	CheckType(item, 'Item', 2)
 
 	return DerivedType{ Type = 'Role', Base = item }
 end
@@ -465,12 +465,12 @@ end
 --
 
 local function CreateSimpleAttributeExact(item, valueType, uom, quantitySpecification, attributeContraints, listedValues)
-	CheckType(item, 'Item')
-	CheckType(valueType, 'string')
-	CheckTypeOrNil(uom, 'string')
-	CheckTypeOrNil(quantitySpecification, 'string')
-	CheckTypeOrNil(attributeContraints, 'AttributeConstraints')
-	CheckType(listedValues, 'array:ListedValue')
+	CheckType(item, 'Item', 2)
+	CheckType(valueType, 'string', 2)
+	CheckTypeOrNil(uom, 'string', 2)
+	CheckTypeOrNil(quantitySpecification, 'string', 2)
+	CheckTypeOrNil(attributeContraints, 'AttributeConstraints', 2)
+	CheckType(listedValues, 'array:ListedValue', 2)
 
 	return DerivedType{ Type = 'SimpleAttribute', Base = item, ValueType = valueType, Uom = uom, QuantitySpecification = quantitySpecification, AttributeContraints = attributeContraints, ListedValues = listedValues }
 end
@@ -492,8 +492,8 @@ end
 --
 
 local function CreateComplexAttributeExact(item, subAttributeBindings)
-	CheckType(item, 'Item')
-	CheckType(subAttributeBindings, 'array:AttributeBinding')
+	CheckType(item, 'Item', 2)
+	CheckType(subAttributeBindings, 'array:AttributeBinding', 2)
 
 	for _, ab in ipairs(subAttributeBindings) do
 		subAttributeBindings[ab.AttributeCode] = ab
@@ -519,11 +519,11 @@ end
 --
 
 function CreateListedValue(label, definition, code, remarks, aliases)
-	CheckType(label, 'string')
-	CheckType(definition, 'string')
-	CheckType(code, 'number')
-	CheckTypeOrNil(remarks, 'string')
-	CheckTypeOrNil(aliases, 'array:string')
+	CheckType(label, 'string', 2)
+	CheckType(definition, 'string', 2)
+	CheckType(code, 'number', 2)
+	CheckTypeOrNil(remarks, 'string', 2)
+	CheckTypeOrNil(aliases, 'array:string', 2)
 
 	return { Type = 'ListedValue', Label = label, Definition = definition, Code = code, Remarks = remarks, Aliases = aliases }
 end
@@ -533,11 +533,11 @@ end
 --
 
 function CreateAttributeBinding(attributeCode, lowerMultiplicity, upperMultiplicity, sequential, permittedValues)
-	CheckType(attributeCode, 'string')
-	CheckType(lowerMultiplicity, 'number')
-	CheckTypeOrNil(upperMultiplicity, 'number')
-	CheckType(sequential, 'boolean')
-	CheckType(permittedValues, 'array:number')
+	CheckType(attributeCode, 'string', 2)
+	CheckType(lowerMultiplicity, 'number', 2)
+	CheckTypeOrNil(upperMultiplicity, 'number', 2)
+	CheckType(sequential, 'boolean', 2)
+	CheckType(permittedValues, 'array:number', 2)
 
 	return { Type = 'AttributeBinding', AttributeCode = attributeCode, LowerMultiplicity = lowerMultiplicity, UpperMultiplicity = upperMultiplicity, Sequential = sequential, PermittedValues = permittedValues }
 end
@@ -547,12 +547,12 @@ end
 --
 
 function CreateInformationBinding(informationTypeCode, lowerMultiplicity, upperMultiplicity, roleType, role, association)
-	CheckType(informationTypeCode, 'string')
-	CheckType(lowerMultiplicity, 'number')
-	CheckTypeOrNil(upperMultiplicity, 'number')
-	CheckType(roleType, 'string')
-	CheckTypeOrNil(role, 'Role')
-	CheckType(association, 'InformationAssociation')
+	CheckType(informationTypeCode, 'string', 2)
+	CheckType(lowerMultiplicity, 'number', 2)
+	CheckTypeOrNil(upperMultiplicity, 'number', 2)
+	CheckType(roleType, 'string', 2)
+	CheckTypeOrNil(role, 'Role', 2)
+	CheckType(association, 'InformationAssociation', 2)
 
 	return { Type = 'InformationBinding', InformationTypeCode = informationTypeCode, LowerMultiplicity = lowerMultiplicity, UpperMultiplicity = upperMultiplicity, RoleType = roleType, Role = role, Association = association }
 end
@@ -562,12 +562,12 @@ end
 --
 
 function CreateFeatureBinding(featureTypeCode, lowerMultiplicity, upperMultiplicity, roleType, role, association)
-	CheckType(featureTypeCode, 'string')
-	CheckType(lowerMultiplicity, 'number')
-	CheckTypeOrNil(upperMultiplicity, 'number')
-	CheckType(roleType, 'string')
-	CheckType(role, 'Role')
-	CheckType(association, 'FeatureAssociation')
+	CheckType(featureTypeCode, 'string', 2)
+	CheckType(lowerMultiplicity, 'number', 2)
+	CheckTypeOrNil(upperMultiplicity, 'number', 2)
+	CheckType(roleType, 'string', 2)
+	CheckType(role, 'Role', 2)
+	CheckType(association, 'FeatureAssociation', 2)
 
 	return { Type = 'FeatureBinding', FeatureTypeCode = featureTypeCode, LowerMultiplicity = lowerMultiplicity, UpperMultiplicity = upperMultiplicity, RoleType = roleType, Role = role, Association = association }
 end
@@ -581,11 +581,11 @@ local informationCache = {}
 spatialCache = {}
 
 function CreateAttributeBinding(attributeCode, multiplicityLower, multiplicityUpper, sequential, permittedValues)
-	CheckType(attributeCode, 'string')
-	CheckType(multiplicityLower, 'number')
-	CheckTypeOrNil(multiplicityLower, 'number')
-	CheckType(sequential, 'boolean')
-	CheckTypeOrNil(permittedValues, 'array:number')
+	CheckType(attributeCode, 'string', 2)
+	CheckType(multiplicityLower, 'number', 2)
+	CheckTypeOrNil(multiplicityLower, 'number', 2)
+	CheckType(sequential, 'boolean', 2)
+	CheckTypeOrNil(permittedValues, 'array:number', 2)
 
 	return { Type = 'AttributeBinding', AttributeCode = attributeCode, MultiplicityLower = multiplicityLower, MultiplicityUpper = multiplicityUpper, Sequential = sequential, PermittedValues = permittedValues }
 end
@@ -941,10 +941,10 @@ function CreateSpatialAssociation(spatialType, spatialID, orientation, scaleMini
 		orientation = Orientation[orientation]
 	end
 
-	CheckType(spatialType, 'SpatialType')
-	CheckTypeOrNil(orientation, 'Orientation')
-	CheckTypeOrNil(scaleMinimum, 'number')
-	CheckTypeOrNil(scaleMaximum, 'number')
+	CheckType(spatialType, 'SpatialType', 2)
+	CheckTypeOrNil(orientation, 'Orientation', 2)
+	CheckTypeOrNil(scaleMinimum, 'number', 2)
+	CheckTypeOrNil(scaleMaximum, 'number', 2)
 
 	local spatialAssociation = { Type = 'SpatialAssociation', SpatialType = spatialType, SpatialID = spatialID, Orientation = orientation, ScaleMinimum = scaleMinimum, ScaleMaximum = scaleMaximum, InformationAssociations = {} }
 
@@ -958,16 +958,16 @@ function CreateSpatialAssociation(spatialType, spatialID, orientation, scaleMini
 		for _, featureID in ipairs(featureIDs) do
 			self.AssociatedFeatures[#self.AssociatedFeatures + 1] = featureCache[featureID];
 
-			CheckType(featureCache[featureID], 'Feature');
+			CheckType(featureCache[featureID], 'Feature', 2);
 		end
 
 		return self.AssociatedFeatures
 	end
 
 	function spatialAssociation:GetInformationAssociations(associationCode, roleCode)
-		CheckSelf(self, 'SpatialAssociation')
-		CheckType(associationCode, 'string')
-		CheckTypeOrNil(roleCode, 'string')
+		CheckSelf(self, 'SpatialAssociation', 2)
+		CheckType(associationCode, 'string', 2)
+		CheckTypeOrNil(roleCode, 'string', 2)
 
 		local tuple = associationCode .. '|' .. (roleCode or '')
 
@@ -1082,9 +1082,9 @@ end
 function CreatePoint(x, y, z)
 	Debug.StartPerformance('Lua Code - Total')
 
-	CheckType(x, 'string')
-	CheckType(y, 'string')
-	CheckTypeOrNil(z, 'string')
+	CheckType(x, 'string', 2)
+	CheckType(y, 'string', 2)
+	CheckTypeOrNil(z, 'string', 2)
 
 	local point = CreateSpatial(SpatialType.Point, { X = tonumber(x), Y = tonumber(y), Z = tonumber(z), ScaledX = StringToScaledDecimal(x), ScaledY = StringToScaledDecimal(y), ScaledZ = StringToScaledDecimal(z) })
 
@@ -1103,7 +1103,7 @@ end
 function CreateMultiPoint(points)
 	Debug.StartPerformance('Lua Code - Total')
 
-	CheckType(points, 'array:Spatial')
+	CheckType(points, 'array:Spatial', 2)
 
 	local multiPoint = CreateSpatial(SpatialType.MultiPoint, points)
 
@@ -1123,8 +1123,8 @@ function CreateCurveSegment(controlPoints, interpolation)
 		interpolation = Interpolation[interpolation]
 	end
 
-	CheckType(controlPoints, 'array:Spatial')
-	CheckType(interpolation, 'Interpolation')
+	CheckType(controlPoints, 'array:Spatial', 2)
+	CheckType(interpolation, 'Interpolation', 2)
 
 	Debug.StopPerformance('Lua Code - Total')
 
@@ -1134,9 +1134,9 @@ end
 function CreateCurve(startPoint, endPoint, segments)
 	Debug.StartPerformance('Lua Code - Total')
 
-	CheckType(startPoint, 'Spatial')
-	CheckType(endPoint, 'Spatial')
-	CheckTypeOrNil(segments, 'array:CurveSegment')
+	CheckType(startPoint, 'Spatial', 2)
+	CheckType(endPoint, 'Spatial', 2)
+	CheckTypeOrNil(segments, 'array:CurveSegment', 2)
 
 	local curve = CreateSpatial(SpatialType.Curve, { StartPoint = startPoint, EndPoint = endPoint, Segments = segments })
 
@@ -1152,7 +1152,7 @@ end
 function CreateCompositeCurve(curveAssociations)
 	Debug.StartPerformance('Lua Code - Total')
 
-	CheckType(curveAssociations, 'array:SpatialAssociation')
+	CheckType(curveAssociations, 'array:SpatialAssociation', 2)
 
 	local compositeCurve = CreateSpatial(SpatialType.CompositeCurve, curveAssociations)
 
@@ -1166,8 +1166,8 @@ end
 function CreateSurface(exteriorRing, interiorRings)
 	Debug.StartPerformance('Lua Code - Total')
 
-	CheckType(exteriorRing, 'SpatialAssociation')
-	CheckType(interiorRings, 'array:SpatialAssociation')
+	CheckType(exteriorRing, 'SpatialAssociation', 2)
+	CheckType(interiorRings, 'array:SpatialAssociation', 2)
 
 	local surface = CreateSpatial(SpatialType.Surface, { ExteriorRing = exteriorRing, InteriorRings = interiorRings })
 
