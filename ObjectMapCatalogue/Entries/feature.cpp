@@ -231,11 +231,17 @@ void Feature::addComplexAttr(ComplexAttribute attr)
 
 Attribute Feature::getAttributeByCode(std::string code) const
 {
+    if(!m_code_to_attr.count(code)){
+        qFatal(QString("'m_code_to_attr' has no key '%1'").arg(QString::fromStdString(code)).toUtf8());
+    }
     return m_code_to_attr.at(code);
 }
 
 ComplexAttribute Feature::getComplexAttributeByCode(std::string code) const
 {
+    if(!m_code_to_cAttr.count(code)){
+        qFatal(QString("'m_code_to_cAttr' has no key '%1'").arg(QString::fromStdString(code)).toUtf8());
+    }
     return m_code_to_cAttr.at(code);
 }
 
@@ -308,6 +314,9 @@ std::vector<Attribute> ComplexAttribute::attibutes() const
 
 Attribute ComplexAttribute::getAttributeByCode(std::string code) const
 {
+    if(!m_code_to_attr.count(code)){
+        qFatal(QString("'m_code_to_attr' has no key '%1'").arg(QString::fromStdString(code)).toUtf8());
+    }
     return m_code_to_attr.at(code);
 }
 

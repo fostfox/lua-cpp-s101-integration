@@ -43,8 +43,8 @@ void EntityController<FC_T>::addType(const FC_T &ft)
 template<typename FC_T>
 FC_T EntityController<FC_T>::type(const std::string& featureCode) const
 {
-    if (!hasInMap(featureCode)){
-        throw "No element in map";
+    if(!hasInMap(featureCode)){
+        qFatal(QString("'m_codeToPTypeMap' has no key '%1'").arg(QString::fromStdString(featureCode)).toUtf8());
     }
     return m_codeToPTypeMap[featureCode];
 }

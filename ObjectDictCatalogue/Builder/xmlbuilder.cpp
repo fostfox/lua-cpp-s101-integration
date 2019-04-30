@@ -110,7 +110,7 @@ FeatureCatalogueController FeatureCatalogueXMLBuilder::build(QFile* xmlPath)
         }
     }
     if (reader.error()){
-        qDebug() << "Some error: %1" + reader.errorString();
+        qWarning() << "Some error: %1" + reader.errorString();
     }
     return fc_controller;
 }
@@ -123,7 +123,7 @@ bool FeatureCatalogueXMLBuilder::isStartElementAndAllowed(std::string tag)
 void FeatureCatalogueXMLBuilder::printErrorIfHapend()
 {
     if (reader.error()){
-        qDebug() << "Some error: %1" + reader.errorString();
+        qWarning() << "Some error: %1" + reader.errorString();
         //throw "Error";
     }
 }

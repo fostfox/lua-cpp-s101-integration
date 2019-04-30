@@ -98,15 +98,15 @@ sol::table helpCreateRoles(sol::state &lua, const QVector<FC_Role> &roles)
     return luaRoles;
 }
 
-template<typename T>
-sol::table helpLuaTable(sol::state &lua, const std::vector<T> &seq)
-{
-    sol::table luaRoles = lua.create_table();
-    for (const auto &s : seq) {
-        luaRoles.add(s);
-    }
-    return luaRoles;
-}
+//template<typename T>
+//sol::table helpLuaTable(sol::state &lua, const std::vector<T> &seq)
+//{
+//    sol::table luaRoles = lua.create_table();
+//    for (const auto &s : seq) {
+//        luaRoles.add(s);
+//    }
+//    return luaRoles;
+//}
 
 
 bool PortrayalMain(const sol::state &lua, const vector<string> &featureIDs)
@@ -438,3 +438,9 @@ sol::object luaCreateSurface(sol::state &lua, const GM_Surface& ss)
 
 
 
+
+sol::object luaGetUnknownAttributeString(sol::state &lua)
+{
+    return lua["GetUnknownAttributeString"](
+            );
+}

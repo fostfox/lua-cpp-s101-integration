@@ -37,8 +37,17 @@ sol::table helpCreatePointsArray(sol::state &lua, const QVector<GM_Point>& point
 sol::table helpCreateSpatialAssociations(sol::state &lua, const QVector<Fe2spRef> &spatialAssociations);
 sol::table helpCreateRoles(sol::state &lua, const QVector<FC_Role> &roles);
 
-template <typename T>
-sol::table helpLuaTable(sol::state &lua, const std::vector<T> &);
+//template <typename T> // TODO: Почему нельзя шаблон в cpp?
+//sol::table helpLuaTable(sol::state &lua, const std::vector<T> &);
+template<typename T>
+sol::table helpLuaTable(sol::state &lua, const std::vector<T> &seq)
+{
+    sol::table luaRoles = lua.create_table();
+    for (const auto &s : seq) {
+        luaRoles.add(s);
+    }
+    return luaRoles;
+}
 
 //-----------------------------------------------------------------------------
 // 9a-14.1 Portrayal Domain Specific Catalogue Functions
@@ -195,3 +204,10 @@ sol::object luaCreateInformationBinding(const sol::state& lua, const FC_Informat
 sol::object luaCreateFeatureBinding(sol::state &lua, const FC_FeatureBinding *featureBinding);
 
 
+//-----------------------------------------------------------------------------
+// 13-8.1.3 Miscellaneous Functions
+/** The functions described on the following pages do not fall under one of the previously
+ * described functionalities.
+ */
+
+sol::object luaGetUnknownAttributeString(sol::state &lua);
