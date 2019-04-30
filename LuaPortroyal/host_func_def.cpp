@@ -38,6 +38,10 @@ LuaHostFunc::LuaHostFunc(
 
     m_lua["TypeSystemChecks"]("true");
 
+    m_lua.set_function("HostSpecialSetCurrentFeatureId", [&](std::string featureId){  //TODO: Временное решение
+        m_currentFeatureId_processFeaturePortrayal = stoi(featureId);
+    });
+
 }
 
 bool LuaHostFunc::doPortrayal()
@@ -766,14 +770,21 @@ void LuaHostFunc::loadFunctions()
             m_isActionState = false;
             throw "Break from LUA";
         } else if ("trace" == debugAction) {
-            qCritical() << QString::fromStdString(str + " " + debugAction + " # " + message);
+            qCritical() << QString::fromStdString("currentFeatureId_processFeaturePortrayal: "
+                                                  + std::to_string(m_currentFeatureId_processFeaturePortrayal)
+                                                  + " "
+                                                  + str
+                                                  + " "
+                                                  + debugAction
+                                                  + " # "
+                                                  + message);
             return;
         } else if ("start_performance" == debugAction) {
             str.assign(++level * 5, ' ');
-
+            return;
         } else if ("stop_performance" == debugAction) {
             str.assign(level-- * 5, ' ');
-
+            return;
         } else if ("reset_performance" == debugAction) {
 
         } else {
