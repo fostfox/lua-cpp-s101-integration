@@ -40,6 +40,6 @@ function DepthNoBottomFound(feature, featurePortrayal, contextParameters)
 			featurePortrayal:AddInstructions('PointInstruction:' .. symbol)
 		end
 	else
-		error('Invalid primitive type or mariner settings passed to portrayal'..feature.PrimitiveType.Name)
+		error('Invalid primitive type or mariner settings passed to portrayal')
 	end
 end

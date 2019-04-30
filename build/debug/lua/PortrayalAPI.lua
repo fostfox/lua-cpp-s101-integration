@@ -20,9 +20,6 @@ function PortrayalInitializeContextParameters(contextParameters)
 	for _, cp in ipairs(contextParameters) do
 		pccp[cp.Name] = cp.DefaultValue
 		pccp._parameterTypes[cp.Name] = cp.ParameterType
-		Debug.Trace(cp.Name)
-		Debug.Trace(cp.DefaultValue)
-		Debug.Trace(cp.ParameterType)
 	end
 
 	Debug.StopPerformance('Lua Code - PortrayalInitializeContextParameters')
@@ -59,7 +56,6 @@ end
 local nilAttribute = {}
 
 local function LookupAttributeValue(container, attributeCode, HostGetSimpleAttribute, HostGetComplexAttributeCount)
-	Debug.Trace("LookupAttributeValue")
 	local attributeMetatable =
 	{
 		__index = function (container, attributeCode)
@@ -161,16 +157,14 @@ local function LookupAttributeValue(container, attributeCode, HostGetSimpleAttri
 			container[attributeCode] = values
 		end
 	else
-		Debug.Trace(HostGetSimpleAttribute == nil)
-		Debug.StopPerformance('Lua Code - Total - HostGetSimpleAttribute')
+		Debug.StopPerformance('Lua Code - Total')
 		local values = HostGetSimpleAttribute(container.ID, attributePath, attributeCode)
-		Debug.StartPerformance('Lua Code - Total - HostGetSimpleAttribute')
+		Debug.StartPerformance('Lua Code - Total')
 
 		--Debug.Break()
 
 		if containerTypeInfo.AttributeBindings[attributeCode].MultiplicityUpper == 1 then
 			-- Single valued
-			Debug.Trace("Single valued")
 			local value = ConvertEncodedValue(simpleAttributeTypeInfo.ValueType, values[1])
 
 			container['@' .. attributeCode] = value
@@ -182,7 +176,6 @@ local function LookupAttributeValue(container, attributeCode, HostGetSimpleAttri
 			container[attributeCode] = value
 			container['!' .. attributeCode] = value
 		else
-			Debug.Trace("Array")
 			-- Array
 			local convertedValues = {}
 
@@ -253,13 +246,6 @@ function CreateItem(code, name, definition, remarks, alias)
 	CheckType(definition, 'string')
 	CheckTypeOrNil(remarks, 'string')
 	CheckTypeOrNil(alias, 'array:string')
-	Debug.Trace("CreateItem")
-	Debug.Trace(code)
-	Debug.Trace(name)
-	Debug.Trace(definition)
-	Debug.Trace(remarks)
-	Debug.Trace(alias[1])
-	Debug.Trace("###")
 
 	return { Type = 'Item', Code = code, Name = name, Definition = definition, Remarks = remarks, Alias  = alias }
 end
@@ -272,50 +258,38 @@ local function CreateNamedTypeExact(item, abstract, attributeBindings)
 	CheckType(item, 'Item')
 	CheckType(abstract, 'boolean')
 	CheckType(attributeBindings, 'array:AttributeBinding')
-	Debug.Trace("CreateNamedTypeExact")
-	Debug.Trace(item.Code)
-	Debug.Trace(abstract)
-	Debug.Trace(#attributeBindings)
-	--Debug.Trace(attributeBindings[1].AttributeCode)
-	Debug.Trace("###")
 
 	for _, ab in ipairs(attributeBindings) do
 		attributeBindings[ab.AttributeCode] = ab
-		Debug.Trace(ab.AttributeCode)
 	end
 
 	return DerivedType{ Type = 'NamedType', Base = item, Abstract = abstract, AttributeBindings = attributeBindings }
 end
 
 function CreateNamedType(...)
-	Debug.Trace("CreateNamedType")
 	local params = {...}
 
 	local ptype = type(params[1])
+
 	if ptype == 'table' then
-		return CreateNamedTypeExact(table.unpack(params, 1, 3))
+		return CreateNamedTypeExact(unpack(params, 1, 3))
 	else
-		return CreateNamedTypeExact(CreateItem(table.unpack(params, 1, 5)), table.unpack(params, 6, 7))
+		return CreateNamedTypeExact(CreateItem(unpack(params, 1, 5)), unpack(params, 6, 7))
 	end
 end
-
 
 --
 --
 --
 
 local function CreateObjectTypeExact(namedType, informationBindings)
-	Debug.Trace("CreateObjectTypeExact")
 	CheckType(namedType, 'NamedType')
 	CheckType(informationBindings, 'array:InformationBinding')
-	Debug.Trace(namedType.Base.Code)
-	Debug.Trace(#informationBindings)
-	Debug.Trace("###")
+
 	return DerivedType{ Type = 'ObjectType', Base = namedType, InformationBindings = informationBindings }
 end
 
 function CreateObjectType(...)
-	Debug.Trace("CreateObjectType")
 	local params = {...}
 
 	local ptype = type(params[1])
@@ -324,12 +298,12 @@ function CreateObjectType(...)
 		local ttype = params[1].Type
 
 		if ttype == 'NamedType' then
-			return CreateObjectTypeExact(table.unpack(params, 1, 2))
+			return CreateObjectTypeExact(unpack(params, 1, 2))
 		else -- should be Item.  Checked in CreateNamedType call.
-			return CreateObjectTypeExact(CreateNamedType(table.unpack(params, 1, 3)), table.unpack(params, 4, 4))
+			return CreateObjectTypeExact(CreateNamedType(unpack(params, 1, 3)), unpack(params, 4, 4))
 		end
 	else
-		return CreateObjectTypeExact(CreateNamedType(table.unpack(params, 1, 7)), table.unpack(params, 8, 8))
+		return CreateObjectTypeExact(CreateNamedType(unpack(params, 1, 7)), unpack(params, 8, 8))
 	end
 end
 
@@ -368,26 +342,17 @@ end
 --
 
 local function CreateFeatureTypeExact(objectType, featureUseType, permittedPrimitives, featureBindings, superType, subType)
-	Debug.Trace("CreateFeatureType")
 	CheckType(objectType, 'ObjectType')
 	CheckType(featureUseType, 'string')
 	CheckType(permittedPrimitives, 'array:string')
 	CheckType(featureBindings, 'array:FeatureBinding')
 	CheckTypeOrNil(superType, 'FeatureType')
 	CheckTypeOrNil(subType, 'array:FeatureType')
-	Debug.Trace(objectType.Base.Base.Code)
-	Debug.Trace(featureUseType)
-	Debug.Trace(permittedPrimitives[1])
-	Debug.Trace(#featureBindings)
-	Debug.Trace(superType == nil)
-	Debug.Trace(subType == nil)
-	Debug.Trace("###")
 
 	return DerivedType{ Type = 'FeatureType', Base = objectType, FeatureUseType = featureUseType, PermittedPrimitives = permittedPrimitives, FeatureBindings = featureBindings, SuperType = superType, SubType = subType }
 end
 
 function CreateFeatureType(...)
-	
 	local params = {...}
 
 	local ptype = type(params[1])
@@ -396,12 +361,12 @@ function CreateFeatureType(...)
 		local ttype = params[1].Type
 
 		if ttype == 'ObjectType' then
-			return CreateFeatureTypeExact(table.unpack(params, 1, 6))
+			return CreateFeatureTypeExact(unpack(params, 1, 6))
 		else
 			Debug.Break()
 		end
 	else
-		return CreateFeatureTypeExact(CreateObjectType(table.unpack(params, 1, 8)), table.unpack(params, 9, 13))
+		return CreateFeatureTypeExact(CreateObjectType(unpack(params, 1, 8)), unpack(params, 9, 13))
 	end
 end
 
@@ -442,18 +407,15 @@ end
 --
 
 local function CreateFeatureAssociationExact(namedType, roles, superType, subType)
-	Debug.Trace("CreateFeatureAssociationExact")
 	CheckType(namedType, 'NamedType')
 	CheckType(roles, 'array:Role')
 	CheckTypeOrNil(superType, 'FeatureAssociation')
 	CheckTypeOrNil(subType, 'array:FeatureAssociation')
-	Debug.Trace("CreateFeatureAssociationExact -- end checks")
 
 	return DerivedType{ Type = 'FeatureAssociation', Base = namedType, Roles = roles, SuperType = superType, SubType = subType }
 end
 
 function CreateFeatureAssociation(...)
-	Debug.Trace("CreateFeatureAssociation")
 	local params = {...}
 
 	local ptype = type(params[1])
@@ -462,13 +424,13 @@ function CreateFeatureAssociation(...)
 		local ttype = params[1].Type
 
 		if ttype == 'NamedType' then
-			--Debug.Break()
-			return CreateFeatureAssociationExact(table.unpack(params, 1, 4))
+			Debug.Break()
+			return CreateFeatureAssociationExact(unpack(params, 1, 4))
 		else
 			Debug.Break()
 		end
 	else
-		return CreateFeatureAssociationExact(CreateNamedType(table.unpack(params, 1, 7)), table.unpack(params, 8, 10))
+		return CreateFeatureAssociationExact(CreateNamedType(unpack(params, 1, 7)), unpack(params, 8, 10))
 	end
 end
 
@@ -506,16 +468,6 @@ local function CreateSimpleAttributeExact(item, valueType, uom, quantitySpecific
 	CheckTypeOrNil(attributeContraints, 'AttributeConstraints')
 	CheckType(listedValues, 'array:ListedValue')
 
-	Debug.Trace("CreateSimpleAttributeExact")
-	Debug.Trace(item.Code)
-	Debug.Trace(valueType)
-	Debug.Trace(uom)
-	Debug.Trace(quantitySpecification)
-	Debug.Trace(attributeContraints == nil)
-	--Debug.Trace(listedValues[1].Code)
-	Debug.Trace(#listedValues)
-	Debug.Trace("######################################################")
-
 	return DerivedType{ Type = 'SimpleAttribute', Base = item, ValueType = valueType, Uom = uom, QuantitySpecification = quantitySpecification, AttributeContraints = attributeContraints, ListedValues = listedValues }
 end
 
@@ -525,9 +477,9 @@ function CreateSimpleAttribute(...)
 	local ptype = type(params[1])
 
 	if ptype == 'table' then
-		return CreateSimpleAttributeExact(table.unpack(params, 1, 6))
+		return CreateSimpleAttributeExact(unpack(params, 1, 6))
 	else
-		return CreateSimpleAttributeExact(CreateItem(table.unpack(params, 1, 5)), table.unpack(params, 6, 10))
+		return CreateSimpleAttributeExact(CreateItem(unpack(params, 1, 5)), unpack(params, 6, 10))
 	end
 end
 
@@ -563,22 +515,11 @@ end
 --
 
 function CreateListedValue(label, definition, code, remarks, aliases)
-	Debug.Trace("CreateListedValue")
 	CheckType(label, 'string')
-	Debug.Trace("ok label")
 	CheckType(definition, 'string')
-	Debug.Trace("ok definition")
 	CheckType(code, 'number')
-	Debug.Trace("ok code")
 	CheckTypeOrNil(remarks, 'string')
-	Debug.Trace("CheckTypeOrNil(aliases, 'array:string')")
 	CheckTypeOrNil(aliases, 'array:string')
-	Debug.Trace(label)
-	Debug.Trace(definition)
-	Debug.Trace(code)
-	Debug.Trace(remarks)
-	Debug.Trace(aliases[1])
-	Debug.Trace("###")
 
 	return { Type = 'ListedValue', Label = label, Definition = definition, Code = code, Remarks = remarks, Aliases = aliases }
 end
@@ -588,12 +529,10 @@ end
 --
 
 function CreateAttributeBinding(attributeCode, lowerMultiplicity, upperMultiplicity, sequential, permittedValues)
-	Debug.Trace("CreateAttributeBinding")
 	CheckType(attributeCode, 'string')
 	CheckType(lowerMultiplicity, 'number')
 	CheckTypeOrNil(upperMultiplicity, 'number')
 	CheckType(sequential, 'boolean')
-	Debug.Trace("CheckType(permittedValues, 'array:number')")
 	CheckType(permittedValues, 'array:number')
 
 	return { Type = 'AttributeBinding', AttributeCode = attributeCode, LowerMultiplicity = lowerMultiplicity, UpperMultiplicity = upperMultiplicity, Sequential = sequential, PermittedValues = permittedValues }
@@ -638,28 +577,20 @@ local informationCache = {}
 spatialCache = {}
 
 function CreateAttributeBinding(attributeCode, multiplicityLower, multiplicityUpper, sequential, permittedValues)
-	Debug.Trace("CreateAttributeBinding")
 	CheckType(attributeCode, 'string')
 	CheckType(multiplicityLower, 'number')
 	CheckTypeOrNil(multiplicityLower, 'number')
 	CheckType(sequential, 'boolean')
-	Debug.Trace("CheckTypeOrNil(permittedValues, 'array:number')")
 	CheckTypeOrNil(permittedValues, 'array:number')
-	Debug.Trace(attributeCode)
-	Debug.Trace(multiplicityLower)
-	Debug.Trace(multiplicityUpper)
-	Debug.Trace(sequential)
-	Debug.Trace(permittedValues[1])
-	Debug.Trace("###")
+
 	return { Type = 'AttributeBinding', AttributeCode = attributeCode, MultiplicityLower = multiplicityLower, MultiplicityUpper = multiplicityUpper, Sequential = sequential, PermittedValues = permittedValues }
 end
 
 function CreateFeature(featureID, featureCode)
-	Debug.StartPerformance('Lua Code - Total - CreateFeature')
+	Debug.StartPerformance('Lua Code - Total')
 	local featureMetatable =
 	{
 		__index = function (t, k)
-			Debug.Trace("### Feature:__index: "..tostring(t).." "..tostring(k))
 			if k == 'Spatial' or k == 'Point' or k == 'MultiPoint' or k == 'Curve' or k == 'CompositeCurve' or k == 'Surface' then
 				local spatial = t:GetSpatial()
 
@@ -668,9 +599,6 @@ function CreateFeature(featureID, featureCode)
 				--end
 
 				if k == 'Spatial' or spatial.SpatialType.Name == k then
-					Debug.Trace("----------------------")
-					Debug.Trace(spatial.SpatialType.Name)
-					Debug.Trace("----------------------")
 					return spatial
 				end
 			elseif k == 'PrimitiveType' then
@@ -688,10 +616,6 @@ function CreateFeature(featureID, featureCode)
 						pt = PrimitiveType.Surface
 					end
 				end
-
-				Debug.Trace(sa)
-				--Debug.Trace(sa.SpatialType.Name)
-				Debug.Trace("#########")
 				
 				t['PrimitiveType'] = pt
 
@@ -753,8 +677,6 @@ function CreateFeature(featureID, featureCode)
 		CheckType(associationCode, 'string')
 		CheckTypeOrNil(roleCode, 'string')
 		CheckTypeOrNil(informationTypeCode, 'string')
-
-		Debug.Trace('GetInformationAssociation')
 
 		local ias = self:GetInformationAssociations(associationCode, roleCode)
 		
@@ -825,10 +747,9 @@ function CreateFeature(featureID, featureCode)
 		CheckSelf(self, 'Feature')
 
 		local sas = rawget(self, 'SpatialAssociations')
-		Debug.Trace(sas)
-		Debug.StopPerformance('Lua Code - Total')
-		sas = sas or HostFeatureGetSpatialAssociations(self.ID)  
 
+		Debug.StopPerformance('Lua Code - Total')
+		sas = sas or HostFeatureGetSpatialAssociations(self.ID)
 		Debug.StartPerformance('Lua Code - Total')
 
 		self['SpatialAssociations'] = sas
@@ -927,7 +848,7 @@ function CreateFeature(featureID, featureCode)
 
 	setmetatable(feature, featureMetatable)
 	
-	Debug.StopPerformance('Lua Code - Total - CreateFeature')
+	Debug.StopPerformance('Lua Code - Total')
 
 	return feature
 end
@@ -969,9 +890,7 @@ end
 
 function CreateSpatialAssociation(spatialType, spatialID, orientation, scaleMinimum, scaleMaximum)
 	Debug.StartPerformance('Lua Code - Total')
-	Debug.Trace("CreateSpatialAssociation")
-	Debug.Trace(spatialType)
-	Debug.Trace("###")
+
 	local spatialAssociationMetatable =
 	{
 		__index = function (t, k)
@@ -1158,8 +1077,6 @@ end
 
 function CreatePoint(x, y, z)
 	Debug.StartPerformance('Lua Code - Total')
-
-	Debug.Trace(type(x))
 
 	CheckType(x, 'string')
 	CheckType(y, 'string')
