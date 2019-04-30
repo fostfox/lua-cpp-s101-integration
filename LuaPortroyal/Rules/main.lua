@@ -116,6 +116,7 @@ function PortrayalMain(featureIDs)
 
 	if featureIDs then
 		for _,  featureID in ipairs(featureIDs) do
+			Debug.Trace("FEATURE_ID:"..featureID)
 			if not ProcessFeaturePortrayalItem(featurePortrayalItems[featureID]) then
 				return false
 			end
