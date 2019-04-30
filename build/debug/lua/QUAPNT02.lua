@@ -5,7 +5,7 @@ function QUAPNT02(feature, featurePortrayal, contextParameters)
 	Debug.StartPerformance('Lua Code - QUAPNT02')
 
 	for spatialAssociation in feature:GetFlattenedSpatialAssociations() do
-		local spatialQuality = spatialAssociation:GetInformationAssociation(unpack(sqParams))
+		local spatialQuality = spatialAssociation:GetInformationAssociation(table.unpack(sqParams))
 		local qualityOfPosition = spatialQuality and spatialQuality.qualityOfHorizontalMeasurement
 
 		if qualityOfPosition and qualityOfPosition >= 2 and qualityOfPosition <= 9 then

@@ -14,6 +14,8 @@ LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_mingw6" -llua53
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
+#DEFINES    += QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT QT_NO_DEBUG_STREAM
+#CONFIG      += warn_off
 
 SOURCES += \
     LuaPortroyal/host_func_def.cpp \
@@ -90,4 +92,5 @@ HEADERS += \
     Geometry/gm_multipoint.h \
     Geometry/gm_curvesegment.h \
     Geometry/gm_compositecurve.h \
-    Geometry/gm_surface.h
+    Geometry/gm_surface.h \
+    init.h

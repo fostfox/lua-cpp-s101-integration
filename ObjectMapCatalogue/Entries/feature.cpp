@@ -231,12 +231,28 @@ void Feature::addComplexAttr(ComplexAttribute attr)
 
 Attribute Feature::getAttributeByCode(std::string code) const
 {
+    if(!m_code_to_attr.count(code)){
+        qFatal(QString("'m_code_to_attr' has no key '%1'").arg(QString::fromStdString(code)).toUtf8());
+    }
     return m_code_to_attr.at(code);
 }
 
 ComplexAttribute Feature::getComplexAttributeByCode(std::string code) const
 {
+    if(!m_code_to_cAttr.count(code)){
+        qFatal(QString("'m_code_to_cAttr' has no key '%1'").arg(QString::fromStdString(code)).toUtf8());
+    }
     return m_code_to_cAttr.at(code);
+}
+
+bool Feature::hasComplexAttribute(std::string code) const
+{
+    return m_code_to_cAttr.count(code) != 0;
+}
+
+bool Feature::hasSimpleAttribute(std::string code) const
+{
+    return m_code_to_attr.count(code) != 0;
 }
 
 Fe2spRef Feature::fe2spRef() const
@@ -298,6 +314,9 @@ std::vector<Attribute> ComplexAttribute::attibutes() const
 
 Attribute ComplexAttribute::getAttributeByCode(std::string code) const
 {
+    if(!m_code_to_attr.count(code)){
+        qFatal(QString("'m_code_to_attr' has no key '%1'").arg(QString::fromStdString(code)).toUtf8());
+    }
     return m_code_to_attr.at(code);
 }
 
@@ -315,4 +334,9 @@ void ComplexAttribute::addAttribute(Attribute attr)
 {
     m_attrs.push_back(attr);
     m_code_to_attr.insert(std::make_pair(attr.alias(), attr));
+}
+
+bool ComplexAttribute::hasAttribute(std::string code) const
+{
+    return m_code_to_attr.count(code) != 0;
 }

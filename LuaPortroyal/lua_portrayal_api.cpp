@@ -88,6 +88,27 @@ sol::table helpCreateSpatialAssociations(sol::state &lua, const QVector<Fe2spRef
 }
 
 
+sol::table helpCreateRoles(sol::state &lua, const QVector<FC_Role> &roles)
+{
+    sol::table luaRoles = lua.create_table();
+    for (const auto &role : roles){ //TODO:: получение реальных ролей, а не кодов
+        auto luaRole = luaCreateRole(lua, &role);
+        luaRoles.add(luaRole);
+    }
+    return luaRoles;
+}
+
+//template<typename T>
+//sol::table helpLuaTable(sol::state &lua, const std::vector<T> &seq)
+//{
+//    sol::table luaRoles = lua.create_table();
+//    for (const auto &s : seq) {
+//        luaRoles.add(s);
+//    }
+//    return luaRoles;
+//}
+
+
 bool PortrayalMain(const sol::state &lua, const vector<string> &featureIDs)
 {
    auto isSuccessPortrayal = lua["PortrayalMain"](featureIDs);
@@ -116,28 +137,35 @@ sol::object PortrayalCreateContextParameter(const sol::state &lua, const Context
     return luaContextParameter;
 }
 
-sol::object luaCreateItem(const sol::state &lua, const FC_Item *item)
+sol::object luaCreateItem(sol::state &lua, const FC_Item *item)
 {
+    auto luaaAliases = helpLuaTable(lua, item->alias());  //TODO: Need to Improve
+
     sol::object luaItem = lua["CreateItem"](
                 item->code(),
                 item->name(),
                 item->defenition(),
                 item->remarks(),
-                item->alias()
+                luaaAliases
                 );
     return luaItem;
 }
 
-sol::object luaCreateAttributeBinding(const sol::state &lua, const FC_AttributeBinding *attrBind)
+sol::object luaCreateAttributeBinding(sol::state &lua, const FC_AttributeBinding *attrBind)
 {
-       sol::object luaAttributeBinding = lua["CreateAttributeBinding"](
-                   attrBind->attributeCode(),
-                   attrBind->multiplicity().lower,
-                   createUpperMuliplicity(lua, attrBind->multiplicity().upper),
-                   attrBind->sequentional(),
-                   attrBind->permittedValues()
-                   );
-       return luaAttributeBinding;
+    sol::table permittedValues = lua.create_table();
+    for (const auto& pValue : attrBind->permittedValues()){
+        permittedValues.add(pValue);
+    }
+
+    sol::object luaAttributeBinding = lua["CreateAttributeBinding"](
+                attrBind->attributeCode(),
+                attrBind->multiplicity().lower,
+                createUpperMuliplicity(lua, attrBind->multiplicity().upper),
+                attrBind->sequentional(),
+                permittedValues
+                );
+    return luaAttributeBinding;
 }
 
 sol::object luaCreateNamedType(const sol::state &lua, const sol::object &luaItem, const sol::table& luaAttributeBindingArr)
@@ -172,49 +200,43 @@ sol::object luaCreateObjectType(const sol::state& lua, const sol::object& LuaNam
     return luaObjectType;
 }
 
-sol::object luaCreateFeatureBinding(const sol::state &lua, const FC_FeatureBinding *fb)
+sol::object luaCreateFeatureBinding(sol::state &lua, const FC_FeatureBinding *fb)
 {
-//    sol::object luaRole = luaCreateRole(lua, fb.role());//TODO:: получение реальных ролей, а не кодов
-//    sol::object luaFeatureAss = luaCreateFeatureAssociation(lua, fb.association());//TODO:: получение реальных ролей, а не кодов
+    sol::object luaRole = luaCreateRole(lua, &fb->roleRef());//TODO:: получение реальных ролей, а не кодов
+    sol::object luaFeatureAss = luaCreateFeatureAssociation(lua, &fb->associationRef());//TODO:: получение реальных ролей, а не кодов
 
-//    sol::object luaObjectType = lua["CreateFeatureBinding"](
-//                fb.featureType().toStdString(),
-//                fb.multiplicity().lower,
-//                createUpperMuliplicity(lua, fb.multiplicity().upper),
-//                fb.roleType().toQString().toStdString(),
-//                luaRole,
-//                luaFeatureAss
-//                );
-//        return luaObjectType;
-    throw ;
-        return sol::object();
+    //sol::table
+
+    sol::object luaFeatureBinding = lua["CreateFeatureBinding"](
+                fb->featureType(),
+                fb->multiplicity().lower,
+                createUpperMuliplicity(lua, fb->multiplicity().upper),
+                fb->roleType().toQString(),
+                luaRole,
+                luaFeatureAss
+                );
+        return luaFeatureBinding;
 }
 
 
-sol::object luaCreateFeatureAssociation(const sol::state &lua, const FC_FeatureAssociation *featureAssocoation)
+sol::object luaCreateFeatureAssociation(sol::state &lua, const FC_FeatureAssociation *featureAssocoation)
 {
-//    auto luaItem = luaCreateItem(lua, featureAssocoation.header());
-//    auto luaNamedType = luaCreateNamedType(lua, luaItem);
+    auto item = featureAssocoation->header();
+    auto luaItem = luaCreateItem(lua, &item);
+    auto luaNamedType = luaCreateNamedType(lua, luaItem, lua.create_table()); // TODO: temorary create empy table
 
-//    vector<sol::object> luaRoles;
-//    luaRoles.reserve(featureAssocoation.role().size());
-//    for (const auto &role : featureAssocoation.role()){ //TODO:: получение реальных ролей, а не кодов
-//        auto luaRole = luaCreateRole(lua, role);
-//        luaRoles.push_back(luaRole)
-//    }
+    sol::table luaRoles = helpCreateRoles(lua, featureAssocoation->roleRefs());
 
-//    auto luaFeatureAss = lua["CreateFeatureAssociation"](
-//                luaNamedType,
-//                luaRoles,
-//                sol::nil, //TODO superType
-//                sol::nil // TODO: subType
-//                );
-//    return luaFeatureAss;
-    throw ;
-        return sol::object();
+    auto luaFeatureAss = lua["CreateFeatureAssociation"](
+                luaNamedType,
+                luaRoles,
+                sol::nil, //TODO superType
+                sol::nil // TODO: subType
+                );
+    return luaFeatureAss;
 }
 
-sol::object luaCreateRole(const sol::state &lua, const FC_Role *role)
+sol::object luaCreateRole(sol::state &lua, const FC_Role *role)
 {
     auto luaItem = luaCreateItem(lua, &role->header());
     auto luaRole = lua["CreateRole"](
@@ -223,7 +245,7 @@ sol::object luaCreateRole(const sol::state &lua, const FC_Role *role)
     return luaRole;
 }
 
-sol::object luaCreateInformationType(const sol::state &lua, sol::object luaObjectType, sol::object luaSuperType, std::vector<sol::object> luaSubTypes)
+sol::object luaCreateInformationType(const sol::state &lua, sol::object luaObjectType, sol::object luaSuperType, sol::table luaSubTypes)
 {
     auto infType = lua["CreateInformationType"](
                 luaObjectType,
@@ -254,27 +276,28 @@ sol::object luaCreateSimpleAttribute(sol::state &lua, const FC_SimpleAttribute *
     return simplAttr;
 }
 
-sol::object luaCreateListedValue(const sol::state &lua, const FC_ListedValue *lv)
+sol::object luaCreateListedValue(sol::state &lua, const FC_ListedValue *lv)
 {
+    sol::object remarks = lv->remarks().empty()
+            ? sol::nil
+            : sol::make_object(lua, lv->remarks()[0]);
+    sol::table alias = helpLuaTable(lua, lv->alias());  // TODO; нужно улучшить
+
     sol::object luaListedValue = lua["CreateListedValue"](
                 lv->label(),
                 lv->defenition(),
                 lv->code(),
-                lv->remarks(),
-                lv->alias()
+                remarks,
+                alias
                 );
     return luaListedValue;
 }
 
-sol::object luaCreateComplexAttribute(const sol::state &lua, const FC_ComplexAttribute *ca)
+sol::object luaCreateComplexAttribute(sol::state &lua, const FC_ComplexAttribute *ca)
 {
     auto luaItem = luaCreateItem(lua, &ca->header());
 
-    vector<sol::object> subAttributeBindings;
-    for (const auto& attrBind : ca->attributeBindings()){
-        sol::object attrsBind = luaCreateAttributeBinding(lua, &attrBind);
-        subAttributeBindings.push_back(attrsBind);
-    }
+    sol::table subAttributeBindings = helpCreateAttributeBindings(lua, ca->attributeBindings());
 
     auto complAttr = lua["CreateComplexAttribute"](
                 luaItem,
@@ -285,8 +308,8 @@ sol::object luaCreateComplexAttribute(const sol::state &lua, const FC_ComplexAtt
 
 
 
-sol::table luaCreateFeatureType(const sol::state &lua, const sol::object &luaObjectType, const std::string &featureUseType, const std::vector<std::string> &permittedPrimitives, const sol::table &luaFeatureBindings, sol::object luaSuperType, sol::table luaSubType)
-{
+sol::table luaCreateFeatureType(const sol::state &lua, const sol::object &luaObjectType, const std::string &featureUseType, const sol::table &permittedPrimitives, const sol::table &luaFeatureBindings, sol::object luaSuperType, sol::table luaSubType)
+{    
     sol::table featureType = lua["CreateFeatureType"](
                 luaObjectType,
                 featureUseType,
@@ -319,7 +342,7 @@ sol::object luaCreateSpatialAssociation(const sol::state &lua, const Fe2spRef &s
     switch (spAssociation.orientation()) {
     case 1: orient = "Forward"; break;
     case 2: orient = "Forward"; break;
-    case 255: spType = "Reverse"; break;
+    case 255: orient = "Reverse"; break;
     default:
         throw "Unsupported Spatial orientation (orientation)";
     }
@@ -398,14 +421,24 @@ sol::object luaCreateCompositeCurve(sol::state &lua, const GM_CompositeCurve& cc
 
 sol::object luaCreateSurface(sol::state &lua, const GM_Surface& ss)
 {
-    sol::table lueInteriorRings = ss.hasInteriorRings()
+    auto exteriorRing = luaCreateSpatialAssociation(lua, ss.exteriorRing());
+
+    auto lueInteriorRings = ss.hasInteriorRings()
             ? helpCreateSpatialAssociations(lua, ss.interiorRings())
             : sol::nil;
 
     sol::object luaPoint  = lua["CreateSurface"] (
-                ss.exteriorRing(),
+                exteriorRing,
                 lueInteriorRings
                 );
     return luaPoint;
 }
 
+
+
+
+sol::object luaGetUnknownAttributeString(sol::state &lua)
+{
+    return lua["GetUnknownAttributeString"](
+            );
+}

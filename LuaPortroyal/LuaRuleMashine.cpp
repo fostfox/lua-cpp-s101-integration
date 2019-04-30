@@ -35,8 +35,8 @@ LuaRuleMashine::LuaRuleMashine(
                 sol::lib::io,
                 sol::lib::table
                 );
-    m_lua->script_file(fileNameEntryPoint.toStdString());
 
+    m_lua->script_file(fileNameEntryPoint.toStdString());
     m_luaHostFunc = new LuaHostFunc(*m_lua, m_dictObjCtrl, m_mapObjCtrl, m_contParamCtrl, *m_drawController);
 }
 

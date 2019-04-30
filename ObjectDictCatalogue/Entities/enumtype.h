@@ -81,11 +81,17 @@ void EnumType<Type>::initEnumToStrMap()
 template<typename Type>
 std::string EnumType<Type>::toQString(Type t) const
 {
+    if(!m_enumToStrMap.contains(t)){
+        qFatal("'m_enumToStrMap' has no key 't'");
+    }
     return m_enumToStrMap[t];
 }
 
 template<typename Type>
 Type EnumType<Type>::toEnum(const std::string &t) const
 {
+    if(!m_qstrToEnumMap.contains(t)){
+        qFatal(QString("'m_enumToStrMap' has no key '%1'").arg(QString::fromStdString(t)).toUtf8());
+    }
     return m_qstrToEnumMap[t];
 }

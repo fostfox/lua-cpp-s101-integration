@@ -110,7 +110,7 @@ FeatureCatalogueController FeatureCatalogueXMLBuilder::build(QFile* xmlPath)
         }
     }
     if (reader.error()){
-        qDebug() << "Some error: %1" + reader.errorString();
+        qWarning() << "Some error: %1" + reader.errorString();
     }
     return fc_controller;
 }
@@ -123,7 +123,7 @@ bool FeatureCatalogueXMLBuilder::isStartElementAndAllowed(std::string tag)
 void FeatureCatalogueXMLBuilder::printErrorIfHapend()
 {
     if (reader.error()){
-        qDebug() << "Some error: %1" + reader.errorString();
+        qWarning() << "Some error: %1" + reader.errorString();
         //throw "Error";
     }
 }
@@ -290,7 +290,8 @@ FC_FeatureAssociation FeatureCatalogueXMLBuilder::buildFeatureAssociation()
             switch (strTypeToBuildType[tag]) {
             case Role: {
                 auto roleCode = readAttrValue("ref");
-                fAss.addRoleCode(roleCode);
+                FC_Role role = fc_controller.rolesCtrl().type(roleCode);
+                fAss.addRoleRef(role);
                 readNext1(&reader);
             } break;
             default: // Обработка завершена
@@ -477,11 +478,13 @@ FC_FeatureBinding FeatureCatalogueXMLBuilder::buildFeatureBinding()
             switch (strTypeToBuildType[tag]) {
             case Association : {
                 auto associationCode = readAttrValue("ref");
-                featureBind.setAssociation(associationCode);
+                FC_FeatureAssociation fAss = fc_controller.featureAssociationCtrl().type(associationCode);
+                featureBind.setAssociationRef(fAss);
             } break;
             case Role: {
                 auto roleCode = readAttrValue("ref");
-                featureBind.setRole(roleCode);
+                FC_Role role = fc_controller.rolesCtrl().type(roleCode);
+                featureBind.setRoleRef(role);
             } break;
             case FeatureType: {
                 auto featureTypeCode = readAttrValue("ref");

@@ -51,6 +51,9 @@ std::vector<std::string> FeatureMapController::getFeaturesIDs() const
 
 const std::string &FeatureMapController::getCodeById(std::string id) const
 {
+    if(!id_to_f_.count(id)){
+        qFatal(QString("'id_to_f_' has no key '%1'").arg(QString::fromStdString(id)).toUtf8());
+    }
     return id_to_f_.at(id).classAlias();
 }
 
@@ -71,7 +74,7 @@ Attribute FeatureMapController::getSimpleAttribute(std::string id, std::string p
         attr = f.getAttributeByCode(attrCode);
     }
     else{
-        assert(false);
+        qFatal("No condition caught");
     }
 
     return attr;
@@ -84,7 +87,39 @@ Feature FeatureMapController::getFeatureById(std::string id) const
 
 Fe2spRef FeatureMapController::getFe2spRefByRefId(std::string refId) const
 {
+    if(!refId_to_Fe2SpRef.count(refId)){
+        qFatal(QString("'refId_to_Fe2SpRef' has no key '%1'").arg(QString::fromStdString(refId)).toUtf8());
+    }
     return refId_to_Fe2SpRef.at(refId);
+}
+
+bool FeatureMapController::hasSimpleAttribute(std::string id, std::string path, std::string attributeCode) const
+{
+    Feature f = id_to_f_.at(id);
+    std::vector<std::pair<std::string, std::string> > attrsFull
+            = getAttributeNames(path);
+
+    ComplexAttribute cAttr;
+    Attribute attr;
+    // такая реализация пока что, так как у нас в xml complex содержит только simple
+    if (attrsFull.size() == 2){
+        if (!f.hasComplexAttribute(attrsFull[0].first)){
+            return false;
+        };        cAttr = f.getComplexAttributeByCode(attrsFull[0].first);
+        if (!cAttr.hasAttribute(attributeCode)){
+            return false;
+        }
+    }
+    else if (attrsFull.size() == 1){
+        if (!f.hasSimpleAttribute(attributeCode)){
+            return false;
+        }
+    }
+    else{
+        qFatal("No condition caught");
+    }
+
+    return true;
 }
 
 

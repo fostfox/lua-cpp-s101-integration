@@ -22,7 +22,7 @@ function PortrayalMain(featureIDs)
 		Debug.StartPerformance('Lua Code - Dataset processing')
 
 		local feature = featurePortrayalItem.Feature
-		
+
 		--Debug.Break()
 
 		local featurePortrayal = featurePortrayalItem:NewFeaturePortrayal()
@@ -63,13 +63,10 @@ function PortrayalMain(featureIDs)
 			end
 
 			Debug.StartPerformance('Lua Code - Rules processing')
-			Debug.Trace("####")
+
 			local scaleMinimum = feature['!scaleMinimum']
 			local scaleMaximum = feature['!scaleMaximum']
-			Debug.Trace(scaleMinimum)
-			Debug.Trace(scaleMaximum)
-			
-			Debug.Trace("####")
+
 			if scaleMinimum and not contextParameters.IGNORE_SCAMIN then
 				featurePortrayal:AddInstructions('ScaleMinimum:' .. scaleMinimum)
 			end
@@ -77,10 +74,10 @@ function PortrayalMain(featureIDs)
 			if scaleMaximum then
 				featurePortrayal:AddInstructions('ScaleMaximum:' .. scaleMaximum)
 			end
-			
+
 			require(feature.Code)
 			_G[feature.Code](feature, featurePortrayal, contextParameters)
-			
+
 			if #featurePortrayal.DrawingInstructions == 0 then
 				error('No drawing instructions were emitted for feature ' .. feature.ID)
 			end
@@ -103,13 +100,13 @@ function PortrayalMain(featureIDs)
 
 		featurePortrayalItem.ObservedContextParameters = contextParameters._observed
 		featurePortrayalItem.InUseContextParameters = contextParameters._asTable
-		
+
 		--Debug.Break()
 
 		local observed = ObservedContextParametersAsString(featurePortrayalItem)
-		
+
 		local drawingInstructions = table.concat(featurePortrayal.DrawingInstructions, ';')
-		
+
 		Debug.StopPerformance('Lua Code - HostPortrayalEmit preparation')
 
 		return HostPortrayalEmit(featurePortrayal.FeatureReference, drawingInstructions, observed)
@@ -119,6 +116,7 @@ function PortrayalMain(featureIDs)
 
 	if featureIDs then
 		for _,  featureID in ipairs(featureIDs) do
+			Debug.Trace("FEATURE_ID:"..featureID)
 			if not ProcessFeaturePortrayalItem(featurePortrayalItems[featureID]) then
 				return false
 			end

@@ -3,9 +3,9 @@
 #include "../DataTypes/datatypes.h"
 #include "fc_item.h"
 
-class FC_Role : public FC_Item{
+class FC_Role{
   public:
-    FC_Role() = default;
+    FC_Role();
     FC_Role(const FC_Item &header);
 
     const FC_Item& header() const;

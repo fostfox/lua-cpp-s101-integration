@@ -6,6 +6,7 @@ require 'Default'
 -- Main entry point for portrayal
 function PortrayalMain(featureIDs)
 	Debug.StartPerformance('Lua Code - Total')
+
 	if not portrayalContext then
 		error('Host must call PortrayalInitializeContextParameters() before calling portrayal_main()')
 	end
@@ -22,7 +23,7 @@ function PortrayalMain(featureIDs)
 
 		local feature = featurePortrayalItem.Feature
 
-		Debug.Break()
+		--Debug.Break()
 
 		local featurePortrayal = featurePortrayalItem:NewFeaturePortrayal()
 
@@ -30,7 +31,7 @@ function PortrayalMain(featureIDs)
 		
 		local status, err = pcall(function ()
 			local nauticalInformation = feature:GetInformationAssociation('additionalInformation', 'informationProvidedFor', 'NauticalInformation')
-			exit()
+
 			if nauticalInformation then
 				local vg31030, vg31031
 
@@ -62,7 +63,6 @@ function PortrayalMain(featureIDs)
 			end
 
 			Debug.StartPerformance('Lua Code - Rules processing')
-			exit()
 
 			local scaleMinimum = feature['!scaleMinimum']
 			local scaleMaximum = feature['!scaleMaximum']
