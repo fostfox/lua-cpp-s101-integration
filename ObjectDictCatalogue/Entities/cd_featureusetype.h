@@ -26,6 +26,11 @@ enum class CD_FeatureUseTypes {
      * Grouping features thematically
     */
     THEME,
+
+    /*
+     * a feature which is made up of component features // WARNING: Depricated type
+    */
+    AGGREGATION
 };
 
 class CD_FeatureUseType : public EnumType<CD_FeatureUseTypes>

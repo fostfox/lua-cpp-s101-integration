@@ -22,7 +22,8 @@ void CD_FeatureUseType::initMaps()
             { Type::GEOGRAPHIC     , "geographic" },
             { Type::META           , "meta" },
             { Type::CARTOGRAPHIC   , "cartographic" },
-            { Type::THEME          , "theme" }
+            { Type::THEME          , "theme" },
+            { Type::AGGREGATION    , "aggregation" }
     };
     initEnumToStrMap();
 }
