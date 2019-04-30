@@ -36,7 +36,8 @@ ContexParametrController::ContexParametrController()
         ContextParameter("RADAR_OVERLAY", ContextParameter::BOOLEAN, "false"),
         ContextParameter("SAFETY_DEPTH",  ContextParameter::REAL, "10.5"),
         ContextParameter("PLAIN_BOUNDARIES", ContextParameter::BOOLEAN, "false"),
-        ContextParameter("SIMPLIFIED_POINTS", ContextParameter::BOOLEAN, "true")
+        ContextParameter("SIMPLIFIED_POINTS", ContextParameter::BOOLEAN, "true"),
+        ContextParameter("SAFETY_CONTOUR", ContextParameter::REAL, "10.5")
     };
 }
 
