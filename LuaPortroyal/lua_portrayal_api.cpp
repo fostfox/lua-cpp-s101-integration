@@ -297,11 +297,7 @@ sol::object luaCreateComplexAttribute(sol::state &lua, const FC_ComplexAttribute
 {
     auto luaItem = luaCreateItem(lua, &ca->header());
 
-    vector<sol::object> subAttributeBindings;
-    for (const auto& attrBind : ca->attributeBindings()){
-        sol::object attrsBind = luaCreateAttributeBinding(lua, &attrBind);
-        subAttributeBindings.push_back(attrsBind);
-    }
+    sol::table subAttributeBindings = helpCreateAttributeBindings(lua, ca->attributeBindings());
 
     auto complAttr = lua["CreateComplexAttribute"](
                 luaItem,
@@ -425,12 +421,14 @@ sol::object luaCreateCompositeCurve(sol::state &lua, const GM_CompositeCurve& cc
 
 sol::object luaCreateSurface(sol::state &lua, const GM_Surface& ss)
 {
-    sol::table lueInteriorRings = ss.hasInteriorRings()
+    auto exteriorRing = luaCreateSpatialAssociation(lua, ss.exteriorRing());
+
+    auto lueInteriorRings = ss.hasInteriorRings()
             ? helpCreateSpatialAssociations(lua, ss.interiorRings())
             : sol::nil;
 
     sol::object luaPoint  = lua["CreateSurface"] (
-                ss.exteriorRing(),
+                exteriorRing,
                 lueInteriorRings
                 );
     return luaPoint;

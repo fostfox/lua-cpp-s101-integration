@@ -28,11 +28,13 @@ LuaHostFunc::LuaHostFunc(
     ,m_dictObjCtrl(dictObjCtrl)
     ,m_contParamCtrl(contParamController)
     ,m_drawInstrCtrl(drawInstrCtrl)
+    ,m_isActionState(true)
 {
     loadFunctions();
 
     ContexParametrController contextParamControl;
     PortrayalInitializeContextParameters(m_lua, contParamController);
+
 
     m_lua["TypeSystemChecks"]("true");
 
@@ -224,7 +226,8 @@ void LuaHostFunc::loadFunctions()
             auto atribute = m_mapObjCtrl.getSimpleAttribute(featureID, path, attributeCode);
             simpleAtrValues = helpLuaTable(m_lua, atribute.value());
         } else {
-            simpleAtrValues = luaGetUnknownAttributeString(m_lua);
+            simpleAtrValues = m_lua.create_table();
+            simpleAtrValues.add(luaGetUnknownAttributeString(m_lua));
         }
 
         return simpleAtrValues;
@@ -710,11 +713,10 @@ void LuaHostFunc::loadFunctions()
                        -> sol::object   //WARNING: TODO: Not Emplementer
     {
         qDebug() << "call HostGetComplexAttributeTypeInfo";
-        //const auto &complAttrType = m_dictObjCtrl.simpleAttributeCtrl().type(attributeCode);
-        //auto simpleAttrs = luaCreateSimpleAttribute(m_lua, &complAttrType);
-        qCritical() << "HostGetComplexAttributeTypeInfo not working well. attributeCode(" << QString::fromStdString(attributeCode) << ")";
-        sol::object simpleAttrs = sol::object();
-        return simpleAttrs;
+        const auto &complAttrType = m_dictObjCtrl.complexAttributeCtrl().type(attributeCode);
+        auto complexAttrs = luaCreateComplexAttribute(m_lua, &complAttrType);
+        qWarning() << "HostGetComplexAttributeTypeInfo not working well. attributeCode(" << QString::fromStdString(attributeCode) << ")";
+        return complexAttrs;
     });
 
     ///----------------------------------------------------------------------------------------------
