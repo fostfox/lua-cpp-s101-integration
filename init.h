@@ -9,14 +9,14 @@
 #include <QString>
 
 namespace filenames {
-const static QString MAP =          "../XMLData/test_dataset_map.xml";
+const static QString MAP =          "../XMLData/dataset_map.xml";
 const static QString DICT =         "../XMLData/S-101_FC_0_8_8.xml";
 const static QString LUA_MAIN =     "../LuaPortroyal/Rules/main.lua";
 const static QString PORTRAYAL =    "OUTPUT.txt";
 }
 
 
-#ifndef NO_DEBUG_OUT
+
 
 char* getLine(const uint N, char D){
     char* line = new char[N];
@@ -28,6 +28,7 @@ char* getLine(const uint N, char D){
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
+    #ifndef NO_DEBUG_OUT
     static const char *line1 = getLine(120, '_');
     static const char *line2 = getLine(120, '=');
     static const char *line3 = getLine(120, ':');
@@ -55,5 +56,6 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
         abort();
         break;
     }
+    #endif
 }
-#endif
+
