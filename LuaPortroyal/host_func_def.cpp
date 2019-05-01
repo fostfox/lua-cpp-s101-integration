@@ -296,8 +296,8 @@ void LuaHostFunc::loadFunctions()
 
         auto luaFSpatialAssociations = m_lua.create_table();
 
-        if (m_mapObjCtrl.hasSpatialAssotiation(featureID))
-        {
+        if (m_mapObjCtrl.hasSpatialAssotiation(featureID)) {
+            qWarning() << "for feature ID=" << QString::fromStdString(featureID) << " return empty SpatialAssociation[] table";
             Fe2spRef featureSpatioalAss = m_mapObjCtrl.getFeatureById(featureID).fe2spRef();
             auto luaFSAss = luaCreateSpatialAssociation(m_lua, featureSpatioalAss);
             luaFSpatialAssociations.add(luaFSAss);
@@ -414,7 +414,7 @@ void LuaHostFunc::loadFunctions()
             luaSpatial = tmpCurve;
             break;
         case 125:
-            luaSpatial = tmpCurve;
+            luaSpatial = tmpCompositeCurve;
             break;
 //       case xxx:
 //           luaSpatial = tmpCurveSegment;
@@ -426,7 +426,7 @@ void LuaHostFunc::loadFunctions()
             luaSpatial = tmpSurface;
             break;
         default:
-            throw "Orange it's not my life, but I'm gangster";
+            qFatal("Orange it's not my life, but I'm gangster");
         }
 
         return luaSpatial;
