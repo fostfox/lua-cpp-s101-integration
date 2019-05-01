@@ -1,5 +1,8 @@
 #Visual Code
-/.vscode
+.vscode
+
+#Lua Files in build <- temporary decision
+!/build/**/lua/**
 
 #bin files 
 *.exe
@@ -34,6 +37,7 @@ ui_*.h
 *.jsc
 Makefile*
 *build-*
+*build*
 
 # Qt unit tests
 target_wrapper.*
@@ -53,3 +57,4 @@ compile_commands.json
 
 # QtCreator local machine specific files for imported projects
 *creator.user*
+
