@@ -788,17 +788,18 @@ void LuaHostFunc::loadFunctions()
             return;
         } else if ("start_performance" == debugAction) {
             str.assign(++level * 5, ' ');
-            return;
+            //return;
         } else if ("stop_performance" == debugAction) {
             str.assign(level-- * 5, ' ');
-            return;
+            //return;
         } else if ("reset_performance" == debugAction) {
 
         } else {
             qWarning() << "Undefined debugger action\n";
         }
 
-        std::cerr << str << " " << debugAction << " # " << message << std::endl;
+        qDebug() << QString::fromStdString(str + " " + debugAction + " # " + message);
+        //std::cerr << str << " " << debugAction << " # " << message << std::endl;
     });
 }
 
