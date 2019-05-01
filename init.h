@@ -46,11 +46,11 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     const char *function = context.function ? context.function : "";
     switch (type) {
     case QtDebugMsg: // is used for writing custom debug output.";
-        //fprintf(out, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        fprintf(out, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
         break;
     case QtInfoMsg:  // "is used for informational messages.";
-        //fprintf(out, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
-        //fprintf(out, "%s\nInfo: %s\n\n", line1, localMsg.constData());
+        fprintf(out, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        fprintf(out, "%s\nInfo: %s\n\n", line1, localMsg.constData());
         break;
     case QtWarningMsg:  // "is used to report warnings and recoverable errors in your application.";
         fprintf(out, "\n%s\nWarning: %s (%s:%u, %s)\n%s\n", line2, localMsg.constData(), file, context.line, function, line2);
@@ -60,6 +60,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
         break;
     case QtFatalMsg:  // is used for writing fatal error messages shortly before exiting."
         fprintf(out, "\n\n%s\nFatal: %s (%s:%u, %s)\n%s\n\n", line4, localMsg.constData(), file, context.line, function, line4);
+        fprintf(stderr, "\n\n%s\nFatal: %s (%s:%u, %s)\n%s\n\n", line4, localMsg.constData(), file, context.line, function, line4);
         abort();
         break;
     }
