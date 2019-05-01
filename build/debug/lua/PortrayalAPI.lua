@@ -958,16 +958,16 @@ function CreateSpatialAssociation(spatialType, spatialID, orientation, scaleMini
 		for _, featureID in ipairs(featureIDs) do
 			self.AssociatedFeatures[#self.AssociatedFeatures + 1] = featureCache[featureID];
 
-			CheckType(featureCache[featureID], 'Feature', 2);
+			CheckType(featureCache[featureID], 'Feature');
 		end
 
 		return self.AssociatedFeatures
 	end
 
 	function spatialAssociation:GetInformationAssociations(associationCode, roleCode)
-		CheckSelf(self, 'SpatialAssociation', 2)
-		CheckType(associationCode, 'string', 2)
-		CheckTypeOrNil(roleCode, 'string', 2)
+		CheckSelf(self, 'SpatialAssociation')
+		CheckType(associationCode, 'string')
+		CheckTypeOrNil(roleCode, 'string')
 
 		local tuple = associationCode .. '|' .. (roleCode or '')
 
