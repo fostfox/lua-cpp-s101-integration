@@ -37,7 +37,12 @@ ContexParametrController::ContexParametrController()
         ContextParameter("SAFETY_DEPTH",  ContextParameter::REAL, "10.5"),
         ContextParameter("PLAIN_BOUNDARIES", ContextParameter::BOOLEAN, "false"),
         ContextParameter("SIMPLIFIED_POINTS", ContextParameter::BOOLEAN, "true"),
-        ContextParameter("SAFETY_CONTOUR", ContextParameter::REAL, "10.5")
+        ContextParameter("SAFETY_CONTOUR", ContextParameter::REAL, "10.5"),
+        ContextParameter("SHALLOW_CONTOUR", ContextParameter::REAL, "10.3"),
+        ContextParameter("DEEP_CONTOUR", ContextParameter::REAL, "10"),
+        ContextParameter("SHALLOW_PATTERN", ContextParameter::BOOLEAN, "true"),
+        ContextParameter("TWO_SHADES", ContextParameter::BOOLEAN, "false"),
+        ContextParameter("SHOW_ISOLATED_DANGERS_IN_SHALLOW_WATERS", ContextParameter::BOOLEAN, "true")
     };
 }
 

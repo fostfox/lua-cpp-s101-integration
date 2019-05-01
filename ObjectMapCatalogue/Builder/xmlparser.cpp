@@ -309,6 +309,8 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
             fe2spRef.setScamax(m_xmlReader->readElementText().toInt());
             readNext2(m_xmlReader);
 
+            fe2spRef.setSpatial(m_xmlReader->name().toString().toStdString());
+
             feature.setFe2spRef(fe2spRef);
 
             // SKIP EXTRA INFORMATION OF fe2sp_ref

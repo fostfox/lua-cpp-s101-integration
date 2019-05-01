@@ -293,11 +293,15 @@ void LuaHostFunc::loadFunctions()
                        -> sol::table
     {
         qDebug() << "call HostFeatureGetSpatialAssociations";
-        Fe2spRef featureSpatioalAss = m_mapObjCtrl.getFeatureById(featureID).fe2spRef();
 
         auto luaFSpatialAssociations = m_lua.create_table();
-        auto luaFSAss = luaCreateSpatialAssociation(m_lua, featureSpatioalAss);
-        luaFSpatialAssociations.add(luaFSAss);
+
+        if (m_mapObjCtrl.hasSpatialAssotiation(featureID)) {
+            qWarning() << "for feature ID=" << QString::fromStdString(featureID) << " return empty SpatialAssociation[] table";
+            Fe2spRef featureSpatioalAss = m_mapObjCtrl.getFeatureById(featureID).fe2spRef();
+            auto luaFSAss = luaCreateSpatialAssociation(m_lua, featureSpatioalAss);
+            luaFSpatialAssociations.add(luaFSAss);
+        }
 
         return luaFSpatialAssociations;
     });
@@ -410,7 +414,7 @@ void LuaHostFunc::loadFunctions()
             luaSpatial = tmpCurve;
             break;
         case 125:
-            luaSpatial = tmpCurve;
+            luaSpatial = tmpCompositeCurve;
             break;
 //       case xxx:
 //           luaSpatial = tmpCurveSegment;
@@ -422,7 +426,7 @@ void LuaHostFunc::loadFunctions()
             luaSpatial = tmpSurface;
             break;
         default:
-            throw "Orange it's not my life, but I'm gangster";
+            qFatal("Orange it's not my life, but I'm gangster");
         }
 
         return luaSpatial;
@@ -788,17 +792,18 @@ void LuaHostFunc::loadFunctions()
             return;
         } else if ("start_performance" == debugAction) {
             str.assign(++level * 5, ' ');
-            return;
+            //return;
         } else if ("stop_performance" == debugAction) {
             str.assign(level-- * 5, ' ');
-            return;
+            //return;
         } else if ("reset_performance" == debugAction) {
 
         } else {
             qWarning() << "Undefined debugger action\n";
         }
 
-        std::cerr << str << " " << debugAction << " # " << message << std::endl;
+        qDebug() << QString::fromStdString(str + " " + debugAction + " # " + message);
+        //std::cerr << str << " " << debugAction << " # " << message << std::endl;
     });
 }
 

@@ -169,7 +169,7 @@ local function LookupAttributeValue(container, attributeCode, HostGetSimpleAttri
 
 			container['@' .. attributeCode] = value
 
-			if value == unknownValue then
+			if unknownValue == value then
 				value = nil
 			end
 
@@ -184,7 +184,7 @@ local function LookupAttributeValue(container, attributeCode, HostGetSimpleAttri
 
 				convertedValues['@' .. i] = convertedValue
 
-				if convertedValue == unknownValue then
+				if unknownValue == convertedValue then
 					convertedValue = nil
 				end
 
