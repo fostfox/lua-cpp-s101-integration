@@ -108,6 +108,10 @@ sol::table helpCreateRoles(sol::state &lua, const QVector<FC_Role> &roles)
 //    return luaRoles;
 //}
 
+sol::table helpEmptyTable(sol::state &lua)
+{
+    return lua.create_table();
+}
 
 bool PortrayalMain(const sol::state &lua, const vector<string> &featureIDs)
 {
@@ -178,15 +182,17 @@ sol::object luaCreateNamedType(const sol::state &lua, const sol::object &luaItem
     return luaNamedType;
 }
 
-sol::object luaCreateInformationBinding(const sol::state &lua, const FC_InformationBinding *infBind)
+sol::object luaCreateInformationBinding(sol::state &lua, const FC_InformationBinding *infBind)
 {
+    auto luaInfAss = luaCreateInformationAssociation(lua, &infBind->associationRef());
+
     sol::object luaInformationBinding = lua["CreateInformationBinding"](
                 infBind->informationType(),
                 infBind->multiplicity().lower,
                 createUpperMuliplicity(lua, infBind->multiplicity().upper),
                 infBind->roleType().toQString(),
                 sol::nil, //TODO: Role role (not defined)
-                infBind->informationType()
+                luaInfAss
                 );
     return luaInformationBinding;
 }
@@ -442,3 +448,21 @@ sol::object luaGetUnknownAttributeString(sol::state &lua)
     return lua["GetUnknownAttributeString"](
             );
 }
+
+sol::object luaCreateInformationAssociation(sol::state &lua, const FC_InformationAssociation *infAss)
+{
+    auto luaItem = luaCreateItem(lua, &infAss->header());
+    auto luaAttrBind = helpEmptyTable(lua);
+    auto luaNamedType = luaCreateNamedType(lua, luaItem, luaAttrBind);
+
+    auto luaRoles = helpCreateRoles(lua, infAss->rolesRef());
+
+    return lua["CreateInformationAssociation"](
+            luaNamedType,
+            luaRoles,
+            sol::nil,
+            helpEmptyTable(lua)
+            );
+}
+
+

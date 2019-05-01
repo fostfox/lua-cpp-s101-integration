@@ -194,9 +194,11 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostInformationTypeGetCode"
                      , [&](const string &informationTypeID)
+                       -> sol::object
     {
         qDebug() << "call HostInformationTypeGetCode";
-        string informationTypeCode = "";
+        qWarning() << "Return undef string - to the informationTypeID : " << QString::fromStdString(informationTypeID);
+        auto informationTypeCode = luaGetUnknownAttributeString(m_lua);
         return informationTypeCode;
     });
 
@@ -320,10 +322,11 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostFeatureGetAssociatedFeatureIDs"
                      , [&](const string &featureID, const string &associationCode, const sol::object &roleCode)
-                       -> vector<string>
+                       -> sol::table
     {
         qDebug() << "call HostFeatureGetAssociatedFeatureIDs";
-        vector<string> featureAssFeatureIDs;
+        qWarning() << "Return empty string[] - to the featureID : " << QString::fromStdString(featureID);
+        auto featureAssFeatureIDs = helpEmptyTable(m_lua);
         return featureAssFeatureIDs;
     });
 
@@ -347,10 +350,11 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostFeatureGetAssociatedInformationIDs"
                      , [&](const string &featureID, const string &associationCode, const sol::object &roleCode)
-                       -> vector<string>
+                       -> sol::table
     {
         qDebug() << "call HostFeatureGetAssociatedInformationIDs";
-        vector<string> featureAssInfIDs;
+        qWarning() << "Return empty string[] - to the featureID : " << QString::fromStdString(featureID);
+        auto featureAssInfIDs = helpEmptyTable(m_lua);
         return featureAssInfIDs;
     });
 
@@ -451,7 +455,8 @@ void LuaHostFunc::loadFunctions()
                        -> sol::object
     {
         qDebug() << "call HostSpatialGetAssociatedInformationIDs";
-        sol::object spatialAssInfIDs;
+        qWarning() << "Return NIL - to the spatial identified by spatialID : " << QString::fromStdString(spatialID);
+        sol::object spatialAssInfIDs = sol::nil;
         return spatialAssInfIDs;
     });
 
@@ -475,7 +480,8 @@ void LuaHostFunc::loadFunctions()
                        -> sol::object
     {
         qDebug() << "call HostSpatialGetAssociatedFeatureIDs";
-        sol::object spatialAssFeaturesIDs;
+        qWarning() << "Return NIL - to the spatial identified by spatialID : " << QString::fromStdString(spatialID);
+        sol::object spatialAssFeaturesIDs = sol::nil;
         return spatialAssFeaturesIDs;
     });
 
@@ -528,7 +534,8 @@ void LuaHostFunc::loadFunctions()
                        -> int
     {
         qDebug() << "call HostInformationTypeGetComplexAttributeCount";
-        int informCompleAttrCount;
+        qWarning() << "Return 0 - to the informationTypeID : " << QString::fromStdString(informationTypeID);
+        int informCompleAttrCount = 0;
         return informCompleAttrCount;
     });
 

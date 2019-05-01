@@ -318,7 +318,8 @@ FC_InformationAssociation FeatureCatalogueXMLBuilder::buildInformationAssociatio
             switch (strTypeToBuildType[tag]) {
             case Role: {
                 auto roleCode = readAttrValue("ref");
-                infAss.addRoleCode(roleCode);
+                FC_Role role = fc_controller.rolesCtrl().type(roleCode);
+                infAss.addRoleRef(role);
                 readNext1(&reader);
             } break;
             default: // Обработка завершена
@@ -517,7 +518,8 @@ FC_InformationBinding FeatureCatalogueXMLBuilder::buildInformationBinding()
             switch (strTypeToBuildType[tag]) {
             case Association : {
                 auto associationCode = readAttrValue("ref");
-                featureBind.setAssociation(associationCode);
+                FC_InformationAssociation infAss = fc_controller.informationAssociationCtrl().type(associationCode);
+                featureBind.setAssociationRef(infAss);
             } break;
             case InformationType: {
                 auto informTypeCode = readAttrValue("ref");

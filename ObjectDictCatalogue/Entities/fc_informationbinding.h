@@ -13,7 +13,7 @@ class FC_InformationBinding
     FC_InformationBinding(
             Multiplicity multiplicity
             ,FC_RoleType roleType
-            ,InformationAssociationCode association
+            ,FC_InformationAssociation associationRef
             ,InformationTypeCode informationType
             );
 
@@ -25,14 +25,17 @@ class FC_InformationBinding
     void setRoleType(const FC_RoleType &roleType);
 
     InformationAssociationCode association() const;
-    void setAssociation(const InformationAssociationCode &association);
+    const FC_InformationAssociation& associationRef() const;
+    void setAssociationRef(const FC_InformationAssociation &associationRef);
 
     InformationTypeCode informationType() const;
     void setInformationType(const InformationTypeCode &informationType);
+
 
 private:
     Multiplicity m_multiplicity;
     FC_RoleType m_roleType;
     InformationAssociationCode m_association;
+    FC_InformationAssociation m_associationRef;
     InformationTypeCode m_informationType;
 };
