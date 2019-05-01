@@ -293,11 +293,15 @@ void LuaHostFunc::loadFunctions()
                        -> sol::table
     {
         qDebug() << "call HostFeatureGetSpatialAssociations";
-        Fe2spRef featureSpatioalAss = m_mapObjCtrl.getFeatureById(featureID).fe2spRef();
 
         auto luaFSpatialAssociations = m_lua.create_table();
-        auto luaFSAss = luaCreateSpatialAssociation(m_lua, featureSpatioalAss);
-        luaFSpatialAssociations.add(luaFSAss);
+
+        if (m_mapObjCtrl.hasSpatialAssotiation(featureID))
+        {
+            Fe2spRef featureSpatioalAss = m_mapObjCtrl.getFeatureById(featureID).fe2spRef();
+            auto luaFSAss = luaCreateSpatialAssociation(m_lua, featureSpatioalAss);
+            luaFSpatialAssociations.add(luaFSAss);
+        }
 
         return luaFSpatialAssociations;
     });

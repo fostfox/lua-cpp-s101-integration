@@ -122,4 +122,10 @@ bool FeatureMapController::hasSimpleAttribute(std::string id, std::string path, 
     return true;
 }
 
+bool FeatureMapController::hasSpatialAssotiation(std::string id) const
+{
+    Feature f = id_to_f_.at(id);
+    return (f.fe2spRef().refId() != -1) ? true : false;
+}
+
 

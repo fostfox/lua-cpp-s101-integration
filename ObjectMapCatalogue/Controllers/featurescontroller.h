@@ -17,6 +17,7 @@ public:
     Fe2spRef getFe2spRefByRefId(std::string refId) const;
 
     bool hasSimpleAttribute(std::string id, std::string path, std::string attributeCode) const;
+    bool hasSpatialAssotiation(std::string id) const;
 
 private:
     std::vector<Feature> fs_;

@@ -336,8 +336,7 @@ sol::object luaCreateSpatialAssociation(const sol::state &lua, const Fe2spRef &s
     case 110: spType = "Point"; break;
     //case : spType = "MultiPoint"; break;
     case 120: spType = "Curve"; break;
-    case 125: spType = "Curve"; break;
-    //case : spType = "CompositeCurve"; break;
+    case 125: spType = "CompositeCurve"; break;
     case 130: spType = "Surface"; break;
     default:
         qDebug() << "ref Type " << spAssociation.refType();

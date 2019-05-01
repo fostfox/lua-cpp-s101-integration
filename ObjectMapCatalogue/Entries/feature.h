@@ -9,7 +9,8 @@ class Attribute
 public:
     enum class AttrTypes { INT, DOUBLE, STRING, LIST };
     Attribute();
-    Attribute(int code, std::string alias, AttrTypes type, std::vector<std::string> value);
+    Attribute(int code, std::string alias, AttrTypes type,
+              std::vector<std::string> value);
     const int& code() const;
     const std::string& alias() const;
     const AttrTypes& type() const;
@@ -18,6 +19,7 @@ public:
     void setAlias(std::string alias);
     void setType(const AttrTypes &type);
     void setValue(const std::vector<std::string> &value);
+
 private:
     int m_code;
     std::string m_alias;
@@ -50,23 +52,27 @@ class Fe2spRef
 {
 public:
     Fe2spRef();
-    Fe2spRef(int refId, int refType, int orientation, int scamin, int scamax);
+    Fe2spRef(int refId, int refType, int orientation, int scamin, int scamax, std::string spatial);
     int refId() const;
     int refType() const;
     int orientation() const;
     int scamin() const;
     int scamax() const;
+    const std::string spatial() const;
+
     void setRefId(int refId);
     void setRefType(int refType);
     void setOrientation(int orientation);
     void setScamin(int scamin);
     void setScamax(int scamax);
+    void setSpatial(std::string spatial);
 private:
     int m_refId = -1;
     int m_refType;
     int m_orientation;
     int m_scamin;
     int m_scamax;
+    std::string m_spatial = "noGeometry";
 };
 
 class IsolatedPoint
