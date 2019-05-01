@@ -518,7 +518,8 @@ FC_InformationBinding FeatureCatalogueXMLBuilder::buildInformationBinding()
             switch (strTypeToBuildType[tag]) {
             case Association : {
                 auto associationCode = readAttrValue("ref");
-                featureBind.setAssociation(associationCode);
+                FC_InformationAssociation infAss = fc_controller.informationAssociationCtrl().type(associationCode);
+                featureBind.setAssociationRef(infAss);
             } break;
             case InformationType: {
                 auto informTypeCode = readAttrValue("ref");
