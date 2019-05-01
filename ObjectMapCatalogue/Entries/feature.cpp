@@ -27,6 +27,11 @@ const Attribute::AttrTypes &Attribute::type() const
     return m_type;
 }
 
+const std::string Fe2spRef::spatial() const
+{
+    return m_spatial;
+}
+
 const std::vector<std::string> &Attribute::value() const
 {
     return m_value;
@@ -49,6 +54,11 @@ void Attribute::setType(const AttrTypes &type)
     m_type = type;
 }
 
+void Fe2spRef::setSpatial(std::string spatial)
+{
+    m_spatial = spatial;
+}
+
 void Attribute::setValue(const std::vector<std::string> &value)
 {
     //std::cout << "code: " << value.toString().toStdString() << std::endl;
@@ -60,8 +70,10 @@ Fe2spRef::Fe2spRef()
 
 }
 
-Fe2spRef::Fe2spRef(int refId, int refType, int orientation, int scamin, int scamax)
-    :m_refId(refId), m_refType(refType), m_orientation(orientation), m_scamin(scamin),  m_scamax(scamax)
+Fe2spRef::Fe2spRef(int refId, int refType, int orientation, int scamin,
+                   int scamax, std::string spatial)
+    :m_refId(refId), m_refType(refType), m_orientation(orientation), m_scamin(scamin),
+      m_scamax(scamax), m_spatial(spatial)
 {
 
 }
