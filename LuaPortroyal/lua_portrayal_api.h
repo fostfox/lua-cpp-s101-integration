@@ -12,6 +12,7 @@ class UnlimitedInteger;
 class FC_Item;
 class FC_Role;
 class FC_FeatureAssociation;
+class FC_InformationAssociation;
 class FC_SimpleAttribute;
 class FC_ComplexAttribute;
 class FC_ListedValue;
@@ -48,6 +49,8 @@ sol::table helpLuaTable(sol::state &lua, const std::vector<T> &seq)
     }
     return luaRoles;
 }
+
+sol::table helpEmptyTable(sol::state& lua);
 
 //-----------------------------------------------------------------------------
 // 9a-14.1 Portrayal Domain Specific Catalogue Functions
@@ -177,7 +180,7 @@ sol::object luaCreateInformationType(const sol::state& lua, sol::object luaObjec
 sol::table luaCreateFeatureType(const sol::state& lua, const sol::object& luaObjectType, const std::string &featureUseType, const sol::table &permittedPrimitives, const sol::table &luaFeatureBindings, sol::object luaSuperType = sol::nil, sol::table luaSubType = sol::table());
 
 //13-8.1.2.6
-sol::object luaCreateInformationAssociation(sol::object namedType, std::vector<sol::object> roles, sol::object superType, std::vector<sol::object> subType);
+sol::object luaCreateInformationAssociation(sol::state &lua, const FC_InformationAssociation *infAss);
 
 //13-8.1.2.7
 sol::object luaCreateFeatureAssociation(sol::state &lua, const FC_FeatureAssociation *featureAssocoation);
@@ -198,7 +201,7 @@ sol::object luaCreateListedValue(sol::state &lua, const FC_ListedValue *listedVa
 sol::object luaCreateAttributeBinding(sol::state &lua, const FC_AttributeBinding *attrBind);
 
 //13-8.1.2.13
-sol::object luaCreateInformationBinding(const sol::state& lua, const FC_InformationBinding *infBind);
+sol::object luaCreateInformationBinding(sol::state &lua, const FC_InformationBinding *infBind);
 
 //13-8.1.2.14
 sol::object luaCreateFeatureBinding(sol::state &lua, const FC_FeatureBinding *featureBinding);
