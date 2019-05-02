@@ -42,6 +42,7 @@ ContexParametrController::ContexParametrController()
         ContextParameter("DEEP_CONTOUR", ContextParameter::REAL, "10"),
         ContextParameter("SHALLOW_PATTERN", ContextParameter::BOOLEAN, "true"),
         ContextParameter("TWO_SHADES", ContextParameter::BOOLEAN, "false"),
+        ContextParameter("NATIONAL_LANGUAGE", ContextParameter::TEXT, "eng"),
         ContextParameter("SHOW_ISOLATED_DANGERS_IN_SHALLOW_WATERS", ContextParameter::BOOLEAN, "true")
     };
 }
