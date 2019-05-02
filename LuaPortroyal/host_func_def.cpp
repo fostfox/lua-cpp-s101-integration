@@ -40,6 +40,8 @@ LuaHostFunc::LuaHostFunc(
 
     m_lua.set_function("HostSpecialSetCurrentFeatureId", [&](std::string featureId){  //TODO: Временное решение
         m_currentFeatureId_processFeaturePortrayal = stoi(featureId);
+        qInfo() << QString::fromStdString("currentFeatureId_processFeaturePortrayal: "
+                                          + std::to_string(m_currentFeatureId_processFeaturePortrayal));
     });
 
 }
@@ -263,15 +265,9 @@ void LuaHostFunc::loadFunctions()
         qDebug() << "call HostFeatureGetComplexAttributeCount";
         qWarning() << "Maybe Not Working"; // TODO: Проверить получение кол-ва сложных аттрибутов
 
-        int featureCACount;
-        bool isSetSimpleAttrOnMap = m_mapObjCtrl.hasSimpleAttribute(featureID, path, attributeCode);
-
-        if (isSetSimpleAttrOnMap){
-            auto atribute = m_mapObjCtrl.getSimpleAttribute(featureID, path, attributeCode);
-            featureCACount = atribute.value().size();
-        } else {
-            featureCACount = 0;
-        }
+        int featureCACount = static_cast<int>(
+                    m_mapObjCtrl.getComplexAttributeSize(featureID, path, attributeCode)
+                    );
         return featureCACount;
     });
 

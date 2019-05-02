@@ -102,22 +102,26 @@ bool FeatureMapController::hasSimpleAttribute(std::string id, std::string path, 
     ComplexAttribute cAttr;
     Attribute attr;
     // такая реализация пока что, так как у нас в xml complex содержит только simple
-    if (attrsFull.size() == 2){
+    if (attrsFull.size() == 1){
         if (!f.hasComplexAttribute(attrsFull[0].first)){
             return false;
-        };        cAttr = f.getComplexAttributeByCode(attrsFull[0].first);
+        };
+        cAttr = f.getComplexAttributeByCode(attrsFull[0].first);
         if (!cAttr.hasAttribute(attributeCode)){
             return false;
         }
     }
-    else if (attrsFull.size() == 1){
-        if (!f.hasSimpleAttribute(attributeCode)){
-            return false;
-        }
+    else if (!f.hasSimpleAttribute(attributeCode)){
+        return false;
     }
-    else{
-        qFatal("No condition caught");
-    }
+//    else if (attrsFull.size() == 1){
+//        if (!f.hasComplexAttribute(attrsFull[0].first)){
+//            return false;
+//        }
+//    }
+//    else{
+//        qFatal("No condition caught");
+//    }
 
     return true;
 }
@@ -130,11 +134,18 @@ bool FeatureMapController::hasSpatialAssotiation(std::string id) const
 
 size_t FeatureMapController::getComplexAttributeSize(std::string featureId, std::string path, std::string attributeCode) const
 {
-    qWarning("In FeatureMapController::getComplexAttributeSize path is not processing");
+    if (!path.empty()) {
+        qWarning("In FeatureMapController::getComplexAttributeSize path is not processing");
+    }
+    size_t complexAttrSize = 0;
+
     Feature f = id_to_f_.at(featureId);
+    if (!f.hasComplexAttribute(attributeCode)){
+        return complexAttrSize;
+    }
     ComplexAttribute cAttr = f.getComplexAttributeByCode(attributeCode);
 
-    size_t complexAttrSize = cAttr.attibutes().size();
+    complexAttrSize = cAttr.attibutes().size();
     if (!complexAttrSize){
         qWarning("In FeatureMapController::getComplexAttributeSize ComplexAttribute:",
                  attributeCode.c_str(), " hasn't SimpleAttributes");
