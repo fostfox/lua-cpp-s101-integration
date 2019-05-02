@@ -19,6 +19,8 @@ public:
     bool hasSimpleAttribute(std::string id, std::string path, std::string attributeCode) const;
     bool hasSpatialAssotiation(std::string id) const;
 
+    size_t getComplexAttributeSize(std::string featureId, std::string path, std::string attributeCode) const;
+
 private:
     std::vector<Feature> fs_;
     std::map<std::string, Feature> id_to_f_;

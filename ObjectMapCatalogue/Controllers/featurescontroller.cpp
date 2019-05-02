@@ -128,4 +128,19 @@ bool FeatureMapController::hasSpatialAssotiation(std::string id) const
     return (f.fe2spRef().refId() != -1) ? true : false;
 }
 
+size_t FeatureMapController::getComplexAttributeSize(std::string featureId, std::string path, std::string attributeCode) const
+{
+    qWarning("In FeatureMapController::getComplexAttributeSize path is not processing");
+    Feature f = id_to_f_.at(featureId);
+    ComplexAttribute cAttr = f.getComplexAttributeByCode(attributeCode);
+
+    size_t complexAttrSize = cAttr.attibutes().size();
+    if (!complexAttrSize){
+        qWarning("In FeatureMapController::getComplexAttributeSize ComplexAttribute:",
+                 attributeCode.c_str(), " hasn't SimpleAttributes");
+    }
+
+    return complexAttrSize;
+}
+
 
