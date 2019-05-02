@@ -40,8 +40,9 @@ LuaHostFunc::LuaHostFunc(
 
     m_lua.set_function("HostSpecialSetCurrentFeatureId", [&](std::string featureId){  //TODO: Временное решение
         m_currentFeatureId_processFeaturePortrayal = stoi(featureId);
+        qInfo() << QString::fromStdString("currentFeatureId_processFeaturePortrayal: "
+                                          + std::to_string(m_currentFeatureId_processFeaturePortrayal));
     });
-
 }
 
 bool LuaHostFunc::doPortrayal()
