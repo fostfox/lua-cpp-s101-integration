@@ -66,18 +66,11 @@ Attribute FeatureMapController::getSimpleAttribute(std::string id, std::string p
     ComplexAttribute cAttr;
     Attribute attr;
     // такая реализация пока что, так как у нас в xml complex содержит только simple
-    if (attrsFull.size() == 2){
+    if (attrsFull.size() == 1){
         cAttr = f.getComplexAttributeByCode(attrsFull[0].first);
-        attr = cAttr.getAttributeByCode(attrCode);
+        return cAttr.getAttributeByCode(attrCode);
     }
-    else if (attrsFull.size() == 1){
-        attr = f.getAttributeByCode(attrCode);
-    }
-    else{
-        qFatal("No condition caught");
-    }
-
-    return attr;
+    return f.getAttributeByCode(attrCode);
 }
 
 Feature FeatureMapController::getFeatureById(std::string id) const
@@ -102,21 +95,17 @@ bool FeatureMapController::hasSimpleAttribute(std::string id, std::string path, 
     ComplexAttribute cAttr;
     Attribute attr;
     // такая реализация пока что, так как у нас в xml complex содержит только simple
-    if (attrsFull.size() == 2){
+    if (attrsFull.size() == 1){
         if (!f.hasComplexAttribute(attrsFull[0].first)){
             return false;
-        };        cAttr = f.getComplexAttributeByCode(attrsFull[0].first);
+        };
+        cAttr = f.getComplexAttributeByCode(attrsFull[0].first);
         if (!cAttr.hasAttribute(attributeCode)){
             return false;
         }
     }
-    else if (attrsFull.size() == 1){
-        if (!f.hasSimpleAttribute(attributeCode)){
-            return false;
-        }
-    }
-    else{
-        qFatal("No condition caught");
+    else if (!f.hasSimpleAttribute(attributeCode)){
+        return false;
     }
 
     return true;
@@ -126,6 +115,28 @@ bool FeatureMapController::hasSpatialAssotiation(std::string id) const
 {
     Feature f = id_to_f_.at(id);
     return (f.fe2spRef().refId() != -1) ? true : false;
+}
+
+size_t FeatureMapController::getComplexAttributeSize(std::string featureId, std::string path, std::string attributeCode) const
+{
+    if (!path.empty()) {
+        qWarning("In FeatureMapController::getComplexAttributeSize path is not processing");
+    }
+    size_t complexAttrSize = 0;
+
+    Feature f = id_to_f_.at(featureId);
+    if (!f.hasComplexAttribute(attributeCode)){
+        return complexAttrSize;
+    }
+    ComplexAttribute cAttr = f.getComplexAttributeByCode(attributeCode);
+
+    complexAttrSize = cAttr.attibutes().size();
+    if (!complexAttrSize){
+        qWarning("In FeatureMapController::getComplexAttributeSize ComplexAttribute:",
+                 attributeCode.c_str(), " hasn't SimpleAttributes");
+    }
+
+    return complexAttrSize;
 }
 
 
