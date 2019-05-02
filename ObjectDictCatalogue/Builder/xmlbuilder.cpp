@@ -233,6 +233,7 @@ FC_FeatureType FeatureCatalogueXMLBuilder::buildFeatureType()
             } break;
 
             default: // Обработка завершена
+                checkUnsetEnummType(featureType.featureUseType());
                 return featureType;
             }
         } else {
@@ -240,8 +241,8 @@ FC_FeatureType FeatureCatalogueXMLBuilder::buildFeatureType()
         }
     }
     printErrorIfHapend();
+    checkUnsetEnummType(featureType.featureUseType());
     return featureType;
-
 }
 
 FC_Role FeatureCatalogueXMLBuilder::buildRole()
@@ -382,12 +383,14 @@ CD_AttributeValueType FeatureCatalogueXMLBuilder::buildAttributeValueType()
                 type = CD_AttributeValueType(element);
             } break;
             default : // Тег не подходит
+                checkUnsetEnummType(type);
                 return type;
             }
         }
         readNext1(&reader);
     }
     printErrorIfHapend();
+    checkUnsetEnummType(type);
     return type;
 }
 
@@ -468,6 +471,7 @@ FC_FeatureBinding FeatureCatalogueXMLBuilder::buildFeatureBinding()
 
     auto roleType = readAttrValue("roleType");//attrBind.setSequentional(toBoolean(isSequential));
     featureBind.setRoleType(roleType);
+    checkUnsetEnummType(featureBind.roleType());
     readNext1(&reader);
 
     auto multiplisity = buildMultiplicity();
@@ -507,6 +511,7 @@ FC_InformationBinding FeatureCatalogueXMLBuilder::buildInformationBinding()
 
     auto roleType = readAttrValue("roleType");//attrBind.setSequentional(toBoolean(isSequential));
     featureBind.setRoleType(roleType);
+    checkUnsetEnummType(featureBind.roleType());
     readNext1(&reader);
 
     auto multiplisity = buildMultiplicity();

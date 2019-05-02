@@ -2,6 +2,12 @@
 
 using Type = FC_SpatialPrimitiveTypes;
 
+FC_SpatialPrimitiveType::FC_SpatialPrimitiveType()
+    :EnumType<Type>(Type::UNDEFINED)
+{
+    initMaps();
+}
+
 FC_SpatialPrimitiveType::FC_SpatialPrimitiveType(const std::string &type)
     :EnumType<Type>(type)
 {
@@ -22,7 +28,8 @@ void FC_SpatialPrimitiveType::initMaps()
            { Type::Curve,       "curve" },
            { Type::Surface,     "surface"  },
            { Type::Coverage,    "coverage"  },
-           { Type::NoGeometry,  "noGeometry"  }
+           { Type::NoGeometry,  "noGeometry"  },
+           { Type::UNDEFINED, "undefined" }
        };
     initEnumToStrMap();
 }

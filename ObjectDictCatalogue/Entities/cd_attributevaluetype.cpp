@@ -2,6 +2,12 @@
 
 using Type = CD_AttributeValueTypes;
 
+CD_AttributeValueType::CD_AttributeValueType()
+    :EnumType<Type>(Type::UNDEFINED)
+{
+    initMaps();
+}
+
 CD_AttributeValueType::CD_AttributeValueType(CD_AttributeValueTypes t)
     :EnumType<Type>(t)
 {
@@ -25,7 +31,8 @@ void CD_AttributeValueType::initMaps()
             { Type::DATE         , "date" },
             { Type::TIME         , "time" },
             { Type::S100_TRUNCATED_DATE, "S100_TruncatedDate" },
-            { Type::URL          , "URL" }
+            { Type::URL          , "URL" },
+            { Type::UNDEFINED    , "undefined" }
     };
     initEnumToStrMap();
 }

@@ -9,13 +9,19 @@ enum class FC_SpatialPrimitiveTypes {
     Curve,
     Surface,
     Coverage,
-    NoGeometry
+    NoGeometry,
+
+    /*
+     * Undefined object type. Perhaps the default constructor
+     * created a Type Object, so the type was set by default.
+    */
+    UNDEFINED
 };
 
 class FC_SpatialPrimitiveType : public EnumType<FC_SpatialPrimitiveTypes>
 {
   public:
-    FC_SpatialPrimitiveType() = default;
+    FC_SpatialPrimitiveType();
     FC_SpatialPrimitiveType(const std::string& type);
     FC_SpatialPrimitiveType(FC_SpatialPrimitiveTypes type);
 

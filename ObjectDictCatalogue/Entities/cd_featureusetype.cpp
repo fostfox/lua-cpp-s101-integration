@@ -4,6 +4,12 @@
 using Type = CD_FeatureUseTypes;
 
 
+CD_FeatureUseType::CD_FeatureUseType()
+    :EnumType<Type>(Type::UNDEFINED)
+{
+    initMaps();
+}
+
 CD_FeatureUseType::CD_FeatureUseType(CD_FeatureUseTypes type)
     :EnumType<Type>(type)
 {
@@ -23,7 +29,8 @@ void CD_FeatureUseType::initMaps()
             { Type::META           , "meta" },
             { Type::CARTOGRAPHIC   , "cartographic" },
             { Type::THEME          , "theme" },
-            { Type::AGGREGATION    , "aggregation" }
+            { Type::AGGREGATION    , "aggregation" },
+            { Type::UNDEFINED    , "undefined" }
     };
     initEnumToStrMap();
 }

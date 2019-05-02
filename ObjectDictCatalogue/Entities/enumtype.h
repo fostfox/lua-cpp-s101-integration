@@ -2,7 +2,7 @@
 
 #include <QString>
 #include <QMap>
-
+#include <QDebug>
 
 template<typename Type>
 QMap<Type, std::string>& modEnumToStrMap(const QMap<Type, std::string>& enumToStrMap)
@@ -38,10 +38,20 @@ template <typename Type> class EnumType
 };
 
 
+template<typename T>
+void checkUnsetEnummType(EnumType<T> e){
+    if (e.type() == T::UNDEFINED){
+        qFatal("Set to undefined type");
+    }
+}
+
 
 template<typename Type>
 EnumType<Type>::EnumType(Type t)
 {
+    if (t == Type::UNDEFINED){
+        //qCritical() << "Set to undefined type";
+    }
     m_type = t;
 }
 

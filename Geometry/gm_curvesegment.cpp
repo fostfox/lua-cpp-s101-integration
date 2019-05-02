@@ -4,6 +4,12 @@
 using Type = InterpolationTypes;
 
 
+InterpolationType::InterpolationType()
+    :EnumType<Type>(Type::UNDEFINED)
+{
+    initMaps();
+}
+
 InterpolationType::InterpolationType(InterpolationTypes t)
     :EnumType<Type>(t)
 {
@@ -27,6 +33,7 @@ void InterpolationType::initMaps()
             { Type::ELLIPTICAL, "Elliptical" },
             { Type::CONIC, "Conic" },
             { Type::CIRCULAR_ARC_CENTER_POINT_WITH_RADIUS, "CircularArcCenterPointWithRadius" },
+            { Type::UNDEFINED    , "undefined" }
     };
     initEnumToStrMap();
 }
