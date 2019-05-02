@@ -35,6 +35,24 @@ enum class CD_AttributeValueTypes {
        * specified by ISO 8601
       */
       DATE,
+
+      /*
+       * time Character encoding shall follow the format for time as
+       * specified by ISO 8601
+      */
+      TIME,
+
+      /*
+       * Truncated format for date,
+      */
+      S100_TRUNCATED_DATE,
+
+      /*
+       * Character encoding shall follow the format for URL as
+      * specified by RFC 3986
+      */
+      URL
+
   };
 
 class CD_AttributeValueType : public EnumType<CD_AttributeValueTypes>

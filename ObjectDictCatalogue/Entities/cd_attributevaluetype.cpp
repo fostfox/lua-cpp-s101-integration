@@ -23,6 +23,9 @@ void CD_AttributeValueType::initMaps()
             { Type::REAL         , "real" },
             { Type::TEXT         , "text" },
             { Type::DATE         , "date" },
+            { Type::TIME         , "time" },
+            { Type::S100_TRUNCATED_DATE, "S100_TruncatedDate" },
+            { Type::URL          , "URL" }
     };
     initEnumToStrMap();
 }
