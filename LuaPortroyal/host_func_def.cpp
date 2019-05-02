@@ -298,10 +298,11 @@ void LuaHostFunc::loadFunctions()
         auto luaFSpatialAssociations = m_lua.create_table();
 
         if (m_mapObjCtrl.hasSpatialAssotiation(featureID)) {
-            qWarning() << "for feature ID=" << QString::fromStdString(featureID) << " return empty SpatialAssociation[] table";
             Fe2spRef featureSpatioalAss = m_mapObjCtrl.getFeatureById(featureID).fe2spRef();
             auto luaFSAss = luaCreateSpatialAssociation(m_lua, featureSpatioalAss);
             luaFSpatialAssociations.add(luaFSAss);
+        } else {
+            qWarning() << "for feature ID=" << QString::fromStdString(featureID) << " return empty SpatialAssociation[] table";
         }
 
         return luaFSpatialAssociations;
