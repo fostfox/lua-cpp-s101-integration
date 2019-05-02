@@ -165,6 +165,7 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
 
 
             if (typeOfAttrs == "complex_attrs"){
+            fixComplex:
             // complex
             ComplexAttribute complexAttr;
 
@@ -279,6 +280,8 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
 
 
             feature.addComplexAttr(complexAttr);
+
+            if (typeOfAttrs == "code") goto fixComplex;
 
             // TAG NAME AFTER </complex_attrs>
             typeOfAttrs = m_xmlReader->name().toString().toStdString();
