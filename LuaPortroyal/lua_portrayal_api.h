@@ -78,7 +78,7 @@ sol::table helpEmptyTable(sol::state& lua);
  *          uncached featureIDs, or featureIDs associated with context parameters whose values have
  *          changed.
  */
-bool PortrayalMain(const sol::state& lua, const std::vector<std::string> &featureIDs);
+bool PortrayalMain(sol::state &lua, const std::vector<std::string> &featureIDs);
 
 /*!
  * \brief PortrayalInitializeContextParameters

@@ -140,11 +140,11 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostGetFeatureIDs"
                      , [&]()
-                       -> vector<string>
+                       -> sol::table
     {
         qDebug() << "call HostGetFeatureIDs";
-        vector<string> featuresIds = m_mapObjCtrl.getFeaturesIDs();
-        return featuresIds;
+        auto luaFeaturesIds = helpLuaTable(m_lua, m_mapObjCtrl.getFeaturesIDs());
+        return luaFeaturesIds;
     });
 
     /*!
@@ -554,10 +554,12 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostGetFeatureTypeCodes"
                      , [&]()
+                       -> sol::table
     {
         qDebug() << "call HostGetFeatureTypeCodes";
-        auto featureTypeCodes = m_dictObjCtrl.featureTypeCtrl().codes();
-        return featureTypeCodes;
+        const auto& featureTypeCodes = m_dictObjCtrl.featureTypeCtrl().codes();
+        auto luafeatureTypeCodes = helpLuaTable(m_lua, featureTypeCodes);
+        return luafeatureTypeCodes;
     });
     /*!
      * \brief HostGetInformationTypeCodes()
@@ -566,10 +568,12 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostGetInformationTypeCodes"
                      , [&]()
+                       -> sol::table
     {
         qDebug() << "call HostGetInformationTypeCodes";
-        auto informTypeCodes = m_dictObjCtrl.informationTypeCrtl().codes();
-        return informTypeCodes;
+        const auto& informTypeCodes = m_dictObjCtrl.informationTypeCrtl().codes();
+        auto luaInformTypeCodes = helpLuaTable(m_lua, informTypeCodes);
+        return luaInformTypeCodes;
     });
     /*!
      * \brief HostGetSimpleAttributeTypeCodes
@@ -578,10 +582,12 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostGetSimpleAttributeTypeCodes"
                      , [&]()
+                       -> sol::table
     {
         qDebug() << "call HostGetSimpleAttributeTypeCodes";
-        auto simpleAtrTypeCodes = m_dictObjCtrl.simpleAttributeCtrl().codes();
-        return simpleAtrTypeCodes;
+        const auto& simpleAtrTypeCodes = m_dictObjCtrl.simpleAttributeCtrl().codes();
+        auto luaSimpleAtrTypeCodes = helpLuaTable(m_lua, simpleAtrTypeCodes);
+        return luaSimpleAtrTypeCodes;
     });
     /*!
      * \brief HostGetComplexAttributeTypeCodes
@@ -591,10 +597,12 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostGetComplexAttributeTypeCodes"
                      , [&]()
+                       -> sol::table
     {
         qDebug() << "call HostGetComplexAttributeTypeCodes";
-        auto complexAttrTypeCodes = m_dictObjCtrl.complexAttributeCtrl().codes();
-        return complexAttrTypeCodes;
+        const auto& complexAttrTypeCodes = m_dictObjCtrl.complexAttributeCtrl().codes();
+        auto luaComplexAttrTypeCodes = helpLuaTable(m_lua, complexAttrTypeCodes);
+        return luaComplexAttrTypeCodes;
     });
     /*!
      * \brief HostGetRoleTypeCodes
@@ -603,10 +611,12 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostGetRoleTypeCodes"
                      , [&]()
+                       -> sol::table
     {
         qDebug() << "call HostGetRoleTypeCodes";
-        auto roleTypeCodes = m_dictObjCtrl.rolesCtrl().codes();
-        return roleTypeCodes;
+        const auto& roleTypeCodes = m_dictObjCtrl.rolesCtrl().codes();
+        auto luaRoleTypeCodes = helpLuaTable(m_lua, roleTypeCodes);
+        return luaRoleTypeCodes;
     });
     /*!
      * \brief HostGetInformationAssociationTypeCodes
@@ -616,10 +626,12 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostGetInformationAssociationTypeCodes"
                      , [&]()
+                       -> sol::table
     {
         qDebug() << "call HostGetInformationAssociationTypeCodes";
-        auto infAssTypeCodes = m_dictObjCtrl.informationAssociationCtrl().codes();
-        return infAssTypeCodes;
+        const auto& infAssTypeCodes = m_dictObjCtrl.informationAssociationCtrl().codes();
+        auto luaInfAssTypeCodes = helpLuaTable(m_lua, infAssTypeCodes);
+        return luaInfAssTypeCodes;
     });
     /*!
      * \brief HostGetFeatureAssociationTypeCodes
@@ -629,10 +641,12 @@ void LuaHostFunc::loadFunctions()
      */
     m_lua.set_function("HostGetFeatureAssociationTypeCodes"
                      , [&]()
+                       -> sol::table
     {
         qDebug() << "call HostGetFeatureAssociationTypeCodes";
-        auto featureAssTypeCodes = m_dictObjCtrl.featureAssociationCtrl().codes();
-        return featureAssTypeCodes;
+        const auto& featureAssTypeCodes = m_dictObjCtrl.featureAssociationCtrl().codes();
+        auto luaFeatureAssTypeCodes = helpLuaTable(m_lua, featureAssTypeCodes);
+        return luaFeatureAssTypeCodes;
     });
     /*!
      * \brief HostGetFeatureTypeInfo

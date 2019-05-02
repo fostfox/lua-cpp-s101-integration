@@ -33,7 +33,7 @@ function SNDFRM04(feature, featurePortrayal, contextParameters, soundingPoint, d
 	if feature.Code == 'DepthNoBottomFound' or contains(feature.qualityOfVerticalMeasurement, { 3, 4, 5, 8, 9 }) or contains(feature.status, { 18 }) then
 		addSymbol(symbolPrefix..'C2')
 	else
-		local spatialQuality = feature:GetSpatialAssociation():GetInformationAssociation(table.unpack(sqParams))
+		local spatialQuality = feature:GetSpatialAssociation():GetInformationAssociation(unpack(sqParams))
 		local qualityOfPosition = spatialQuality and spatialQuality.qualityOfHorizontalMeasurement
 
 		if qualityOfPosition and qualityOfPosition ~= 1 and qualityOfPosition ~= 10 and qualityOfPosition ~= 11 then

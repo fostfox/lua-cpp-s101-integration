@@ -169,7 +169,7 @@ local function LookupAttributeValue(container, attributeCode, HostGetSimpleAttri
 
 			container['@' .. attributeCode] = value
 
-			if unknownValue == value then
+			if value == unknownValue then
 				value = nil
 			end
 
@@ -184,7 +184,7 @@ local function LookupAttributeValue(container, attributeCode, HostGetSimpleAttri
 
 				convertedValues['@' .. i] = convertedValue
 
-				if unknownValue == convertedValue then
+				if convertedValue == unknownValue then
 					convertedValue = nil
 				end
 
@@ -272,9 +272,9 @@ function CreateNamedType(...)
 	local ptype = type(params[1])
 
 	if ptype == 'table' then
-		return CreateNamedTypeExact(table.unpack(params, 1, 3))
+		return CreateNamedTypeExact(unpack(params, 1, 3))
 	else
-		return CreateNamedTypeExact(CreateItem(table.unpack(params, 1, 5)), table.unpack(params, 6, 7))
+		return CreateNamedTypeExact(CreateItem(unpack(params, 1, 5)), unpack(params, 6, 7))
 	end
 end
 
@@ -298,12 +298,12 @@ function CreateObjectType(...)
 		local ttype = params[1].Type
 
 		if ttype == 'NamedType' then
-			return CreateObjectTypeExact(table.unpack(params, 1, 2))
+			return CreateObjectTypeExact(unpack(params, 1, 2))
 		else -- should be Item.  Checked in CreateNamedType call.
-			return CreateObjectTypeExact(CreateNamedType(table.unpack(params, 1, 3)), table.unpack(params, 4, 4))
+			return CreateObjectTypeExact(CreateNamedType(unpack(params, 1, 3)), unpack(params, 4, 4))
 		end
 	else
-		return CreateObjectTypeExact(CreateNamedType(table.unpack(params, 1, 7)), table.unpack(params, 8, 8))
+		return CreateObjectTypeExact(CreateNamedType(unpack(params, 1, 7)), unpack(params, 8, 8))
 	end
 end
 
@@ -328,13 +328,13 @@ function CreateInformationType(...)
 		local ttype = params[1].Type
 
 		if ttype == 'ObjectType' then
-			return CreateInformationTypeExact(table.unpack(params, 1, 3))
+			return CreateInformationTypeExact(unpack(params, 1, 3))
 		else
 			Debug.Trace("Break in CreateInformationType")
 			Debug.Break()
 		end
 	else
-		return CreateInformationTypeExact(CreateObjectType(table.unpack(params, 1, 8)), table.unpack(params, 9, 10))
+		return CreateInformationTypeExact(CreateObjectType(unpack(params, 1, 8)), unpack(params, 9, 10))
 	end
 end
 
@@ -362,13 +362,13 @@ function CreateFeatureType(...)
 		local ttype = params[1].Type
 
 		if ttype == 'ObjectType' then
-			return CreateFeatureTypeExact(table.unpack(params, 1, 6))
+			return CreateFeatureTypeExact(unpack(params, 1, 6))
 		else
 			Debug.Trace("Break in CreateFeatureType")
 			Debug.Break()
 		end
 	else
-		return CreateFeatureTypeExact(CreateObjectType(table.unpack(params, 1, 8)), table.unpack(params, 9, 13))
+		return CreateFeatureTypeExact(CreateObjectType(unpack(params, 1, 8)), unpack(params, 9, 13))
 	end
 end
 
@@ -395,13 +395,13 @@ function CreateInformationAssociation(...)
 
 		if ttype == 'NamedType' then
 			--Debug.Break() // < Is this break really needed? 
-			return CreateInformationAssociationExact(table.unpack(params, 1, 4))
+			return CreateInformationAssociationExact(unpack(params, 1, 4))
 		else
 			Debug.Trace("Break in CreateInformationAssociation")
 			Debug.Break()
 		end
 	else
-		return CreateInformationAssociationExact(CreateNamedType(table.unpack(params, 1, 7)), table.unpack(params, 8, 10))
+		return CreateInformationAssociationExact(CreateNamedType(unpack(params, 1, 7)), unpack(params, 8, 10))
 	end
 end
 
@@ -428,13 +428,13 @@ function CreateFeatureAssociation(...)
 
 		if ttype == 'NamedType' then
 			-- Debug.Break() // < Is this break really needed? 
-			return CreateFeatureAssociationExact(table.unpack(params, 1, 4))
+			return CreateFeatureAssociationExact(unpack(params, 1, 4))
 		else
 			Debug.Trace("CreateFeatureAssociation")
 			Debug.Break()
 		end
 	else
-		return CreateFeatureAssociationExact(CreateNamedType(table.unpack(params, 1, 7)), table.unpack(params, 8, 10))
+		return CreateFeatureAssociationExact(CreateNamedType(unpack(params, 1, 7)), unpack(params, 8, 10))
 	end
 end
 
@@ -456,7 +456,7 @@ function CreateRole(...)
 	if ptype == 'table' then
 		return CreateRoleExact(params[1])
 	else
-		return CreateRoleExact(CreateItem(table.unpack(params, 1, 5)))
+		return CreateRoleExact(CreateItem(unpack(params, 1, 5)))
 	end
 end
 
@@ -481,9 +481,9 @@ function CreateSimpleAttribute(...)
 	local ptype = type(params[1])
 
 	if ptype == 'table' then
-		return CreateSimpleAttributeExact(table.unpack(params, 1, 6))
+		return CreateSimpleAttributeExact(unpack(params, 1, 6))
 	else
-		return CreateSimpleAttributeExact(CreateItem(table.unpack(params, 1, 5)), table.unpack(params, 6, 10))
+		return CreateSimpleAttributeExact(CreateItem(unpack(params, 1, 5)), unpack(params, 6, 10))
 	end
 end
 
@@ -508,9 +508,9 @@ function CreateComplexAttribute(...)
 	local ptype = type(params[1])
 
 	if ptype == 'table' then
-		return CreateComplexAttributeExact(table.unpack(params, 1, 2))
+		return CreateComplexAttributeExact(unpack(params, 1, 2))
 	else
-		return CreateComplexAttributeExact(CreateItem(table.unpack(params, 1, 5)), table.unpack(params, 6, 6))
+		return CreateComplexAttributeExact(CreateItem(unpack(params, 1, 5)), unpack(params, 6, 6))
 	end
 end
 

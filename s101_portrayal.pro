@@ -6,10 +6,10 @@ CONFIG -= app_bundle
 INCLUDEPATH += 3rdparty/lualib/include
 INCLUDEPATH += 3rdparty/sol2/include
 
-#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_vc15" -llua53
-#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_vc15" -llua53
-LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_mingw6" -llua53
-#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_mingw6" -llua53
+#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_vc15" -llua5.1
+#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_vc15" -llua5.1
+LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_mingw6" -llua5.1
+#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_mingw6" -llua5.1
 
 
 DEFINES += QT_DEPRECATED_WARNINGS

@@ -105,7 +105,7 @@ function OBSTRN07(feature, featurePortrayal, contextParameters)
 		for curveAssociation in feature:GetFlattenedSpatialAssociations() do
 			featurePortrayal:AddSpatialReference(curveAssociation)
 
-			local spatialQuality = curveAssociation:GetInformationAssociation(table.unpack(sqParams))
+			local spatialQuality = curveAssociation:GetInformationAssociation(unpack(sqParams))
 			local qualityOfPosition = spatialQuality and spatialQuality.qualityOfHorizontalMeasurement
 
 			if qualityOfPosition and qualityOfPosition >= 2 and qualityOfPosition <= 9 then

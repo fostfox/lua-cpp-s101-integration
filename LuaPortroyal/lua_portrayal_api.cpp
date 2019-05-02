@@ -113,10 +113,11 @@ sol::table helpEmptyTable(sol::state &lua)
     return lua.create_table();
 }
 
-bool PortrayalMain(const sol::state &lua, const vector<string> &featureIDs)
+bool PortrayalMain(sol::state &lua, const vector<string> &featureIDs)
 {
-   auto isSuccessPortrayal = lua["PortrayalMain"](featureIDs);
-   return isSuccessPortrayal;
+    auto luaFeatureIDs = helpLuaTable(lua, featureIDs);
+    auto isSuccessPortrayal = lua["PortrayalMain"](luaFeatureIDs);
+    return isSuccessPortrayal;
 }
 
 void PortrayalInitializeContextParameters(sol::state &lua, const ContexParametrController &contextParameters)
