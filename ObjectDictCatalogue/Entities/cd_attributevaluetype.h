@@ -35,12 +35,35 @@ enum class CD_AttributeValueTypes {
        * specified by ISO 8601
       */
       DATE,
+
+      /*
+       * time Character encoding shall follow the format for time as
+       * specified by ISO 8601
+      */
+      TIME,
+
+      /*
+       * Truncated format for date,
+      */
+      S100_TRUNCATED_DATE,
+
+      /*
+       * Character encoding shall follow the format for URL as
+      * specified by RFC 3986
+      */
+      URL,
+
+      /*
+       * Undefined object type. Perhaps the default constructor
+       * created a Type Object, so the type was set by default.
+      */
+      UNDEFINED
   };
 
 class CD_AttributeValueType : public EnumType<CD_AttributeValueTypes>
 {
   public:
-    CD_AttributeValueType() = default;
+    CD_AttributeValueType();
     CD_AttributeValueType(CD_AttributeValueTypes t);
     CD_AttributeValueType(std::string t);
 

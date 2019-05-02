@@ -6,14 +6,20 @@
 enum class FC_RoleTypes {
     Association,
     Aggregation,
-    Composition
+    Composition,
+
+    /*
+     * Undefined object type. Perhaps the default constructor
+     * created a Type Object, so the type was set by default.
+    */
+    UNDEFINED
 };
 
 
 class FC_RoleType : public EnumType<FC_RoleTypes>
 {
   public:
-    FC_RoleType() = default;
+    FC_RoleType();
     FC_RoleType(std::string type);
     FC_RoleType(FC_RoleTypes type);
 

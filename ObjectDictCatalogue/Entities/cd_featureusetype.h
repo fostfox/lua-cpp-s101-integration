@@ -30,13 +30,19 @@ enum class CD_FeatureUseTypes {
     /*
      * a feature which is made up of component features // WARNING: Depricated type
     */
-    AGGREGATION
+    AGGREGATION,
+
+    /*
+     * Undefined object type. Perhaps the default constructor
+     * created a Type Object, so the type was set by default.
+    */
+    UNDEFINED
 };
 
 class CD_FeatureUseType : public EnumType<CD_FeatureUseTypes>
 {
   public:
-    CD_FeatureUseType() = default;
+    CD_FeatureUseType();
     CD_FeatureUseType(CD_FeatureUseTypes type);
     CD_FeatureUseType(std::string type);
 

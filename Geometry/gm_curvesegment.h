@@ -15,13 +15,18 @@ enum class InterpolationTypes {
     LOXODROMIC,
     ELLIPTICAL,
     CONIC,
-    CIRCULAR_ARC_CENTER_POINT_WITH_RADIUS
+    CIRCULAR_ARC_CENTER_POINT_WITH_RADIUS,
+    /*
+     * Undefined object type. Perhaps the default constructor
+     * created a Type Object, so the type was set by default.
+    */
+    UNDEFINED
   };
 
 class InterpolationType : public EnumType<InterpolationTypes>
 {
   public:
-    InterpolationType() = default;
+    InterpolationType();
     InterpolationType(InterpolationTypes t);
     InterpolationType(std::string t);
 
