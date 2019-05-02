@@ -1,8 +1,5 @@
 #pragma once
 #include <vector>
-#include <sstream>
-#include <QDataStream>
-#include <QVariant>
 
 #include "../Entries/feature.h"
 #include "../Controllers/featurescontroller.h"

@@ -2,7 +2,6 @@
 
 #include <QString>
 #include <QMap>
-#include <QDebug>
 
 template<typename Type>
 QMap<Type, std::string>& modEnumToStrMap(const QMap<Type, std::string>& enumToStrMap)

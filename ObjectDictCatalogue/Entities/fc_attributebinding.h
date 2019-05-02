@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../DataTypes/datatypes.h"
-#include "fc_listedvalue.h"
 #include "fc_attribute.h"
 
 class FC_AttributeBinding

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../DataTypes/datatypes.h"
-#include <QVector>
+#include <vector>
 
 class FC_ListedValue
 {

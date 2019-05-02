@@ -2,7 +2,7 @@
 
 #include <string>
 #include <QMap>
-#include <QString>
+
 
 class DrawingInstructions
 {

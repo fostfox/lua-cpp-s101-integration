@@ -1,6 +1,5 @@
 #pragma once
 
-#include "fc_item.h"
 #include "fc_role.h"
 
 #include <QVector>
