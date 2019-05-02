@@ -66,18 +66,11 @@ Attribute FeatureMapController::getSimpleAttribute(std::string id, std::string p
     ComplexAttribute cAttr;
     Attribute attr;
     // такая реализация пока что, так как у нас в xml complex содержит только simple
-    if (attrsFull.size() == 2){
+    if (attrsFull.size() == 1){
         cAttr = f.getComplexAttributeByCode(attrsFull[0].first);
-        attr = cAttr.getAttributeByCode(attrCode);
+        return cAttr.getAttributeByCode(attrCode);
     }
-    else if (attrsFull.size() == 1){
-        attr = f.getAttributeByCode(attrCode);
-    }
-    else{
-        qFatal("No condition caught");
-    }
-
-    return attr;
+    return f.getAttributeByCode(attrCode);
 }
 
 Feature FeatureMapController::getFeatureById(std::string id) const
@@ -114,14 +107,6 @@ bool FeatureMapController::hasSimpleAttribute(std::string id, std::string path, 
     else if (!f.hasSimpleAttribute(attributeCode)){
         return false;
     }
-//    else if (attrsFull.size() == 1){
-//        if (!f.hasComplexAttribute(attrsFull[0].first)){
-//            return false;
-//        }
-//    }
-//    else{
-//        qFatal("No condition caught");
-//    }
 
     return true;
 }
