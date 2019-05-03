@@ -14,6 +14,7 @@ class FC_InformationBinding
             ,FC_RoleType roleType
             ,FC_InformationAssociation associationRef
             ,InformationTypeCode informationType
+            ,FC_Role roleRef
             );
 
 
@@ -30,6 +31,8 @@ class FC_InformationBinding
     InformationTypeCode informationType() const;
     void setInformationType(const InformationTypeCode &informationType);
 
+    const FC_Role& roleRef() const;
+    void setRoleRef(const FC_Role &roleRef);
 
 private:
     Multiplicity m_multiplicity;
@@ -37,4 +40,5 @@ private:
     InformationAssociationCode m_association;
     FC_InformationAssociation m_associationRef;
     InformationTypeCode m_informationType;
+    FC_Role m_roleRef;
 };

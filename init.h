@@ -11,7 +11,7 @@
 
 namespace filenames {
 const static QString MAP =          "../XMLData/dataset_map.xml";
-const static QString DICT =         "../XMLData/S-101_FC_0_8_8.xml";
+const static QString DICT =         "../XMLData/S-101FC_1.0.0_20190409.xml";
 const static QString LUA_MAIN =     "../LuaPortroyal/Rules/main.lua";
 const static QString PORTRAYAL =    "OUTPUT.txt";
 const static char*   LOG       =    "log.txt";

@@ -186,13 +186,14 @@ sol::object luaCreateNamedType(const sol::state &lua, const sol::object &luaItem
 sol::object luaCreateInformationBinding(sol::state &lua, const FC_InformationBinding *infBind)
 {
     auto luaInfAss = luaCreateInformationAssociation(lua, &infBind->associationRef());
+    auto luaRole = luaCreateRole(lua, &infBind->roleRef());
 
     sol::object luaInformationBinding = lua["CreateInformationBinding"](
                 infBind->informationType(),
                 infBind->multiplicity().lower,
                 createUpperMuliplicity(lua, infBind->multiplicity().upper),
                 infBind->roleType().toQString(),
-                sol::nil, //TODO: Role role (not defined)
+                luaRole,
                 luaInfAss
                 );
     return luaInformationBinding;
