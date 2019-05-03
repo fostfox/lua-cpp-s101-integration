@@ -1,5 +1,6 @@
 #include "feature.h"
 #include <iostream>
+#include <QString>
 
 Attribute::Attribute()
 {

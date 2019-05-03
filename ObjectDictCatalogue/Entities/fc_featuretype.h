@@ -2,10 +2,8 @@
 
 #include "QVector"
 
-#include "fc_item.h"
 #include "cd_featureusetype.h"
 #include "fc_spatialprimitivetype.h"
-#include "fc_attributebinding.h"
 #include "fc_featurebinding.h"
 #include "fc_informationbinding.h"
 

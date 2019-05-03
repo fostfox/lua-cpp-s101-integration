@@ -1,5 +1,6 @@
+#include <QString>
 #include "featurescontroller.h"
-#include <assert.h>
+
 
 std::vector<std::pair<std::string, std::string> > getAttributeNames(std::string path){
     std::string s = path;

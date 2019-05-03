@@ -6,7 +6,7 @@
 #include <QMap>
 #include <QDebug>
 #include <iostream>
-
+#include <sstream>
 
 inline bool isStartElement(QXmlStreamReader *reader)
 {

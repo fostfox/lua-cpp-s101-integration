@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../DataTypes/datatypes.h"
 #include "fc_item.h"
 
 class FC_Role{

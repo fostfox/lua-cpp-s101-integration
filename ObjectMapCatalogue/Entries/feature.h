@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include <string>
-#include <QVariant>
 #include <map>
 
 class Attribute

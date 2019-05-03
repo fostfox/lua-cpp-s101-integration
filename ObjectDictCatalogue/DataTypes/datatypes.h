@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QString>
+#include <string>
 
 using Integer = int;
 using PositiveInteger = unsigned int;

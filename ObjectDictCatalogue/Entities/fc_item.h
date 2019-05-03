@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QVector>
+#include <vector>
 #include "../DataTypes/datatypes.h"
 
 
