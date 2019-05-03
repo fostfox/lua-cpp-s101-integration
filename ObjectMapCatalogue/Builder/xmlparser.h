@@ -19,7 +19,7 @@ class FeatureMapXMLBuilder
 public:
     FeatureMapXMLBuilder(QFile * const inputFile);
 
-    FeatureMapController build();
+    FeatureMapController build(bool onlyFullFeatures = false);
     std::vector<Feature> parse2();
 
 private:
