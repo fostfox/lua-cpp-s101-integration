@@ -9,40 +9,61 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <QString>
+#include <QMap>
+#include <QString>
+#include <QVector>
 
-class TimeUnit{
+class QFile;
+class Profiler;
+
+
+class TimeUnit {
 public:
-    TimeUnit(const std::string &functionName);
+    TimeUnit(const QString &functionName);
     ~TimeUnit();
 
 private:
-    std::string functionName_;
-    std::chrono::steady_clock::time_point begin;
-    std::chrono::steady_clock::time_point end;
-    double result;
-
-    std::stringstream logfile;
     void start();
-    void stop(std::string s);
-    void dump();
+    void stop();
+    void writeElapsed();
+
+private:
+    QString m_functionName;
+    std::chrono::steady_clock::time_point m_begin;
+    std::chrono::steady_clock::time_point m_end;
 };
 
+
 class Profiler {
+    friend class TimeUnit;
 public:
     Profiler() = default;
     Profiler(const Profiler& root) = delete;
     Profiler& operator=(const Profiler&) = delete;
 
-    static Profiler& Instance();
-    static TimeUnit createTimeUnit(const std::string &functionName);
+    static Profiler& instance();
+    static TimeUnit createTimeUnit(const QString &functionName);
 
-    static void dump();
+    static void setLogFile(const QString &fileName);
+    static void dumpLog();
 
 private:
-    friend class TimeUnit;
-    //void setFunctionResultTime(std::string fileName, double timeResult);
+    class FunctionTimeInfo {
+    public:
+        FunctionTimeInfo(const QString &name);
+        void addElapsedTime(double time);
+        const QString &name() const;
+        const QVector<double>& elapsedTimes() const;
+    private:
+        QString m_name;
+        QVector<double> m_elapsedTimes;
+    };
 
-    std::string funcName_;
-    std::map<std::string, std::vector<double>> m_funcName_to_times;
+    void addElapsedTime(const QString &functionName, double time);
+
+private:
+    static QString m_fileName;
+    static QMap<QString, FunctionTimeInfo> m_funcTimeInfoMap;
 };
 
