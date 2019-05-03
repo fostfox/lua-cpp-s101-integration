@@ -27,11 +27,21 @@ FeatureMapXMLBuilder::FeatureMapXMLBuilder(QFile * const inputFile)
     m_xmlReader = new QXmlStreamReader(inputFile);
 }
 
-FeatureMapController FeatureMapXMLBuilder::build()
+FeatureMapController FeatureMapXMLBuilder::build(bool onlyFullFeatures)
 {
-    auto v = parse2();
+    auto features = parse2();
+    if (onlyFullFeatures) {
+        std::vector<Feature> tmpFeatures;
+        for (auto f : features){
+            if (f.fe2spRef().refId() != -1){
+                tmpFeatures.push_back(f);
+            }
+        }
+        features.clear();
+        features = tmpFeatures;
+    }
     FeatureMapController fFontroller;
-    fFontroller.setFeatures(v);
+    fFontroller.setFeatures(features);
     return fFontroller;
 }
 

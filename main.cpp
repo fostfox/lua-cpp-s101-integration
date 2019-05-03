@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 
     qInfo() << "START: Map parsing";
     FeatureMapXMLBuilder mapBuilder(&mapFile);
-    auto mapController = mapBuilder.build();
+    auto mapController = mapBuilder.build(true);
     mapFile.close();
     qInfo() << "END: Map parsing";
 
