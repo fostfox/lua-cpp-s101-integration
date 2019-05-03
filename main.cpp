@@ -12,8 +12,11 @@
 #include "drawing_instructions_controller.h"
 #include "contextparameter.h"
 
+#include "profiler.h"
+
 int main(int argc, char *argv[])
 {
+    TimeUnit t = Profiler::createTimeUnit(__FUNCTION__);
 
     qInstallMessageHandler(myMessageOutput);
 
@@ -88,4 +91,5 @@ int main(int argc, char *argv[])
     }
     portayalFile.close();
 
+    Profiler::dump();
 }
