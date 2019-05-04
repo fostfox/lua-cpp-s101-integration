@@ -408,8 +408,9 @@ void LuaHostFunc::loadFunctions()
         PROFILING_TIME2("HostGetSpatial")
         qDebug() << "call HostGetSpatial";
 
-        if (m_mapObjCtrl.hasSpatialObject(spatialID)){
-            qCritical("the item is not on the map with the specified field");
+        if (!m_mapObjCtrl.hasSpatialObject(spatialID)){
+            qCritical(("Ihe spatilalID=" + spatialID + " not on the map").c_str());
+            return sol::nil;
         }
         auto spatialP = m_mapObjCtrl.spatialObjectByRefId(spatialID);
 
