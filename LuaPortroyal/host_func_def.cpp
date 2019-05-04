@@ -407,57 +407,33 @@ void LuaHostFunc::loadFunctions()
     {
         PROFILING_TIME2("HostGetSpatial")
         qDebug() << "call HostGetSpatial";
-        auto tmpFe2sp = m_mapObjCtrl.getFe2spRefByRefId(spatialID);
+
+        if (m_mapObjCtrl.hasSpatialObject(spatialID)){
+            qCritical("the item is not on the map with the specified field");
+        }
+        auto spatialP = m_mapObjCtrl.spatialObjectByRefId(spatialID);
 
         sol::object luaSpatial;
-
-        GM_Point tmp_GM_Point(0, 0, 0);
-        sol::object tmpPoint = luaCreatePoint(m_lua, tmp_GM_Point);
-
-        QVector<GM_Point> controlPoints = {tmp_GM_Point, tmp_GM_Point};
-        GM_CurveSegment tmp_GM_Curve_Segment(controlPoints, InterpolationTypes::CONIC);
-        sol::object tmpCurveSegment = luaCreateCurveSegment(m_lua, tmp_GM_Curve_Segment);
-
-        QVector<GM_CurveSegment> segments = {tmp_GM_Curve_Segment, tmp_GM_Curve_Segment};
-        GM_Curve tmp_GM_Curve(tmp_GM_Point, tmp_GM_Point, segments);
-        sol::object tmpCurve = luaCreateCurve(m_lua, tmp_GM_Curve);
-
-        GM_MultiPoint tmp_GM_MultiPoint(controlPoints);
-        sol::object tmpMultiPoint = luaCreateMultiPoint(m_lua, tmp_GM_MultiPoint);
-
-        QVector<Fe2spRef> tmpVecFe2spRef = {tmpFe2sp, tmpFe2sp};
-        GM_CompositeCurve tmp_GM_CompositeCurve(tmpVecFe2spRef);
-        sol::object tmpCompositeCurve = luaCreateCompositeCurve(m_lua, tmp_GM_CompositeCurve);
-
-        GM_Surface tmp_GM_Surface(tmpFe2sp);
-        sol::object tmpSurface = luaCreateSurface(m_lua, tmp_GM_Surface);
-
-        switch(tmpFe2sp.refType()){
-        case 110:
-            luaSpatial = tmpPoint;
-            break;
-//      case xxx:
-//          luaSpatial = tmpMultiPoint;
-//          break;
-        case 120:
-            luaSpatial = tmpCurve;
-            break;
-        case 125:
-            luaSpatial = tmpCompositeCurve;
-            break;
-//       case xxx:
-//           luaSpatial = tmpCurveSegment;
-//           break;
-//       case xxx:
-//           luaSpatial = tmpCompositeCurve;
-//           break;
-        case 130:
-            luaSpatial = tmpSurface;
-            break;
+        switch (spatialP->getType()) {
+        case GM_Object::POINT: {
+            luaSpatial = luaCreatePoint(m_lua, *static_cast<GM_Point*>(spatialP));
+        } break;
+        case GM_Object::MULTIPOINT: {
+            luaSpatial = luaCreateMultiPoint(m_lua, *static_cast<GM_MultiPoint*>(spatialP));
+        } break;
+        case GM_Object::CURVE: {
+            luaSpatial = luaCreateCurve(m_lua, *static_cast<GM_Curve*>(spatialP));
+        } break;
+        case GM_Object::COMPOSITE_CURVE: {
+            luaSpatial = luaCreateCompositeCurve(m_lua, *static_cast<GM_CompositeCurve*>(spatialP));
+        } break;
+        case GM_Object::SURFACE: {
+            luaSpatial = luaCreateSurface(m_lua, *static_cast<GM_Surface*>(spatialP));
+        } break;
         default:
+            //qFatal("Unsupported switch statment);
             qFatal("Orange it's not my life, but I'm gangster");
         }
-
         return luaSpatial;
     });
 

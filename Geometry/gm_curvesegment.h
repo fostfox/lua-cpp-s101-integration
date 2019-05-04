@@ -5,7 +5,7 @@
 #include "gm_point.h"
 
 #include "../ObjectDictCatalogue/Entities/enumtype.h"
-
+#include "gm_object.h"
 
 enum class InterpolationTypes {
     NONE,
@@ -34,23 +34,22 @@ class InterpolationType : public EnumType<InterpolationTypes>
     void initMaps();
 };
 
-
-
-
-class GM_CurveSegment
+class GM_CurveSegment : public GM_Object
 {
 public:
     GM_CurveSegment() = default;
+    GM_CurveSegment(const QVector<GM_Point>& controlPoints);
     GM_CurveSegment(const QVector<GM_Point>& controlPoints, const InterpolationType& interpolation);
+    ~GM_CurveSegment() = default;
 
     void addControlPoint(const GM_Point &controlPoint);
 
     QVector<GM_Point> controlPoints() const;
     InterpolationType interpolation() const;
-
+    Type getType() const;
 
 
 private:
     QVector<GM_Point> m_controlPoints;
-    InterpolationType m_interpolation;
+    InterpolationType m_interpolation = InterpolationTypes::LOXODROMIC;
 };

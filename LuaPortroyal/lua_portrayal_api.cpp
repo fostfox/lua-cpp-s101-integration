@@ -372,12 +372,12 @@ sol::object luaCreateSpatialAssociation(const sol::state &lua, const Fe2spRef &s
 sol::object luaCreatePoint(const sol::state &lua, const GM_Point& point)
 {
     sol::object z = point.hasZ()
-            ? sol::make_object(lua, std::to_string(point.z()))
+            ? sol::make_object(lua, point.z())
             : sol::nil;
 
     sol::object luaPoint  = lua["CreatePoint"] (
-                std::to_string(point.x()),
-                std::to_string(point.y()),
+                point.x(),
+                point.y(),
                 z
                 );
 

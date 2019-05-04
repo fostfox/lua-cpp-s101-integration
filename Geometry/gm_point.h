@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../ObjectDictCatalogue/DataTypes/datatypes.h"
-
+#include "gm_object.h"
 
 namespace std{
 template< class T >
@@ -10,24 +10,25 @@ class optional;
 }
 
 
-class GM_Point
+class GM_Point : public GM_Object
 {
 public:
     GM_Point() = default;
-    GM_Point(Real x, Real y);
-    GM_Point(Real x, Real y, Real z);
+    GM_Point(std::string x, std::string y);
+    GM_Point(std::string x, std::string y, std::string z);
 
-    ~GM_Point();
+    ~GM_Point() = default;
 
 
     bool hasZ() const;
+    Type getType() const;
 
-    Real x() const;
-    Real y() const;
-    Real z() const;
+    std::string x() const;
+    std::string y() const;
+    std::string z() const;
 
 private:
-    Real m_x;
-    Real m_y;
-    std::optional<Real>* m_z;
+    std::string m_x;
+    std::string m_y;
+    std::optional<std::string>* m_z;
 };

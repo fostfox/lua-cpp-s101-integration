@@ -15,3 +15,8 @@ QVector<GM_Point> GM_MultiPoint::points() const
 {
     return m_points;
 }
+
+GM_Object::Type GM_MultiPoint::getType() const
+{
+    return GM_Object::MULTIPOINT;
+}

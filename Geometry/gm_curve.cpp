@@ -8,6 +8,26 @@ GM_Curve::GM_Curve(const GM_Point &startPoint, const GM_Point &endPoint, QVector
 
 }
 
+void GM_Curve::setStartPoint(const GM_Point &p)
+{
+    m_startPoint = p;
+}
+
+void GM_Curve::setEndPoint(const GM_Point &p)
+{
+    m_endPoint = p;
+}
+
+void GM_Curve::setSegments(const QVector<GM_CurveSegment> &seg)
+{
+    m_segments = seg;
+}
+
+void GM_Curve::addSegment(const GM_CurveSegment &seg)
+{
+    m_segments.push_back(seg);
+}
+
 GM_Point GM_Curve::startPoint() const
 {
     return m_startPoint;
@@ -21,4 +41,9 @@ GM_Point GM_Curve::endPoint() const
 QVector<GM_CurveSegment> GM_Curve::segments() const
 {
     return m_segments;
+}
+
+GM_Object::Type GM_Curve::getType() const
+{
+    return GM_Object::CURVE;
 }
