@@ -39,10 +39,14 @@ void InterpolationType::initMaps()
 }
 
 
+GM_CurveSegment::GM_CurveSegment(const QVector<GM_Point> &controlPoints)
+    :m_controlPoints(controlPoints)
+{
+}
+
 GM_CurveSegment::GM_CurveSegment(const QVector<GM_Point> &controlPoints, const InterpolationType &interpolation)
     :m_controlPoints(controlPoints), m_interpolation(interpolation)
 {
-
 }
 
 void GM_CurveSegment::addControlPoint(const GM_Point &controlPoint)
