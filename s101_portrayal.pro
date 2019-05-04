@@ -52,7 +52,8 @@ SOURCES += \
     Geometry/gm_curvesegment.cpp \
     Geometry/gm_curve.cpp \
     Geometry/gm_compositecurve.cpp \
-    Geometry/gm_surface.cpp
+    Geometry/gm_surface.cpp \
+    profiler.cpp
 
 
 HEADERS += \
@@ -93,4 +94,5 @@ HEADERS += \
     Geometry/gm_curvesegment.h \
     Geometry/gm_compositecurve.h \
     Geometry/gm_surface.h \
-    init.h
+    init.h \
+    profiler.h
