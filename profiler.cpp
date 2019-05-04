@@ -54,6 +54,7 @@ void Profiler::setLogFile(const QString &fileName)
 
 void Profiler::dumpLog()
 {
+#ifdef PROFILING_TIME_ENABLE
     if (m_fileName.isEmpty()){
         qFatal("File name not specified");
     }
@@ -64,13 +65,14 @@ void Profiler::dumpLog()
 
     QTextStream out(&logFile);
     for (const auto &funcInf : m_funcTimeInfoMap) {
-        out << QString("Function: '%1', total: %2, run count: %3, average: %4")
+        out << QString("Function: '%1', total: %2, run count: %3, average: %4\n")
                .arg(funcInf.name())
                .arg(funcInf.totalElapsed())
                .arg(funcInf.runCount())
                .arg(funcInf.averageElapsed());
     }
     logFile.close();
+#endif
 }
 
 void Profiler::addElapsedTime(const QString &functionName, double time)

@@ -3,14 +3,14 @@
 #include <chrono>
 #include <QMap>
 
-
-#ifdef PROFILING_TIME_ENABLE
+#define PROFILING_TIME_ENABLE
+//#ifndef PROFILING_TIME_ENABLE
     #define PROFILING_TIME2(functionName) [[maybe_unused]] const auto& p = Profiler::instance().createTimeUnit(functionName);
     #define PROFILING_TIME PROFILING_TIME2(__FUNCTION__)
-#else
-    #define PROFILING_TIME2(functionName)
-    #define PROFILING_TIME
-#endif
+//#else
+    //#define PROFILING_TIME2(functionName)
+    //#define PROFILING_TIME
+//#endif
 
 
 class QFile;
