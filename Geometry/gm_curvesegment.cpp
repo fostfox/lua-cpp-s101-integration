@@ -60,3 +60,8 @@ InterpolationType GM_CurveSegment::interpolation() const
     return m_interpolation;
 }
 
+GM_Object::Type GM_CurveSegment::getType() const
+{
+    return GM_Object::CURVE_SEGMENT;
+}
+

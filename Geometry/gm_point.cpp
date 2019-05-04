@@ -7,21 +7,16 @@ using std::optional;
 
 
 
-GM_Point::GM_Point(Real x, Real y)
+GM_Point::GM_Point(std::string x, std::string y)
     :m_x(x), m_y(y)
 {
-    m_z = new std::optional<Real>{};
+    m_z = new std::optional<std::string>{};
 }
 
-GM_Point::GM_Point(Real x, Real y, Real z)
+GM_Point::GM_Point(std::string x, std::string y, std::string z)
     :m_x(x), m_y(y)
 {
-    m_z = new std::optional<Real>{z};
-}
-
-GM_Point::~GM_Point()
-{
-    //delete m_z; TODO: ned fix memory leackage
+    m_z = new std::optional<std::string>{z};
 }
 
 bool GM_Point::hasZ() const
@@ -29,18 +24,23 @@ bool GM_Point::hasZ() const
     return m_z->has_value();
 }
 
+GM_Object::Type GM_Point::getType() const
+{
+    return GM_Object::POINT;
+}
 
-Real GM_Point::x() const
+
+std::string GM_Point::x() const
 {
     return m_x;
 }
 
-Real GM_Point::y() const
+std::string GM_Point::y() const
 {
     return m_y;
 }
 
-Real GM_Point::z() const
+std::string GM_Point::z() const
 {
     return m_z->value();
 }

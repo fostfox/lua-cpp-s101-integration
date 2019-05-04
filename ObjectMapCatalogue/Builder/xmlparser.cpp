@@ -25,10 +25,12 @@ FeatureMapXMLBuilder::FeatureMapXMLBuilder(QFile * const inputFile)
 {
     m_inputFile = inputFile;
     m_xmlReader = new QXmlStreamReader(inputFile);
+    m_xmlSpatial = new QXmlStreamReader(inputFile);
 }
 
 FeatureMapController FeatureMapXMLBuilder::build(bool onlyFullFeatures)
 {
+    parseSpatials(); // DELETE
     auto features = parse2();
     if (onlyFullFeatures) {
         std::vector<Feature> tmpFeatures;
@@ -356,6 +358,204 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
         throw "Some error";
     }
     return features;
+}
+
+enum ParserTags {isolated_point, edge, composite_edge, surface,
+                lat, lon, ref_id, ref_type, orientation, interior, index, sp2sp_ref,
+                geo_points, geo_point};
+
+const static QMap<std::string, ParserTags> strTagToParserTags=  {
+    { "isolated_point",         isolated_point },
+    { "edge",                   edge },
+    { "composite_edge",         composite_edge },
+    { "surface",                surface },
+
+    { "lat",                    lat },
+    { "lon",                    lon },
+
+    { "ref_id",                    ref_id },
+    { "ref_type",                    ref_type },
+    { "orientation",                    orientation },
+    { "interior",                    interior },
+
+    { "index",                    index },
+    { "sp2sp_ref",                    sp2sp_ref },
+
+    { "geo_points",                    geo_points },
+    { "geo_point",                    geo_point }
+};
+
+bool FeatureMapXMLBuilder::isStartElementAndAllowed(std::string tag)
+{
+    return m_xmlSpatial->isStartElement() && strTagToParserTags.contains(tag);
+}
+
+GM_Object *FeatureMapXMLBuilder::buildIsolatedPoint()
+{
+    int index = m_xmlSpatial->readElementText().toInt();
+    readNext2(m_xmlSpatial);
+    std::string lat = m_xmlSpatial->readElementText().toStdString();
+    readNext2(m_xmlSpatial);
+    std::string lon = m_xmlSpatial->readElementText().toStdString();
+    m_SpId_to_SpatialObject[index] = new GM_Point(lat, lon);
+    return new GM_Point(lat, lon);
+}
+
+GM_Object *FeatureMapXMLBuilder::buildSurface()
+{
+    int index = m_xmlSpatial->readElementText().toInt();
+    readNext2(m_xmlSpatial);
+    GM_Surface* surf = new GM_Surface();
+    while(!(m_xmlSpatial->name().toString().toStdString() == "surface" && m_xmlSpatial->isEndElement())){
+        if (m_xmlSpatial->name().toString().toStdString() == "sp2sp_ref" && m_xmlSpatial->isStartElement()){
+            m_xmlSpatial->readNextStartElement();
+            Fe2spRef ring = buildFe2Sp();
+            int interior = m_xmlSpatial->readElementText().toInt();
+            if (!surf->hasExteriorRing()){
+                surf->setExteriorRing(ring);
+            }
+            else{
+                surf->addInteriorRing(ring);
+            }
+            m_xmlSpatial->readNextStartElement();
+            if (m_xmlSpatial->name().toString().toStdString() == "composite_edge" && m_xmlSpatial->isStartElement()){
+                m_xmlSpatial->readNextStartElement();
+                buildCompositeEdge();
+            }
+            else if (m_xmlSpatial->name().toString().toStdString() == "edge" && m_xmlSpatial->isStartElement()){
+                m_xmlSpatial->readNextStartElement();
+                buildEdge();
+            }
+
+        }
+        readNext1(m_xmlSpatial);
+    }
+    m_SpId_to_SpatialObject[index] = surf;
+    return static_cast<GM_Object*>(surf);
+}
+
+GM_Object *FeatureMapXMLBuilder::buildCompositeEdge()
+{
+    int index = m_xmlSpatial->readElementText().toInt();
+    readNext2(m_xmlSpatial);
+    GM_CompositeCurve* curv = new GM_CompositeCurve();
+    while(!(m_xmlSpatial->name().toString().toStdString() == "composite_edge" && m_xmlSpatial->isEndElement())){
+        if (m_xmlSpatial->name().toString().toStdString() == "sp2sp_ref" && m_xmlSpatial->isStartElement()){
+            m_xmlSpatial->readNextStartElement();
+            Fe2spRef ring = buildFe2Sp();
+            int interior = m_xmlSpatial->readElementText().toInt();
+            curv->addCurveAssotiation(ring);
+            m_xmlSpatial->readNextStartElement();
+            if (m_xmlSpatial->name().toString().toStdString() == "composite_edge" && m_xmlSpatial->isStartElement()){
+                m_xmlSpatial->readNextStartElement();
+                buildCompositeEdge();
+            }
+            else if (m_xmlSpatial->name().toString().toStdString() == "edge" && m_xmlSpatial->isStartElement()){
+                m_xmlSpatial->readNextStartElement();
+                buildEdge();
+            }
+
+        }
+        readNext1(m_xmlSpatial);
+    }
+    m_SpId_to_SpatialObject[index] = curv;
+    if (index == 331){
+        std::cout << "!";
+    }
+    return static_cast<GM_Object*>(curv);
+}
+
+GM_Object *FeatureMapXMLBuilder::buildEdge()
+{
+    int index = m_xmlSpatial->readElementText().toInt();
+    readNext2(m_xmlSpatial);
+    GM_Curve* curv = new GM_Curve();
+    GM_CurveSegment seg;
+    while(!(m_xmlSpatial->name().toString().toStdString() == "edge" && m_xmlSpatial->isEndElement())){
+        if (m_xmlSpatial->name().toString().toStdString() == "geo_point" && m_xmlSpatial->isStartElement()){
+            m_xmlSpatial->readNextStartElement();
+            std::string lat = m_xmlSpatial->readElementText().toStdString();
+            readNext2(m_xmlSpatial);
+            std::string lon = m_xmlSpatial->readElementText().toStdString();
+            GM_Point p(lat, lon);
+            seg.addControlPoint(p);
+        }
+        readNext1(m_xmlSpatial);
+    }
+    curv->setStartPoint(seg.controlPoints()[0]);
+    curv->setEndPoint(seg.controlPoints()[seg.controlPoints().size() - 1]);
+    curv->setSegments(QVector<GM_CurveSegment>{ seg });
+
+    m_SpId_to_SpatialObject[index] = curv;
+    return static_cast<GM_Object*>(curv);
+}
+
+Fe2spRef FeatureMapXMLBuilder::buildFe2Sp()
+{
+    Fe2spRef fe2spRef;
+    // ref_id
+    fe2spRef.setRefId(m_xmlSpatial->readElementText().toInt());
+    readNext2(m_xmlSpatial);
+
+    // ref_type
+    fe2spRef.setRefType(m_xmlSpatial->readElementText().toInt());
+    readNext2(m_xmlSpatial);
+
+    // orientation
+    fe2spRef.setOrientation(m_xmlSpatial->readElementText().toInt());
+    readNext2(m_xmlSpatial);
+
+    return fe2spRef;
+}
+
+Fe2spRef FeatureMapXMLBuilder::buildExteriorRing()
+{
+
+}
+
+//GM_Object *FeatureMapXMLBuilder::buildIsolatedPoint()
+//{
+//    int lat = m_xmlSpatial->readElementText().toInt();
+//    int lon = m_xmlSpatial->readElementText().toInt();
+//    return new GM_Point(lat, lon);
+//}
+
+
+
+std::map<int, GM_Object *> FeatureMapXMLBuilder::parseSpatials()
+{
+    while (!m_xmlSpatial->atEnd()){
+        std::string tag = m_xmlSpatial->name().toString().toStdString();
+        if (isStartElementAndAllowed(tag)){
+            switch (strTagToParserTags[tag]) {
+                case isolated_point : {
+                    m_xmlSpatial->readNextStartElement(); // readNext1
+                    GM_Object* obj = buildIsolatedPoint();
+                } break;
+                case surface : {
+                    m_xmlSpatial->readNextStartElement(); // readNext1
+                    GM_Object* obj = buildSurface();
+                } break;
+            case edge : {
+                m_xmlSpatial->readNextStartElement(); // readNext1
+                GM_Object* obj = buildEdge();
+            } break;
+            case composite_edge : {
+                m_xmlSpatial->readNextStartElement(); // readNext1
+                GM_Object* obj = buildCompositeEdge();
+            } break;
+            default:
+                readNext1(m_xmlSpatial);
+            }
+        }
+        else{
+            readNext1(m_xmlSpatial);
+        }
+    }
+    if (m_xmlSpatial->error()){
+        qWarning() << "Some error: %1" + m_xmlSpatial->errorString();
+    }
+    return m_SpId_to_SpatialObject;
 }
 
 std::vector<std::string> FeatureMapXMLBuilder::getListAttrByString(std::string strVal)
