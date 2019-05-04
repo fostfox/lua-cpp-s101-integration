@@ -465,8 +465,8 @@ void LuaHostFunc::loadFunctions()
     {
         PROFILING_TIME2("HostSpatialGetAssociatedInformationIDs")
         qDebug() << "call HostSpatialGetAssociatedInformationIDs";
-        qWarning() << "Return NIL - to the spatial identified by spatialID : " << QString::fromStdString(spatialID);
-        sol::object spatialAssInfIDs = sol::nil;
+        qWarning() << "Return Empty spatial[] identified by spatialID : " << QString::fromStdString(spatialID);
+        sol::object spatialAssInfIDs = helpEmptyTable(m_lua);
         return spatialAssInfIDs;
     });
 
