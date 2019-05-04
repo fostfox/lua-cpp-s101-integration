@@ -30,7 +30,7 @@ FeatureMapXMLBuilder::FeatureMapXMLBuilder(QFile * const inputFile)
 
 FeatureMapController FeatureMapXMLBuilder::build(bool onlyFullFeatures)
 {
-    auto spatials = parseSpatials(); // DELETE
+    auto spatials = parseSpatials();
 
     m_inputFile->close();
     m_inputFile->open(QIODevice::ReadOnly);
@@ -399,7 +399,7 @@ bool FeatureMapXMLBuilder::isStartElementAndAllowed(std::string tag)
 GM_Object *FeatureMapXMLBuilder::buildIsolatedPoint()
 {
     // MUST BE
-    //int index = m_xmlSpatial->readElementText().toInt();
+    //std::string index = m_xmlSpatial->readElementText().toStdString();
     //readNext2(m_xmlSpatial);
     std::string lat = m_xmlSpatial->readElementText().toStdString();
     readNext2(m_xmlSpatial);
@@ -410,7 +410,7 @@ GM_Object *FeatureMapXMLBuilder::buildIsolatedPoint()
 
 GM_Object *FeatureMapXMLBuilder::buildSurface()
 {
-    int index = m_xmlSpatial->readElementText().toInt();
+    std::string index = m_xmlSpatial->readElementText().toStdString();
     readNext2(m_xmlSpatial);
     GM_Surface* surf = new GM_Surface();
     while(!(m_xmlSpatial->name().toString().toStdString() == "surface" && m_xmlSpatial->isEndElement())){
@@ -444,7 +444,7 @@ GM_Object *FeatureMapXMLBuilder::buildSurface()
 GM_Object *FeatureMapXMLBuilder::buildCompositeEdge()
 {
     // MUST BE
-    //int index = m_xmlSpatial->readElementText().toInt();
+    //std::string index = m_xmlSpatial->readElementText().toStdString();
     //readNext2(m_xmlSpatial);
     GM_CompositeCurve* curv = new GM_CompositeCurve();
     while(!(m_xmlSpatial->name().toString().toStdString() == "composite_edge" && m_xmlSpatial->isEndElement())){
@@ -475,7 +475,7 @@ GM_Object *FeatureMapXMLBuilder::buildCompositeEdge()
 
 GM_Object *FeatureMapXMLBuilder::buildEdge()
 {
-    int index = m_xmlSpatial->readElementText().toInt();
+    std::string index = m_xmlSpatial->readElementText().toStdString();
     readNext2(m_xmlSpatial);
     GM_Curve* curv = new GM_Curve();
     GM_CurveSegment seg;
@@ -530,7 +530,7 @@ Fe2spRef FeatureMapXMLBuilder::buildExteriorRing()
 
 
 
-std::map<int, GM_Object *> FeatureMapXMLBuilder::parseSpatials()
+std::map<std::string, GM_Object *> FeatureMapXMLBuilder::parseSpatials()
 {
     while (!m_xmlSpatial->atEnd()){
         std::string tag = m_xmlSpatial->name().toString().toStdString();

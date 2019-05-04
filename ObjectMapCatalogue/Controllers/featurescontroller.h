@@ -23,14 +23,14 @@ public:
 
     size_t getComplexAttributeSize(std::string featureId, std::string path, std::string attributeCode) const;
 
-    void setSpatials(std::map<int, GM_Object *> SpId_to_SpatialObject);
-    bool hasSpatialObject(int spatialId) const;
-    GM_Object* spatialObjectByRefId(int refId) const;
+    void setSpatials(std::map<std::string, GM_Object *> SpId_to_SpatialObject);
+    bool hasSpatialObject(std::string spatialId) const;
+    GM_Object* spatialObjectByRefId(std::string refId) const;
 
 private:
     std::vector<Feature> fs_;
     std::map<std::string, Feature> id_to_f_;
     std::map<std::string, Fe2spRef> refId_to_Fe2SpRef;
-    std::map<int, GM_Object *> spId_to_SpatialObject;
+    std::map<std::string, GM_Object *> spId_to_SpatialObject;
 };
 
