@@ -1,18 +1,17 @@
 #pragma once
 
-
-// timer.h
-#include <iostream>
-#include <sstream>
 #include <chrono>
-#include <fstream>
-#include <map>
-#include <vector>
-#include <string>
-#include <QString>
 #include <QMap>
-#include <QString>
-#include <QVector>
+
+
+#ifdef PROFILING_TIME_ENABLE
+    #define PROFILING_TIME2(functionName) [[maybe_unused]] const auto& p = Profiler::instance().createTimeUnit(functionName);
+    #define PROFILING_TIME PROFILING_TIME2(__FUNCTION__)
+#else
+    #define PROFILING_TIME2(functionName)
+    #define PROFILING_TIME
+#endif
+
 
 class QFile;
 class Profiler;
@@ -38,32 +37,37 @@ private:
 class Profiler {
     friend class TimeUnit;
 public:
+    static Profiler& instance();
+    static void setLogFile(const QString &fileName);
+
+    [[nodiscard]]
+    TimeUnit createTimeUnit(const QString &functionName);
+    void dumpLog();
+
+private:
     Profiler() = default;
     Profiler(const Profiler& root) = delete;
     Profiler& operator=(const Profiler&) = delete;
 
-    static Profiler& instance();
-    static TimeUnit createTimeUnit(const QString &functionName);
+    void addElapsedTime(const QString &functionName, double time);
 
-    static void setLogFile(const QString &fileName);
-    static void dumpLog();
-
-private:
     class FunctionTimeInfo {
     public:
+        FunctionTimeInfo() = default;
         FunctionTimeInfo(const QString &name);
         void addElapsedTime(double time);
         const QString &name() const;
-        const QVector<double>& elapsedTimes() const;
+        double totalElapsed() const;
+        double averageElapsed() const;
+        long runCount() const;
     private:
-        QString m_name;
-        QVector<double> m_elapsedTimes;
+        QString m_name = "undef_function_name";
+        long m_runCount = 0;
+        double m_totalElapsed = 0;
     };
-
-    void addElapsedTime(const QString &functionName, double time);
 
 private:
     static QString m_fileName;
-    static QMap<QString, FunctionTimeInfo> m_funcTimeInfoMap;
+    QMap<QString, FunctionTimeInfo> m_funcTimeInfoMap;
 };
 

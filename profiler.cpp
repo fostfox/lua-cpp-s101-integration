@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QTextStream>
 
+QString Profiler::m_fileName;
 
 TimeUnit::TimeUnit(const QString &functionName)
     : m_functionName(functionName)
@@ -13,6 +14,7 @@ TimeUnit::TimeUnit(const QString &functionName)
 TimeUnit::~TimeUnit()
 {
     this->stop();
+    this->writeElapsed();
 }
 
 void TimeUnit::start()
@@ -61,26 +63,13 @@ void Profiler::dumpLog()
     }
 
     QTextStream out(&logFile);
-    for (const auto &funcInfo : m_funcTimeInfoMap){
-        const auto &elapsedTimes = funcInfo.elapsedTimes();
-        int runFunctCount = elapsedTimes.size();
-
-        out << QString("Function: %1, times[%2]: ")
-               .arg(funcInfo.name())
-               .arg(runFunctCount);
-
-        double elapsedTimeTotal(0);
-        for (const auto &elapsedTime : elapsedTimes){
-            out << elapsedTime << " ";
-            elapsedTimeTotal += elapsedTime;
-        }
-
-        out << QString("total: %1, average: %2")
-               .arg(elapsedTimeTotal)
-               .arg(elapsedTimeTotal / runFunctCount);
+    for (const auto &funcInf : m_funcTimeInfoMap) {
+        out << QString("Function: '%1', total: %2, run count: %3, average: %4")
+               .arg(funcInf.name())
+               .arg(funcInf.totalElapsed())
+               .arg(funcInf.runCount())
+               .arg(funcInf.averageElapsed());
     }
-    out << "\n";
-
     logFile.close();
 }
 
@@ -92,6 +81,7 @@ void Profiler::addElapsedTime(const QString &functionName, double time)
     m_funcTimeInfoMap[functionName].addElapsedTime(time);
 }
 
+
 Profiler::FunctionTimeInfo::FunctionTimeInfo(const QString &name)
     :m_name(name)
 {
@@ -99,7 +89,8 @@ Profiler::FunctionTimeInfo::FunctionTimeInfo(const QString &name)
 
 void Profiler::FunctionTimeInfo::addElapsedTime(double time)
 {
-    m_elapsedTimes.push_back(time);
+    ++m_runCount;
+    m_totalElapsed += time;
 }
 
 const QString &Profiler::FunctionTimeInfo::name() const
@@ -107,7 +98,17 @@ const QString &Profiler::FunctionTimeInfo::name() const
     return m_name;
 }
 
-const QVector<double> &Profiler::FunctionTimeInfo::elapsedTimes() const
+double Profiler::FunctionTimeInfo::averageElapsed() const
 {
-    return m_elapsedTimes;
+    return m_totalElapsed / m_runCount;
+}
+
+long Profiler::FunctionTimeInfo::runCount() const
+{
+    return m_runCount;
+}
+
+double Profiler::FunctionTimeInfo::totalElapsed() const
+{
+    return m_totalElapsed;
 }
