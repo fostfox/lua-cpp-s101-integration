@@ -406,7 +406,7 @@ void LuaHostFunc::loadFunctions()
                        -> sol::object  //TODO: impl
     {
         PROFILING_TIME2("HostGetSpatial")
-        qDebug() << "call HostGetSpatial";
+        qDebug() << "call HostGetSpatialID=" + QString::fromStdString(spatialID);
 
         if (!m_mapObjCtrl.hasSpatialObject(spatialID)){
             qCritical(("Ihe spatilalID=" + spatialID + " not on the map").c_str());
