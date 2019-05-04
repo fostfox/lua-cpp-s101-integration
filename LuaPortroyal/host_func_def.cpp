@@ -406,10 +406,11 @@ void LuaHostFunc::loadFunctions()
                        -> sol::object  //TODO: impl
     {
         PROFILING_TIME2("HostGetSpatial")
-        qDebug() << "call HostGetSpatial";
+        qDebug() << "call HostGetSpatialID=" + QString::fromStdString(spatialID);
 
-        if (m_mapObjCtrl.hasSpatialObject(spatialID)){
-            qCritical("the item is not on the map with the specified field");
+        if (!m_mapObjCtrl.hasSpatialObject(spatialID)){
+            qCritical(("Ihe spatilalID=" + spatialID + " not on the map").c_str());
+            return sol::nil;
         }
         auto spatialP = m_mapObjCtrl.spatialObjectByRefId(spatialID);
 
@@ -465,8 +466,8 @@ void LuaHostFunc::loadFunctions()
     {
         PROFILING_TIME2("HostSpatialGetAssociatedInformationIDs")
         qDebug() << "call HostSpatialGetAssociatedInformationIDs";
-        qWarning() << "Return NIL - to the spatial identified by spatialID : " << QString::fromStdString(spatialID);
-        sol::object spatialAssInfIDs = sol::nil;
+        qWarning() << "Return Empty spatial[] identified by spatialID : " << QString::fromStdString(spatialID);
+        sol::object spatialAssInfIDs = helpEmptyTable(m_lua);
         return spatialAssInfIDs;
     });
 
@@ -491,8 +492,8 @@ void LuaHostFunc::loadFunctions()
     {
         PROFILING_TIME2("HostSpatialGetAssociatedFeatureIDs")
         qDebug() << "call HostSpatialGetAssociatedFeatureIDs";
-        qWarning() << "Return NIL - to the spatial identified by spatialID : " << QString::fromStdString(spatialID);
-        sol::object spatialAssFeaturesIDs = sol::nil;
+        qWarning() << "Return empty spatial[] identified by spatialID : " << QString::fromStdString(spatialID);
+        sol::object spatialAssFeaturesIDs = helpEmptyTable(m_lua);
         return spatialAssFeaturesIDs;
     });
 

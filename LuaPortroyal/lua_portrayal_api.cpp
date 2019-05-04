@@ -432,10 +432,7 @@ sol::object luaCreateCompositeCurve(sol::state &lua, const GM_CompositeCurve& cc
 sol::object luaCreateSurface(sol::state &lua, const GM_Surface& ss)
 {
     auto exteriorRing = luaCreateSpatialAssociation(lua, ss.exteriorRing());
-
-    auto lueInteriorRings = ss.hasInteriorRings()
-            ? helpCreateSpatialAssociations(lua, ss.interiorRings())
-            : sol::nil;
+    auto lueInteriorRings = helpCreateSpatialAssociations(lua, ss.interiorRings());
 
     sol::object luaPoint  = lua["CreateSurface"] (
                 exteriorRing,
