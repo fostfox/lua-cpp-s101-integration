@@ -117,6 +117,7 @@ sol::table helpEmptyTable(sol::state &lua)
 
 bool PortrayalMain(sol::state &lua, const vector<string> &featureIDs)
 {
+    PROFILING_TIME
     auto luaFeatureIDs = helpLuaTable(lua, featureIDs);
     auto isSuccessPortrayal = lua["PortrayalMain"](luaFeatureIDs);
     return isSuccessPortrayal;

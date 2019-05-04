@@ -72,7 +72,10 @@ int main(int argc, char *argv[])
 
     LuaRuleMashine luaPortoyal(filenames::LUA_MAIN, dictController, mapController, contextParamCtrl);
 
-    qDebug() << " \n\n--- DO PORTRAYAL STATUS: ---"<< luaPortoyal.doPortrayal();
+    for (int i = 0; i < 30; ++i){
+        qDebug() << " \n\n--- DO PORTRAYAL STATUS: ---"<< luaPortoyal.doPortrayal();
+    }
+
 
     QTextStream out(&portayalFile);
     auto drawInstCtrl = luaPortoyal.drawController();
