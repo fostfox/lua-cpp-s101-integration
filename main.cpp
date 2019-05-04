@@ -1,10 +1,8 @@
-//#include <QCoreApplication>
-
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
 
-#include <init.h>
+#include "init.h"
 
 #include "ObjectDictCatalogue/Builder/xmlbuilder.h"
 #include "ObjectMapCatalogue/Builder/xmlparser.h"
@@ -12,9 +10,9 @@
 #include "drawing_instructions_controller.h"
 #include "contextparameter.h"
 
+
 int main(int argc, char *argv[])
 {
-
     qInstallMessageHandler(myMessageOutput);
 
     QTextStream errorStream(stderr);
@@ -87,4 +85,8 @@ int main(int argc, char *argv[])
     }
     portayalFile.close();
 
+    /// -----------------------------------------------------
+    ///
+    Profiler::setLogFile(filenames::PROFILE);
+    Profiler::instance().dumpLog();
 }

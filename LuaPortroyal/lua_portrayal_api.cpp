@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "profiler.h"
+
 #include "../ObjectDictCatalogue/DataTypes/datatypes.h"
 #include "../ObjectDictCatalogue/Entities/fc_item.h"
 #include "../ObjectDictCatalogue/Entities/fc_role.h"
