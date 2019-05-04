@@ -30,7 +30,12 @@ FeatureMapXMLBuilder::FeatureMapXMLBuilder(QFile * const inputFile)
 
 FeatureMapController FeatureMapXMLBuilder::build(bool onlyFullFeatures)
 {
-    parseSpatials(); // DELETE
+    auto spatials = parseSpatials(); // DELETE
+
+    m_inputFile->close();
+    m_inputFile->open(QIODevice::ReadOnly);
+    m_xmlReader->setDevice(m_inputFile);
+
     auto features = parse2();
     if (onlyFullFeatures) {
         std::vector<Feature> tmpFeatures;
@@ -44,6 +49,7 @@ FeatureMapController FeatureMapXMLBuilder::build(bool onlyFullFeatures)
     }
     FeatureMapController fFontroller;
     fFontroller.setFeatures(features);
+    fFontroller.setSpatials(spatials);
     return fFontroller;
 }
 
@@ -392,12 +398,13 @@ bool FeatureMapXMLBuilder::isStartElementAndAllowed(std::string tag)
 
 GM_Object *FeatureMapXMLBuilder::buildIsolatedPoint()
 {
-    int index = m_xmlSpatial->readElementText().toInt();
-    readNext2(m_xmlSpatial);
+    // MUST BE
+    //int index = m_xmlSpatial->readElementText().toInt();
+    //readNext2(m_xmlSpatial);
     std::string lat = m_xmlSpatial->readElementText().toStdString();
     readNext2(m_xmlSpatial);
     std::string lon = m_xmlSpatial->readElementText().toStdString();
-    m_SpId_to_SpatialObject[index] = new GM_Point(lat, lon);
+    //m_SpId_to_SpatialObject[index] = new GM_Point(lat, lon);
     return new GM_Point(lat, lon);
 }
 
@@ -436,8 +443,9 @@ GM_Object *FeatureMapXMLBuilder::buildSurface()
 
 GM_Object *FeatureMapXMLBuilder::buildCompositeEdge()
 {
-    int index = m_xmlSpatial->readElementText().toInt();
-    readNext2(m_xmlSpatial);
+    // MUST BE
+    //int index = m_xmlSpatial->readElementText().toInt();
+    //readNext2(m_xmlSpatial);
     GM_CompositeCurve* curv = new GM_CompositeCurve();
     while(!(m_xmlSpatial->name().toString().toStdString() == "composite_edge" && m_xmlSpatial->isEndElement())){
         if (m_xmlSpatial->name().toString().toStdString() == "sp2sp_ref" && m_xmlSpatial->isStartElement()){
@@ -458,10 +466,10 @@ GM_Object *FeatureMapXMLBuilder::buildCompositeEdge()
         }
         readNext1(m_xmlSpatial);
     }
-    m_SpId_to_SpatialObject[index] = curv;
-    if (index == 331){
-        std::cout << "!";
-    }
+    //m_SpId_to_SpatialObject[index] = curv;
+//    if (index == 331){
+//        std::cout << "!";
+//    }
     return static_cast<GM_Object*>(curv);
 }
 

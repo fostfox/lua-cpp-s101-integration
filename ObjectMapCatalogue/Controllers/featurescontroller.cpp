@@ -41,6 +41,21 @@ void FeatureMapController::setFeatures(std::vector<Feature> fs)
     }
 }
 
+void FeatureMapController::setSpatials(std::map<int, GM_Object *> SpId_to_SpatialObject)
+{
+    spId_to_SpatialObject = SpId_to_SpatialObject;
+}
+
+bool FeatureMapController::hasSpatialObject(int refId)
+{
+    return spId_to_SpatialObject.count(refId) != 0;
+}
+
+GM_Object *FeatureMapController::spatialObjectByRefId(int refId)
+{
+    return spId_to_SpatialObject[refId];
+}
+
 std::vector<std::string> FeatureMapController::getFeaturesIDs() const
 {
     std::vector<std::string> ids;

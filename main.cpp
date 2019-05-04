@@ -76,7 +76,6 @@ int main(int argc, char *argv[])
 
     qDebug() << " \n\n--- DO PORTRAYAL STATUS: ---"<< luaPortoyal.doPortrayal();
 
-
     QTextStream out(&portayalFile);
     auto drawInstCtrl = luaPortoyal.drawController();
     for (const auto& featureID : mapController.getFeaturesIDs()){
