@@ -46,12 +46,12 @@ void FeatureMapController::setSpatials(std::map<int, GM_Object *> SpId_to_Spatia
     spId_to_SpatialObject = SpId_to_SpatialObject;
 }
 
-bool FeatureMapController::hasSpatialObject(int refId)
+bool FeatureMapController::hasSpatialObject(int spatialId) const
 {
-    return spId_to_SpatialObject.count(refId) != 0;
+    return spId_to_SpatialObject.count(spatialId) != 0;
 }
 
-GM_Object *FeatureMapController::spatialObjectByRefId(int refId)
+GM_Object *FeatureMapController::spatialObjectByRefId(int refId) const
 {
     return spId_to_SpatialObject[refId];
 }
@@ -127,9 +127,9 @@ bool FeatureMapController::hasSimpleAttribute(std::string id, std::string path, 
     return true;
 }
 
-bool FeatureMapController::hasSpatialAssotiation(std::string id) const
+bool FeatureMapController::hasSpatialAssotiation(std::string featureId) const
 {
-    Feature f = id_to_f_.at(id);
+    Feature f = id_to_f_.at(featureId);
     return (f.fe2spRef().refId() != -1) ? true : false;
 }
 

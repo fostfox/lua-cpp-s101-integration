@@ -19,13 +19,13 @@ public:
     Fe2spRef getFe2spRefByRefId(std::string refId) const;
 
     bool hasSimpleAttribute(std::string id, std::string path, std::string attributeCode) const;
-    bool hasSpatialAssotiation(std::string id) const;
+    bool hasSpatialAssotiation(std::string featureId) const;
 
     size_t getComplexAttributeSize(std::string featureId, std::string path, std::string attributeCode) const;
 
     void setSpatials(std::map<int, GM_Object *> SpId_to_SpatialObject);
-    bool hasSpatialObject(int refId);
-    GM_Object* spatialObjectByRefId(int refId);
+    bool hasSpatialObject(int spatialId) const;
+    GM_Object* spatialObjectByRefId(int refId) const;
 
 private:
     std::vector<Feature> fs_;
