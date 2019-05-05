@@ -3,28 +3,67 @@ QT -= gui
 CONFIG += c++17 console
 CONFIG -= app_bundle
 
-#INCLUDEPATH += 3rdparty/lualib_jit/include
-#DEPENDPATH += 3rdparty/lualib_jit/include
-#LIBS += -L"$$PWD\3rdparty\lualib_jit\lib" -llua51
-
-INCLUDEPATH += 3rdparty/lualib/include
-LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_mingw6" -llua5.1
-
-INCLUDEPATH += 3rdparty/sol2/include
-
-#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_vc15" -llua5.1
-#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_vc15" -llua5.1
-#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_mingw6" -llua5.1
-#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_mingw6" -llua5.1
-
-
 DEFINES += QT_DEPRECATED_WARNINGS
 
 #DEFINES    += QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT QT_NO_DEBUG_STREAM
 #CONFIG      += warn_off
 
+#INCLUDEPATH += 3rdparty/lualib_jit/include
+#DEPENDPATH += 3rdparty/lualib_jit/include
+#LIBS += -L"$$PWD\3rdparty\lualib_jit\lib" -llua51
 
-#Copy Lua and XML Files-----------------------------------------------------------------
+INCLUDEPATH += 3rdparty/lualib/include
+INCLUDEPATH += 3rdparty/sol2/include
+
+
+###############################################################################
+# Setting LIBS
+
+greaterThan(QT_MAJOR_VERSION, 4) {
+    TARGET_ARCH=$${QT_ARCH}
+} else {
+    TARGET_ARCH=$${QMAKE_HOST.arch}
+}
+contains(TARGET_ARCH, x86_64) {
+    ARCHITECTURE = x64
+} else {
+    ARCHITECTURE = x86
+}
+message("[INFO] ARCHITECTURE=$${ARCHITECTURE}")
+
+win32-g++ {
+    message("[INFO] COMPILER = MinGW (win32-g++)")
+    contains(ARCHITECTURE, x64) {
+        LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_mingw6" -llua5.1
+    }
+    contains(ARCHITECTURE, x86) {
+        LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_mingw6" -llua5.1
+    }
+}
+win32-msvc* {
+    message("[INFO] COMPILER = MSVC (win32-msvc) MSVC_VER=$${MSVC_VER}")
+    MSVC_VER = $$(VisualStudioVersion)
+    contains(ARCHITECTURE, x64) {
+        equals(MSVC_VER, 15.0){
+            message("msvc 2017")
+            LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_vc15" -llua5.1
+        }
+    }
+    contains(ARCHITECTURE, x86) {
+        LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_mingw6" -llua5.1
+        equals(MSVC_VER, 15.0){
+            message("msvc 2017")
+            LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_vc15" -llua5.1
+        }
+    }
+} else {
+    message("[FATAL] just supporting win32-g++")
+}
+
+
+###############################################################################
+# Copy Lua and XML Files
+
 XML_SRC = $${_PRO_FILE_PWD_}/XMLData
 XML_DEST1 = $${OUT_PWD}
 XML_DEST2 = $${OUT_PWD}
@@ -57,7 +96,8 @@ QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$LUA_SRC $$LUA_DEST1 $$escape_expand(\\n\\t
 QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$LUA_SRC $$LUA_DEST2 $$escape_expand(\\n\\t)
 message("[INFO] Will copy $${LUA_SRC} to $${LUA_DEST1}")
 message("[INFO] Will copy $${LUA_SRC} to $${LUA_DEST2}")
-#---------------------------------------------------------------------------------------
+
+###############################################################################
 
 
 SOURCES += \
