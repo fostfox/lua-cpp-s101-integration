@@ -15,9 +15,9 @@
 static const auto dateTime = QString::number(QDateTime::currentSecsSinceEpoch());
 
 namespace filenames {
-const static QString MAP =          "../XMLData/dataset_map.xml";
-const static QString DICT =         "../XMLData/S-101FC_1.0.0_20190409.xml";
-const static QString LUA_MAIN =     "../LuaPortroyal/Rules/main.lua";
+const static QString MAP =          "XMLData/dataset_map.xml";
+const static QString DICT =         "XMLData/S-101FC_1.0.0_20190409.xml";
+const static QString LUA_MAIN =     "lua/main.lua";
 const static QString PORTRAYAL =    dateTime + "-OUTPUT.txt";
 const static QString PROFILE =      dateTime + "-elapsed_time.txt";
 const static QString LOG       =    dateTime + "-log.txt";
