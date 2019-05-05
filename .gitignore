@@ -1,9 +1,6 @@
 #Visual Code
 .vscode
 
-#Lua Files in build <- temporary decision
-!/build/**/lua/**
-
 #bin files 
 *.exe
 
