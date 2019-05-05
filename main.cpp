@@ -9,7 +9,7 @@
 #include "LuaPortroyal/LuaRuleMashine.h"
 #include "drawing_instructions_controller.h"
 #include "contextparameter.h"
-
+#include <iostream>
 
 int main(int argc, char *argv[])
 {
@@ -92,4 +92,7 @@ int main(int argc, char *argv[])
     ///
     Profiler::setLogFile(filenames::PROFILE);
     Profiler::instance().dumpLog();
+
+    std::cout << Profiler::instance().functionTimeInfo(QString::fromStdString("PortrayalMain")).totalElapsed() << std::endl;
+    std::cout << Profiler::instance().allTime() - Profiler::instance().functionTimeInfo(QString::fromStdString("PortrayalMain")).totalElapsed();
 }

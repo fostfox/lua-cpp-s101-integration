@@ -52,7 +52,7 @@ LuaHostFunc::LuaHostFunc(
     PortrayalInitializeContextParameters(m_lua, contParamController);
 
 
-    m_lua["TypeSystemChecks"]("true");
+    m_lua["TypeSystemChecks"]("true"); // CheckType
 
 //    func("HostSpecialSetCurrentFeatureId"
 //                , [&](std::string featureId) -> void
@@ -63,6 +63,7 @@ LuaHostFunc::LuaHostFunc(
 
 //    });
     m_lua.set_function("HostSpecialSetCurrentFeatureId", [&](std::string featureId){  //TODO: Временное решение
+        PROFILING_TIME2("HostSpecialSetCurrentFeatureId")
         m_currentFeatureId_processFeaturePortrayal = stoi(featureId);
         qInfo() << QString::fromStdString("currentFeatureId_processFeaturePortrayal: "
                                           + std::to_string(m_currentFeatureId_processFeaturePortrayal));
@@ -794,53 +795,54 @@ void LuaHostFunc::loadFunctions()
      * \remarks
      *          Host implementation of this function is optional.
      */
-    m_lua.set_function("HostDebuggerEntry"
-                     , [&](const string &debugAction, const sol::object &msg)
-    {
-        //qDebug() << "call HostDebuggerEntry";
-        string message;
-        if (msg.is<int>() ||msg.is<double>() ){
-            message = std::to_string(msg.as<int>());
-        } else if (msg.is<bool>()){
-            message = msg.as<bool>() ? "True" : "False";
-        } else if (msg == sol::nil){
-            message = "nil";
-        } else if (msg.is<string>()){
-            message = msg.as<string>();
-        }
+//    m_lua.set_function("HostDebuggerEntry"
+//                     , [&](const string &debugAction, const sol::object &msg)
+//    {
+//        PROFILING_TIME2("HostDebuggerEntry")
+//        //qDebug() << "call HostDebuggerEntry";
+//        string message;
+//        if (msg.is<int>() ||msg.is<double>() ){
+//            message = std::to_string(msg.as<int>());
+//        } else if (msg.is<bool>()){
+//            message = msg.as<bool>() ? "True" : "False";
+//        } else if (msg == sol::nil){
+//            message = "nil";
+//        } else if (msg.is<string>()){
+//            message = msg.as<string>();
+//        }
 
-        //static int level = 0;
-        int level = 0;
-        string str;
+//        //static int level = 0;
+//        int level = 0;
+//        string str;
 
-        if ("break" == debugAction){
-            m_isActionState = false;
-            throw "Break from LUA";
-        } else if ("trace" == debugAction) {
-            qCritical() << QString::fromStdString("currentFeatureId_processFeaturePortrayal: "
-                                                  + std::to_string(m_currentFeatureId_processFeaturePortrayal)
-                                                  + " "
-                                                  + str
-                                                  + " "
-                                                  + debugAction
-                                                  + " # "
-                                                  + message);
-            return;
-        } else if ("start_performance" == debugAction) {
-            str.assign(++level * 5, ' ');
-            //return;
-        } else if ("stop_performance" == debugAction) {
-            str.assign(level-- * 5, ' ');
-            //return;
-        } else if ("reset_performance" == debugAction) {
+//        if ("break" == debugAction){
+//            m_isActionState = false;
+//            throw "Break from LUA";
+//        } else if ("trace" == debugAction) {
+//            qCritical() << QString::fromStdString("currentFeatureId_processFeaturePortrayal: "
+//                                                  + std::to_string(m_currentFeatureId_processFeaturePortrayal)
+//                                                  + " "
+//                                                  + str
+//                                                  + " "
+//                                                  + debugAction
+//                                                  + " # "
+//                                                  + message);
+//            return;
+//        } else if ("start_performance" == debugAction) {
+//            str.assign(++level * 5, ' ');
+//            //return;
+//        } else if ("stop_performance" == debugAction) {
+//            str.assign(level-- * 5, ' ');
+//            //return;
+//        } else if ("reset_performance" == debugAction) {
 
-        } else {
-            qWarning() << "Undefined debugger action\n";
-        }
+//        } else {
+//            qWarning() << "Undefined debugger action\n";
+//        }
 
-        qDebug() << QString::fromStdString(str + " " + debugAction + " # " + message);
-        //std::cerr << str << " " << debugAction << " # " << message << std::endl;
-    });
+//        qDebug() << QString::fromStdString(str + " " + debugAction + " # " + message);
+//        //std::cerr << str << " " << debugAction << " # " << message << std::endl;
+//    });
 }
 
 

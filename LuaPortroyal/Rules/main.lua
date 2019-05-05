@@ -5,8 +5,6 @@ require 'Default'
 
 -- Main entry point for portrayal
 function PortrayalMain(featureIDs)
-    if type(jit) == 'table' then Debug.Trace(jit.version) end
-
 	Debug.StartPerformance('Lua Code - Total')
 
 	if not portrayalContext then

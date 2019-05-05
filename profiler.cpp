@@ -83,6 +83,21 @@ void Profiler::addElapsedTime(const QString &functionName, double time)
     m_funcTimeInfoMap[functionName].addElapsedTime(time);
 }
 
+Profiler::FunctionTimeInfo Profiler::functionTimeInfo(QString funcName) const
+{
+    return m_funcTimeInfoMap.value(funcName);
+}
+
+double Profiler::allTime() const
+{
+    double res = 0;
+    for(auto& item : m_funcTimeInfoMap)
+    {
+        res += item.totalElapsed();
+    }
+    return res;
+}
+
 
 Profiler::FunctionTimeInfo::FunctionTimeInfo(const QString &name)
     :m_name(name)

@@ -1,7 +1,7 @@
 #pragma once
 
 
-//#define NO_DEBUG_OUT
+#define NO_DEBUG_OUT
 #define PROFILING_TIME_ENABLE
 #define DEBUG_TO_LOG_FILE
 

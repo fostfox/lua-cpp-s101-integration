@@ -65,7 +65,9 @@ private:
         long m_runCount = 0;
         double m_totalElapsed = 0;
     };
-
+public:
+    FunctionTimeInfo functionTimeInfo(QString funcName) const;
+    double allTime() const;
 private:
     static QString m_fileName;
     QMap<QString, FunctionTimeInfo> m_funcTimeInfoMap;

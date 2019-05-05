@@ -5,10 +5,12 @@ CONFIG -= app_bundle
 
 INCLUDEPATH += 3rdparty/lualib_jit/include
 DEPENDPATH += 3rdparty/lualib_jit/include
-LIBS += -L"$$PWD\3rdparty\lualib_jit\lib" -llua51
+#LIBS += -L"$$PWD\3rdparty\mingw32" -lluajit
+LIBS += -L"$$PWD\3rdparty\mingw64" -lluajit
 
 #INCLUDEPATH += 3rdparty/lualib/include
 #LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_mingw6" -llua5.1
+#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_mingw6" -llua5.1
 
 INCLUDEPATH += 3rdparty/sol2/include
 
