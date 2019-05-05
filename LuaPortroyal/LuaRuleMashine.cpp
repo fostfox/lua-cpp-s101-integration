@@ -34,8 +34,8 @@ LuaRuleMashine::LuaRuleMashine(
                 sol::lib::os,
                 sol::lib::io,
                 sol::lib::table
-                ,sol::lib::jit
-                ,sol::lib::ffi
+                //,sol::lib::jit
+                //,sol::lib::ffi
                 );
 
     m_lua->script_file(fileNameEntryPoint.toStdString());
