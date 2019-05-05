@@ -1,5 +1,6 @@
+#include <QString>
 #include "featurescontroller.h"
-#include <assert.h>
+
 
 std::vector<std::pair<std::string, std::string> > getAttributeNames(std::string path){
     std::string s = path;
@@ -40,6 +41,21 @@ void FeatureMapController::setFeatures(std::vector<Feature> fs)
     }
 }
 
+void FeatureMapController::setSpatials(std::map<std::string, GM_Object *> SpId_to_SpatialObject)
+{
+    spId_to_SpatialObject = SpId_to_SpatialObject;
+}
+
+bool FeatureMapController::hasSpatialObject(std::string spatialId) const
+{
+    return spId_to_SpatialObject.count(spatialId) != 0;
+}
+
+GM_Object *FeatureMapController::spatialObjectByRefId(std::string refId) const
+{
+    return spId_to_SpatialObject.at(refId);
+}
+
 std::vector<std::string> FeatureMapController::getFeaturesIDs() const
 {
     std::vector<std::string> ids;
@@ -65,6 +81,11 @@ Attribute FeatureMapController::getSimpleAttribute(std::string id, std::string p
 
     ComplexAttribute cAttr;
     Attribute attr;
+    if (attrsFull.size() == 1){
+        if (attrsFull[0].first == ""){
+            attrsFull.clear();
+        }
+    }
     // такая реализация пока что, так как у нас в xml complex содержит только simple
     if (attrsFull.size() == 1){
         cAttr = f.getComplexAttributeByCode(attrsFull[0].first);
@@ -94,6 +115,11 @@ bool FeatureMapController::hasSimpleAttribute(std::string id, std::string path, 
 
     ComplexAttribute cAttr;
     Attribute attr;
+    if (attrsFull.size() == 1){
+        if (attrsFull[0].first == ""){
+            attrsFull.clear();
+        }
+    }
     // такая реализация пока что, так как у нас в xml complex содержит только simple
     if (attrsFull.size() == 1){
         if (!f.hasComplexAttribute(attrsFull[0].first)){
@@ -111,9 +137,9 @@ bool FeatureMapController::hasSimpleAttribute(std::string id, std::string path, 
     return true;
 }
 
-bool FeatureMapController::hasSpatialAssotiation(std::string id) const
+bool FeatureMapController::hasSpatialAssotiation(std::string featureId) const
 {
-    Feature f = id_to_f_.at(id);
+    Feature f = id_to_f_.at(featureId);
     return (f.fe2spRef().refId() != -1) ? true : false;
 }
 

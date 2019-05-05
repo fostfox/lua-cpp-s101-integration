@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "profiler.h"
+
 #include "../ObjectDictCatalogue/DataTypes/datatypes.h"
 #include "../ObjectDictCatalogue/Entities/fc_item.h"
 #include "../ObjectDictCatalogue/Entities/fc_role.h"
@@ -113,10 +115,12 @@ sol::table helpEmptyTable(sol::state &lua)
     return lua.create_table();
 }
 
-bool PortrayalMain(const sol::state &lua, const vector<string> &featureIDs)
+bool PortrayalMain(sol::state &lua, const vector<string> &featureIDs)
 {
-   auto isSuccessPortrayal = lua["PortrayalMain"](featureIDs);
-   return isSuccessPortrayal;
+    PROFILING_TIME
+    auto luaFeatureIDs = helpLuaTable(lua, featureIDs);
+    auto isSuccessPortrayal = lua["PortrayalMain"](luaFeatureIDs);
+    return isSuccessPortrayal;
 }
 
 void PortrayalInitializeContextParameters(sol::state &lua, const ContexParametrController &contextParameters)
@@ -185,13 +189,14 @@ sol::object luaCreateNamedType(const sol::state &lua, const sol::object &luaItem
 sol::object luaCreateInformationBinding(sol::state &lua, const FC_InformationBinding *infBind)
 {
     auto luaInfAss = luaCreateInformationAssociation(lua, &infBind->associationRef());
+    auto luaRole = luaCreateRole(lua, &infBind->roleRef());
 
     sol::object luaInformationBinding = lua["CreateInformationBinding"](
                 infBind->informationType(),
                 infBind->multiplicity().lower,
                 createUpperMuliplicity(lua, infBind->multiplicity().upper),
                 infBind->roleType().toQString(),
-                sol::nil, //TODO: Role role (not defined)
+                luaRole,
                 luaInfAss
                 );
     return luaInformationBinding;
@@ -368,12 +373,12 @@ sol::object luaCreateSpatialAssociation(const sol::state &lua, const Fe2spRef &s
 sol::object luaCreatePoint(const sol::state &lua, const GM_Point& point)
 {
     sol::object z = point.hasZ()
-            ? sol::make_object(lua, std::to_string(point.z()))
+            ? sol::make_object(lua, point.z())
             : sol::nil;
 
     sol::object luaPoint  = lua["CreatePoint"] (
-                std::to_string(point.x()),
-                std::to_string(point.y()),
+                point.x(),
+                point.y(),
                 z
                 );
 
@@ -427,10 +432,7 @@ sol::object luaCreateCompositeCurve(sol::state &lua, const GM_CompositeCurve& cc
 sol::object luaCreateSurface(sol::state &lua, const GM_Surface& ss)
 {
     auto exteriorRing = luaCreateSpatialAssociation(lua, ss.exteriorRing());
-
-    auto lueInteriorRings = ss.hasInteriorRings()
-            ? helpCreateSpatialAssociations(lua, ss.interiorRings())
-            : sol::nil;
+    auto lueInteriorRings = helpCreateSpatialAssociations(lua, ss.interiorRings());
 
     sol::object luaPoint  = lua["CreateSurface"] (
                 exteriorRing,

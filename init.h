@@ -2,22 +2,29 @@
 
 
 //#define NO_DEBUG_OUT
+#define PROFILING_TIME_ENABLE
 #define DEBUG_TO_LOG_FILE
+
+#include "profiler.h"
 
 ///----------------------------------------------------------------------------
 
-
 #include <QString>
+#include <QDateTime>
+
+static const auto dateTime = QString::number(QDateTime::currentSecsSinceEpoch());
 
 namespace filenames {
 const static QString MAP =          "../XMLData/dataset_map.xml";
-const static QString DICT =         "../XMLData/S-101_FC_0_8_8.xml";
+const static QString DICT =         "../XMLData/S-101FC_1.0.0_20190409.xml";
 const static QString LUA_MAIN =     "../LuaPortroyal/Rules/main.lua";
-const static QString PORTRAYAL =    "OUTPUT.txt";
-const static char*   LOG       =    "log.txt";
+const static QString PORTRAYAL =    dateTime + "-OUTPUT.txt";
+const static QString PROFILE =      dateTime + "-elapsed_time.txt";
+const static QString LOG       =    dateTime + "-log.txt";
 }
 
 
+///----------------------------------------------------------------------------
 
 char* getLine(const uint N, char D){
     char* line = new char[N];
@@ -28,7 +35,7 @@ char* getLine(const uint N, char D){
 }
 
 #ifdef DEBUG_TO_LOG_FILE
-    FILE* out = fopen(filenames::LOG, "w");
+    FILE* out = fopen(filenames::LOG.toStdString().c_str(), "w");
 #else
     FILE* out = stderr;
 #endif

@@ -3,7 +3,7 @@
 #include "fc_attribute.h"
 #include "cd_attributevaluetype.h"
 #include "fc_listedvalue.h"
-
+#include <QVector>
 
 class FC_SimpleAttribute
 {

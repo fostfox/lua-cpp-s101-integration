@@ -1,6 +1,5 @@
 #pragma once
 
-#include "fc_attribute.h"
 #include "fc_attributebinding.h"
 
 #include <QVector>

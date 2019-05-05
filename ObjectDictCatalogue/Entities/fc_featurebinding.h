@@ -1,9 +1,5 @@
 #pragma once
 
-#include "../DataTypes/datatypes.h"
-#include "fc_role.h"
-//#include "fc_featuretype.h"
-#include "fc_role.h"
 #include "fc_featureassociation.h"
 #include "fc_roletype.h"
 

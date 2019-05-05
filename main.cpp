@@ -1,10 +1,8 @@
-//#include <QCoreApplication>
-
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
 
-#include <init.h>
+#include "init.h"
 
 #include "ObjectDictCatalogue/Builder/xmlbuilder.h"
 #include "ObjectMapCatalogue/Builder/xmlparser.h"
@@ -12,9 +10,9 @@
 #include "drawing_instructions_controller.h"
 #include "contextparameter.h"
 
+
 int main(int argc, char *argv[])
 {
-
     qInstallMessageHandler(myMessageOutput);
 
     QTextStream errorStream(stderr);
@@ -60,7 +58,7 @@ int main(int argc, char *argv[])
 
     qInfo() << "START: Map parsing";
     FeatureMapXMLBuilder mapBuilder(&mapFile);
-    auto mapController = mapBuilder.build();
+    auto mapController = mapBuilder.build(true);
     mapFile.close();
     qInfo() << "END: Map parsing";
 
@@ -74,7 +72,9 @@ int main(int argc, char *argv[])
 
     LuaRuleMashine luaPortoyal(filenames::LUA_MAIN, dictController, mapController, contextParamCtrl);
 
-    qDebug() << " \n\n--- DO PORTRAYAL STATUS: ---"<< luaPortoyal.doPortrayal();
+    for (int i = 0; i < 30; ++i){
+        qDebug() << " \n\n--- DO PORTRAYAL STATUS: ---"<< luaPortoyal.doPortrayal();
+    }
 
 
     QTextStream out(&portayalFile);
@@ -88,4 +88,8 @@ int main(int argc, char *argv[])
     }
     portayalFile.close();
 
+    /// -----------------------------------------------------
+    ///
+    Profiler::setLogFile(filenames::PROFILE);
+    Profiler::instance().dumpLog();
 }

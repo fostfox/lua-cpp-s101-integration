@@ -526,6 +526,11 @@ FC_InformationBinding FeatureCatalogueXMLBuilder::buildInformationBinding()
                 FC_InformationAssociation infAss = fc_controller.informationAssociationCtrl().type(associationCode);
                 featureBind.setAssociationRef(infAss);
             } break;
+            case Role: {
+                auto roleCode = readAttrValue("ref");
+                FC_Role roleRef = fc_controller.rolesCtrl().type(roleCode);
+                featureBind.setRoleRef(roleRef);
+            } break;
             case InformationType: {
                 auto informTypeCode = readAttrValue("ref");
                 featureBind.setInformationType(informTypeCode);

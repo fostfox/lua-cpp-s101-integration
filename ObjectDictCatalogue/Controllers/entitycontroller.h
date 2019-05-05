@@ -1,8 +1,7 @@
 #pragma once
 
-#include <QMap>
 #include <QVector>
-#include <QString>
+
 
 template <typename FC_T>
 class EntityController

@@ -8,7 +8,7 @@ INCLUDEPATH += 3rdparty/sol2/include
 
 #LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_vc15" -llua53
 #LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_vc15" -llua53
-LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_mingw6" -llua53
+LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_mingw6" -lliblua53
 #LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_mingw6" -llua53
 
 
@@ -52,7 +52,9 @@ SOURCES += \
     Geometry/gm_curvesegment.cpp \
     Geometry/gm_curve.cpp \
     Geometry/gm_compositecurve.cpp \
-    Geometry/gm_surface.cpp
+    Geometry/gm_surface.cpp \
+    Geometry/gm_object.cpp \
+    profiler.cpp
 
 
 HEADERS += \
@@ -93,4 +95,6 @@ HEADERS += \
     Geometry/gm_curvesegment.h \
     Geometry/gm_compositecurve.h \
     Geometry/gm_surface.h \
-    init.h
+    Geometry/gm_object.h \
+    init.h \
+    profiler.h

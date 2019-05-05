@@ -1,8 +1,9 @@
 #pragma once
 
-#include <memory>
-#include <string>
-#include <vector>
+//namespace std {
+//template<typename _Signature> class function;
+//class string;
+//}
 
 namespace sol {
 class state;
@@ -37,6 +38,10 @@ public:
     bool doPortrayal();
 
     void loadFunctions();
+
+//    template<typename R, typename ...Args>
+//    void setHostFunc(const std::string& funcName, const std::function<R(Args...)>& f);
+
 
     ///----------------------------------------------------------------------------------------------
     
