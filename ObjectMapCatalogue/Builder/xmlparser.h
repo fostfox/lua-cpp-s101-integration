@@ -3,13 +3,13 @@
 
 #include "../Entries/feature.h"
 #include "../Controllers/featurescontroller.h"
-#include "../Geometry/gm_object.h"
-#include "../Geometry/gm_point.h"
-#include "../Geometry/gm_compositecurve.h"
-#include "../Geometry/gm_curve.h"
-#include "../Geometry/gm_multipoint.h"
-#include "../Geometry/gm_curvesegment.h"
-#include "../Geometry/gm_surface.h"
+#include "../../Geometry/gm_object.h"
+#include "../../Geometry/gm_point.h"
+#include "../../Geometry/gm_compositecurve.h"
+#include "../../Geometry/gm_curve.h"
+#include "../../Geometry/gm_multipoint.h"
+#include "../../Geometry/gm_curvesegment.h"
+#include "../../Geometry/gm_surface.h"
 
 
 class Feature;

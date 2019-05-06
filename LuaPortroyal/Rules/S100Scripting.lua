@@ -606,7 +606,7 @@ function RunUnitTests()
 		local sign, whole, fractional = ScaledDecimalSplit(sd)
 
 		if sign ~= wholePartSigns[i] or whole ~= wholeParts[i] or fractional ~= fractionalParts[i] then
-			Debug.Break()
+			-- Debug.Break() < Is this break really needed?
 			return 'Scaled decimal test failed for "' .. v .. '" split returned "' .. sign .. ',' .. whole .. ',' .. fractional .. '" expected "' .. wholePartSigns[i] .. ',' .. wholeParts[i] .. ',' .. fractionalParts[i] .. '"'
 		end
 	end
@@ -627,12 +627,12 @@ function RunUnitTests()
 		local me = StringToScaledDecimal(mulTestsAnswers[i])
 
 		if ar ~= ae then
-			Debug.Break()
+			-- Debug.Break() < Is this break really needed?
 			return 'Scaled decimal add test failed for ' .. operand1[i] .. '+' .. operand2[i] .. ' expected ' .. addTestsAnswers[i] .. ' got ' .. tostring(ar)
 		end
 
 		if mr ~= me then
-			Debug.Break()
+			-- Debug.Break() < Is this break really needed?
 			return 'Scaled decimal multiply test failed for ' .. operand1[i] .. '+' .. operand2[i] .. ' expected ' .. mulTestsAnswers[i] .. ' got ' .. tostring(ar)
 		end
 	end
@@ -646,14 +646,14 @@ function RunUnitTests()
 		local result = EncodeDEFString(inputString)
 
 		if result ~= encodedString then
-			Debug.Break()
+			-- Debug.Break() < Is this break really needed?
 			return 'EncodeDEFString test failed for "' .. inputString .. '" expected "' .. encodedString .. '" got "' .. result .. '"'
 		end
 
 		result = DecodeDEFString(encodedString)
 
 		if result ~= inputString then
-			Debug.Break()
+			-- Debug.Break() < Is this break really needed?
 			return 'DecodeDEFString test failed for "' .. encodedString .. '" expected "' .. inputString .. '" got "' .. result .. '"'
 		end
 	end

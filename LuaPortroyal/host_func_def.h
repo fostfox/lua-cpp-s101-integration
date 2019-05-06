@@ -34,7 +34,7 @@ public:
             , const ContexParametrController &contParamController
             , DrawingInstructionsController &drawInstrCtrl
             );
-
+    //~LuaHostFunc();
     bool doPortrayal();
 
     void loadFunctions();

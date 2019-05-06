@@ -15,9 +15,9 @@
 static const auto dateTime = QString::number(QDateTime::currentSecsSinceEpoch());
 
 namespace filenames {
-const static QString MAP =          "../XMLData/dataset_map.xml";
-const static QString DICT =         "../XMLData/S-101FC_1.0.0_20190409.xml";
-const static QString LUA_MAIN =     "../LuaPortroyal/Rules/main.lua";
+const static QString MAP =          "XMLData/dataset_map.xml";
+const static QString DICT =         "XMLData/S-101FC_1.0.0_20190409.xml";
+const static QString LUA_MAIN =     "lua/main.lua";
 const static QString PORTRAYAL =    dateTime + "-OUTPUT.txt";
 const static QString PROFILE =      dateTime + "-elapsed_time.txt";
 const static QString LOG       =    dateTime + "-log.txt";
@@ -56,7 +56,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
         fprintf(out, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
         break;
     case QtInfoMsg:  // "is used for informational messages.";
-        //fprintf(out, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        //fprintf(stderr, "%s\nInfo: %s\n\n", line1, localMsg.constData());
         fprintf(out, "%s\nInfo: %s\n\n", line1, localMsg.constData());
         break;
     case QtWarningMsg:  // "is used to report warnings and recoverable errors in your application.";

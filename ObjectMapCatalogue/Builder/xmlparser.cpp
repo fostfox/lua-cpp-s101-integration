@@ -518,7 +518,7 @@ Fe2spRef FeatureMapXMLBuilder::buildFe2Sp()
 
 Fe2spRef FeatureMapXMLBuilder::buildExteriorRing()
 {
-
+    return Fe2spRef();
 }
 
 //GM_Object *FeatureMapXMLBuilder::buildIsolatedPoint()

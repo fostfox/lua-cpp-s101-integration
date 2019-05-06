@@ -3,25 +3,100 @@ QT -= gui
 CONFIG += c++17 console
 CONFIG -= app_bundle
 
-INCLUDEPATH += 3rdparty/lualib_jit/include
-DEPENDPATH += 3rdparty/lualib_jit/include
-LIBS += -L"$$PWD\3rdparty\lualib_jit\lib" -llua51
-
-#INCLUDEPATH += 3rdparty/lualib/include
-#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_mingw6" -llua5.1
-
-INCLUDEPATH += 3rdparty/sol2/include
-
-#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_vc15" -llua5.1
-#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_vc15" -llua5.1
-#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_mingw6" -llua5.1
-#LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_mingw6" -llua5.1
-
-
 DEFINES += QT_DEPRECATED_WARNINGS
 
 #DEFINES    += QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT QT_NO_DEBUG_STREAM
 #CONFIG      += warn_off
+
+
+###############################################################################
+# Compilig with JIT
+
+#JIT_COMPILING = true
+
+
+###############################################################################
+# Setting ADD INCLUDE and LIBS
+
+equals(JIT_COMPILING, true){
+    LUA_P = lualib_jit
+    LUA_L = luajit
+    DEFINES += JIT_COMPILE_ENABLED
+} else {
+    LUA_P = lualib
+    LUA_L = lualib51
+}
+
+INCLUDEPATH += 3rdparty/$$LUA_P/include
+INCLUDEPATH += 3rdparty/sol2/include
+
+greaterThan(QT_MAJOR_VERSION, 4) {
+    TARGET_ARCH=$${QT_ARCH}
+} else {
+    TARGET_ARCH=$${QMAKE_HOST.arch}
+}
+contains(TARGET_ARCH, x86_64) {
+    ARCH = Win64
+} else {
+    ARCH = Win32
+}
+message("[INFO] ARCHITECTURE=$${ARCH}")
+
+win32-g++ {
+    message("[INFO] COMPILER = MinGW (win32-g++) $${ARCH}_mingw6")
+    COMPILER_P = mingw6
+}
+win32-msvc* {
+    message("[INFO] COMPILER = MSVC (win32-msvc) MSVC_VER=$${MSVC_VER}")
+    MSVC_VER = $$(VisualStudioVersion)
+    equals(MSVC_VER, 15.0){
+        message("msvc 2017")
+        COMPILER_P = vc15
+    }
+}
+
+LIBS += -L"$$PWD/3rdparty/$$LUA_P/lib/$${ARCH}_$$COMPILER_P" -l$$LUA_L
+
+
+
+###############################################################################
+# Copy Lua and XML Files
+
+XML_SRC = $${_PRO_FILE_PWD_}/XMLData
+XML_DEST1 = $${OUT_PWD}
+XML_DEST2 = $${OUT_PWD}
+LUA_SRC  = $${_PRO_FILE_PWD_}/LuaPortroyal/Rules
+LUA_DEST1 = $${OUT_PWD}
+LUA_DEST2 = $${OUT_PWD}
+
+CONFIG(debug, debug|release) {
+    LUA_DEST1 = $${LUA_DEST1}/debug
+    XML_DEST1 = $${XML_DEST1}/debug
+} else {
+    LUA_DEST1 = $${LUA_DEST1}/release
+    XML_DEST1 = $${XML_DEST1}/release
+}
+XML_DEST1  = $${XML_DEST1}/XMLData
+XML_DEST2  = $${XML_DEST2}/XMLData
+LUA_DEST1  = $${LUA_DEST1}/lua
+LUA_DEST2  = $${LUA_DEST2}/lua
+XML_SRC   ~= s,/,\\\,g # fix slashes
+XML_DEST1 ~= s,/,\\\,g #
+XML_DEST2 ~= s,/,\\\,g #
+LUA_SRC   ~= s,/,\\\,g #
+LUA_DEST1 ~= s,/,\\\,g #
+LUA_DEST2 ~= s,/,\\\,g #
+QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$XML_SRC $$XML_DEST1 $$escape_expand(\\n\\t)
+QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$XML_SRC $$XML_DEST2 $$escape_expand(\\n\\t)
+message("[INFO] Will copy $${XML_SRC} to $${XML_DEST1}")
+message("[INFO] Will copy $${XML_SRC} to $${XML_DEST2}")
+QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$LUA_SRC $$LUA_DEST1 $$escape_expand(\\n\\t)
+QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$LUA_SRC $$LUA_DEST2 $$escape_expand(\\n\\t)
+message("[INFO] Will copy $${LUA_SRC} to $${LUA_DEST1}")
+message("[INFO] Will copy $${LUA_SRC} to $${LUA_DEST2}")
+
+
+###############################################################################
 
 SOURCES += \
     LuaPortroyal/host_func_def.cpp \
