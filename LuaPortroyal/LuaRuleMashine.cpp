@@ -39,7 +39,7 @@ LuaRuleMashine::LuaRuleMashine(
 #   endif
 
     std::string luaVersion = m_lua->load("return _VERSION")();
-    std::string luaJitVesion = m_lua->load("return jit.version or 'NO'")();
+    std::string luaJitVesion = m_lua->load("return (jit and jit.version) or 'NO'")();
     qInfo(std::string("Lua: " + luaVersion + ", JIT: " + luaJitVesion).c_str());
 
     m_lua->set_function("HostCall", [&](std::string s) { std::cout << s << "\n"; });
