@@ -56,7 +56,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
         fprintf(out, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
         break;
     case QtInfoMsg:  // "is used for informational messages.";
-        //fprintf(out, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        //fprintf(stderr, "%s\nInfo: %s\n\n", line1, localMsg.constData());
         fprintf(out, "%s\nInfo: %s\n\n", line1, localMsg.constData());
         break;
     case QtWarningMsg:  // "is used to report warnings and recoverable errors in your application.";
