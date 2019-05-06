@@ -8,16 +8,27 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES    += QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT QT_NO_DEBUG_STREAM
 #CONFIG      += warn_off
 
-#INCLUDEPATH += 3rdparty/lualib_jit/include
-#DEPENDPATH += 3rdparty/lualib_jit/include
-#LIBS += -L"$$PWD\3rdparty\lualib_jit\lib" -llua51
 
-INCLUDEPATH += 3rdparty/lualib/include
-INCLUDEPATH += 3rdparty/sol2/include
+###############################################################################
+# Compilig with JIT
+
+JIT_COMPILING = true
 
 
 ###############################################################################
-# Setting LIBS
+# Setting ADD INCLUDE and LIBS
+
+equals(JIT_COMPILING, true){
+    LUA_P = lualib_jit
+    LUA_L = luajit
+    DEFINES += JIT_COMPILE_ENABLED
+} else {
+    LUA_P = lualib
+    LUA_L = lualib51
+}
+
+INCLUDEPATH += 3rdparty/$$LUA_P/include
+INCLUDEPATH += 3rdparty/sol2/include
 
 greaterThan(QT_MAJOR_VERSION, 4) {
     TARGET_ARCH=$${QT_ARCH}
@@ -25,40 +36,27 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     TARGET_ARCH=$${QMAKE_HOST.arch}
 }
 contains(TARGET_ARCH, x86_64) {
-    ARCHITECTURE = x64
+    ARCH = Win64
 } else {
-    ARCHITECTURE = x86
+    ARCH = Win32
 }
-message("[INFO] ARCHITECTURE=$${ARCHITECTURE}")
+message("[INFO] ARCHITECTURE=$${ARCH}")
 
 win32-g++ {
-    message("[INFO] COMPILER = MinGW (win32-g++)")
-    contains(ARCHITECTURE, x64) {
-        LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_mingw6" -llua5.1
-    }
-    contains(ARCHITECTURE, x86) {
-        LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_mingw6" -llua5.1
-    }
+    message("[INFO] COMPILER = MinGW (win32-g++) $${ARCH}_mingw6")
+    COMPILER_P = mingw6
 }
 win32-msvc* {
     message("[INFO] COMPILER = MSVC (win32-msvc) MSVC_VER=$${MSVC_VER}")
     MSVC_VER = $$(VisualStudioVersion)
-    contains(ARCHITECTURE, x64) {
-        equals(MSVC_VER, 15.0){
-            message("msvc 2017")
-            LIBS += -L"$$PWD\3rdparty\lualib\lib\Win64_vc15" -llua5.1
-        }
+    equals(MSVC_VER, 15.0){
+        message("msvc 2017")
+        COMPILER_P = vc15
     }
-    contains(ARCHITECTURE, x86) {
-        LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_mingw6" -llua5.1
-        equals(MSVC_VER, 15.0){
-            message("msvc 2017")
-            LIBS += -L"$$PWD\3rdparty\lualib\lib\Win32_vc15" -llua5.1
-        }
-    }
-} else {
-    message("[FATAL] just supporting win32-g++")
 }
+
+LIBS += -L"$$PWD/3rdparty/$$LUA_P/lib/$${ARCH}_$$COMPILER_P" -l$$LUA_L
+
 
 
 ###############################################################################
@@ -97,8 +95,8 @@ QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$LUA_SRC $$LUA_DEST2 $$escape_expand(\\n\\t
 message("[INFO] Will copy $${LUA_SRC} to $${LUA_DEST1}")
 message("[INFO] Will copy $${LUA_SRC} to $${LUA_DEST2}")
 
-###############################################################################
 
+###############################################################################
 
 SOURCES += \
     LuaPortroyal/host_func_def.cpp \

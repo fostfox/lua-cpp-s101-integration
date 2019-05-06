@@ -24,7 +24,6 @@ LuaRuleMashine::LuaRuleMashine(
     m_drawController = new DrawingInstructionsController();
 
     m_lua = new sol::state();
-    std::cout << "=== opening a state ===" << std::endl;
 
     m_lua->open_libraries(
                 sol::lib::base,
@@ -33,10 +32,17 @@ LuaRuleMashine::LuaRuleMashine(
                 sol::lib::string,
                 sol::lib::os,
                 sol::lib::io,
-                sol::lib::table
-                //,sol::lib::jit
-                //,sol::lib::ffi
-                );
+                sol::lib::table,
+                sol::lib::debug);
+#   ifdef JIT_COMPILE_ENABLED
+        m_lua->open_libraries(sol::lib::jit);
+#   endif
+
+    std::string luaVersion = m_lua->load("return _VERSION")();
+    std::string luaJitVesion = m_lua->load("return jit.version or 'NO'")();
+    qInfo(std::string("Lua: " + luaVersion + ", JIT: " + luaJitVesion).c_str());
+
+    m_lua->set_function("HostCall", [&](std::string s) { std::cout << s << "\n"; });
 
     m_lua->script_file(fileNameEntryPoint.toStdString());
     m_luaHostFunc = new LuaHostFunc(*m_lua, m_dictObjCtrl, m_mapObjCtrl, m_contParamCtrl, *m_drawController);

@@ -69,6 +69,21 @@ LuaHostFunc::LuaHostFunc(
     });
 }
 
+LuaHostFunc::~LuaHostFunc()
+{
+    sol::table i1 = m_lua["calls"];
+    std::cerr << "cals\n" << std::endl;
+    i1.for_each([](sol::object key, sol::object value){
+        std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
+    });
+    sol::table i2 = m_lua["total"];
+    std::cerr << "total\n" << std::endl;
+    i2.for_each([](sol::object key, sol::object value){
+            std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
+    });
+
+}
+
 bool LuaHostFunc::doPortrayal()
 {
     auto featuresIDs = m_mapObjCtrl.getFeaturesIDs();
@@ -794,6 +809,7 @@ void LuaHostFunc::loadFunctions()
      * \remarks
      *          Host implementation of this function is optional.
      */
+#ifdef NO_DEBUG_OUT
     m_lua.set_function("HostDebuggerEntry"
                      , [&](const string &debugAction, const sol::object &msg)
     {
@@ -841,6 +857,7 @@ void LuaHostFunc::loadFunctions()
         qDebug() << QString::fromStdString(str + " " + debugAction + " # " + message);
         //std::cerr << str << " " << debugAction << " # " << message << std::endl;
     });
+#endif
 }
 
 
