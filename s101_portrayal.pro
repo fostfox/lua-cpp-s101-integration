@@ -43,10 +43,16 @@ contains(TARGET_ARCH, x86_64) {
 message("[INFO] ARCHITECTURE=$${ARCH}")
 
 win32-g++ {
+    QMAKE_CXXFLAGS+= -fopenmp
+    QMAKE_LFLAGS += -fopenmp
+
     message("[INFO] COMPILER = MinGW (win32-g++) $${ARCH}_mingw6")
     COMPILER_P = mingw6
 }
 win32-msvc* {
+    QMAKE_CXXFLAGS+= -openmp
+    QMAKE_LFLAGS += -openmp
+
     message("[INFO] COMPILER = MSVC (win32-msvc) MSVC_VER=$${MSVC_VER}")
     MSVC_VER = $$(VisualStudioVersion)
     equals(MSVC_VER, 15.0){
@@ -135,7 +141,8 @@ SOURCES += \
     Geometry/gm_compositecurve.cpp \
     Geometry/gm_surface.cpp \
     Geometry/gm_object.cpp \
-    profiler.cpp
+    profiler.cpp \
+    multitrading.cpp
 
 
 HEADERS += \
@@ -178,4 +185,5 @@ HEADERS += \
     Geometry/gm_surface.h \
     Geometry/gm_object.h \
     init.h \
-    profiler.h
+    profiler.h \
+    multitrading.h

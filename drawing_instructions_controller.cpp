@@ -12,6 +12,12 @@ std::string DrawingInstructions::drawingInstruction() const
     return m_drawingInstruction;
 }
 
+DrawingInstructionsController::DrawingInstructionsController(QMap<int, DrawingInstructions> &&drawInstr)
+    :m_drawInstr(drawInstr)
+{
+
+}
+
 void DrawingInstructionsController::setDrawInstr(int featureId, DrawingInstructions drawingInstructions)
 {
     if (m_drawInstr.contains(featureId)) {

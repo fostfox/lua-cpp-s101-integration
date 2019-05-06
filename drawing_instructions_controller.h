@@ -21,6 +21,7 @@ class DrawingInstructionsController
 {
 public:
     DrawingInstructionsController() = default;
+    DrawingInstructionsController(QMap<int, DrawingInstructions>&& drawInstr);
 
     void setDrawInstr(int featureId, DrawingInstructions drawingInstructions);
 

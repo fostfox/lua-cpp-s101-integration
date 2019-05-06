@@ -48,9 +48,9 @@ LuaRuleMashine::LuaRuleMashine(
     m_luaHostFunc = new LuaHostFunc(*m_lua, m_dictObjCtrl, m_mapObjCtrl, m_contParamCtrl, *m_drawController);
 }
 
-bool LuaRuleMashine::doPortrayal()
+bool LuaRuleMashine::doPortrayal(const std::vector<std::string> &featuresId)
 {
-    bool isSuccess = m_luaHostFunc->doPortrayal();
+    bool isSuccess = m_luaHostFunc->doPortrayal(featuresId);
     return isSuccess;
 }
 

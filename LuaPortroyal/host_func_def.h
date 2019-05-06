@@ -4,6 +4,8 @@
 //template<typename _Signature> class function;
 //class string;
 //}
+#include <string>
+#include <vector>
 
 namespace sol {
 class state;
@@ -35,7 +37,7 @@ public:
             , DrawingInstructionsController &drawInstrCtrl
             );
     //~LuaHostFunc();
-    bool doPortrayal();
+    bool doPortrayal(const std::vector<std::string> &featuresId);
 
     void loadFunctions();
 

@@ -9,6 +9,10 @@ class DrawingInstructionsController;
 class LuaHostFunc;
 class QString;
 
+#include <string>
+#include <vector>
+
+
 namespace sol {
 class state;
 }
@@ -25,7 +29,7 @@ public:
 
 	~LuaRuleMashine();
 
-    bool doPortrayal();
+    bool doPortrayal(const std::vector<std::string> &featuresId);
 
     const DrawingInstructionsController &drawController() const;
 

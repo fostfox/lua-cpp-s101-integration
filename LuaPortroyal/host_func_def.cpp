@@ -84,9 +84,9 @@ LuaHostFunc::LuaHostFunc(
 
 //}
 
-bool LuaHostFunc::doPortrayal()
+bool LuaHostFunc::doPortrayal(const std::vector<std::string> &featuresId)
 {
-    auto featuresIDs = m_mapObjCtrl.getFeaturesIDs();
+    auto featuresIDs = featuresId;
     bool isSuccess = PortrayalMain(m_lua, featuresIDs);
     return isSuccess;
 }

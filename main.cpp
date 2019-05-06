@@ -10,6 +10,7 @@
 #include "drawing_instructions_controller.h"
 #include "contextparameter.h"
 
+#include "multitrading.h"
 
 int main(int argc, char *argv[])
 {
@@ -56,6 +57,7 @@ int main(int argc, char *argv[])
         }
     /// -----------------------------------------------------
 
+
     qInfo() << "START: Map parsing";
     FeatureMapXMLBuilder mapBuilder(&mapFile);
     auto mapController = mapBuilder.build(true);
@@ -70,15 +72,22 @@ int main(int argc, char *argv[])
 
     ContexParametrController contextParamCtrl;
 
-    LuaRuleMashine luaPortoyal(filenames::LUA_MAIN, dictController, mapController, contextParamCtrl);
 
-    for (int i = 0; i < 30; ++i){
-        qDebug() << " \n\n--- DO PORTRAYAL STATUS: ---"<< luaPortoyal.doPortrayal();
-    }
+    Multitrading test(filenames::LUA_MAIN, dictController, mapController, contextParamCtrl);
 
+
+
+   //LuaRuleMashine luaPortoyal(filenames::LUA_MAIN, dictController, mapController, contextParamCtrl);
+
+//    for (int i = 0; i < 30; ++i){
+//        qDebug() << " \n\n--- DO PORTRAYAL STATUS: ---"<< luaPortoyal.doPortrayal();
+//    }
+
+    //luaPortoyal.doPortrayal(mapController.getFeaturesIDs());
+    //auto drawInstCtrl = luaPortoyal.drawController();
+    auto drawInstCtrl = test.doCool();
 
     QTextStream out(&portayalFile);
-    auto drawInstCtrl = luaPortoyal.drawController();
     for (const auto& featureID : mapController.getFeaturesIDs()){
         std::string featureCode = mapController.getFeatureById(featureID).classAlias();
         std::string drawInstr = drawInstCtrl.drawInstr(stoi(featureID)).drawingInstruction();
