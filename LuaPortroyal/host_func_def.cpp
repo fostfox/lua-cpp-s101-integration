@@ -69,20 +69,20 @@ LuaHostFunc::LuaHostFunc(
     });
 }
 
-LuaHostFunc::~LuaHostFunc()
-{
-    sol::table i1 = m_lua["calls"];
-    std::cerr << "cals\n" << std::endl;
-    i1.for_each([](sol::object key, sol::object value){
-        std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
-    });
-    sol::table i2 = m_lua["total"];
-    std::cerr << "total\n" << std::endl;
-    i2.for_each([](sol::object key, sol::object value){
-            std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
-    });
+//LuaHostFunc::~LuaHostFunc()
+//{
+//    sol::table i1 = m_lua["calls"];
+//    std::cerr << "cals\n" << std::endl;
+//    i1.for_each([](sol::object key, sol::object value){
+//        std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
+//    });
+//    sol::table i2 = m_lua["total"];
+//    std::cerr << "total\n" << std::endl;
+//    i2.for_each([](sol::object key, sol::object value){
+//            std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
+//    });
 
-}
+//}
 
 bool LuaHostFunc::doPortrayal()
 {
