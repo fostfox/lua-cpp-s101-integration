@@ -5,26 +5,43 @@ CONFIG -= app_bundle
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
-#DEFINES    += QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT QT_NO_DEBUG_STREAM
 #CONFIG      += warn_off
 
 
 ###############################################################################
 # Compilig with JIT
 
-#JIT_COMPILING = true
+
+DEFINES  += DEBUG_OUT_ENABLE
+DEFINES  += DEBUG_TO_LOG_FILE
+DEFINES  += PROFILING_TIME_ENABLE
+
+
+#!!!!!!!!!!
+#ATTENTION!   # A complete project rebuild is required
+#!!!!!!!!!!   # after activating or deactivating the following flags
+
+#CONFIG += JIT_COMPILING
+#CONFIG += LUA53_COMPILING
 
 
 ###############################################################################
 # Setting ADD INCLUDE and LIBS
 
-equals(JIT_COMPILING, true){
+
+JIT_COMPILING {
     LUA_P = lualib_jit
     LUA_L = luajit
     DEFINES += JIT_COMPILE_ENABLED
 } else {
-    LUA_P = lualib
-    LUA_L = lualib51
+    LUA53_COMPILING {
+        DEFINES += LUA53_COMPILING_ENABLED
+        LUA_L = lualib53
+        LUA_P = lua53
+    } else {
+        LUA_L = lualib51
+        LUA_P = lua51
+    }
 }
 
 INCLUDEPATH += 3rdparty/$$LUA_P/include
@@ -57,8 +74,6 @@ win32-msvc* {
 
 LIBS += -L"$$PWD/3rdparty/$$LUA_P/lib/$${ARCH}_$$COMPILER_P" -l$$LUA_L
 
-
-
 ###############################################################################
 # Copy Lua and XML Files
 
@@ -66,6 +81,7 @@ XML_SRC = $${_PRO_FILE_PWD_}/XMLData
 XML_DEST1 = $${OUT_PWD}
 XML_DEST2 = $${OUT_PWD}
 LUA_SRC  = $${_PRO_FILE_PWD_}/LuaPortroyal/Rules
+LUA_SRC2  = $${LUA_SRC}/Rules-lua53
 LUA_DEST1 = $${OUT_PWD}
 LUA_DEST2 = $${OUT_PWD}
 
@@ -84,17 +100,23 @@ XML_SRC   ~= s,/,\\\,g # fix slashes
 XML_DEST1 ~= s,/,\\\,g #
 XML_DEST2 ~= s,/,\\\,g #
 LUA_SRC   ~= s,/,\\\,g #
+LUA_SRC2  ~= s,/,\\\,g #
 LUA_DEST1 ~= s,/,\\\,g #
 LUA_DEST2 ~= s,/,\\\,g #
 QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$XML_SRC $$XML_DEST1 $$escape_expand(\\n\\t)
 QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$XML_SRC $$XML_DEST2 $$escape_expand(\\n\\t)
 message("[INFO] Will copy $${XML_SRC} to $${XML_DEST1}")
 message("[INFO] Will copy $${XML_SRC} to $${XML_DEST2}")
-QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$LUA_SRC $$LUA_DEST1 $$escape_expand(\\n\\t)
-QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$LUA_SRC $$LUA_DEST2 $$escape_expand(\\n\\t)
+QMAKE_POST_LINK += xcopy /q /y /i $$LUA_SRC $$LUA_DEST1 $$escape_expand(\\n\\t)
+QMAKE_POST_LINK += xcopy /q /y /i $$LUA_SRC $$LUA_DEST2 $$escape_expand(\\n\\t)
 message("[INFO] Will copy $${LUA_SRC} to $${LUA_DEST1}")
 message("[INFO] Will copy $${LUA_SRC} to $${LUA_DEST2}")
-
+LUA53_COMPILING {
+    QMAKE_POST_LINK += xcopy /q /y /i $$LUA_SRC2 $$LUA_DEST1 $$escape_expand(\\n\\t)
+    QMAKE_POST_LINK += xcopy /q /y /i $$LUA_SRC2 $$LUA_DEST2 $$escape_expand(\\n\\t)
+    message("[INFO] Will copy $${LUA_SRC2} to $${LUA_DEST1}")
+    message("[INFO] Will copy $${LUA_SRC2} to $${LUA_DEST2}")
+}
 
 ###############################################################################
 

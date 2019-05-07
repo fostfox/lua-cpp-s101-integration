@@ -337,15 +337,15 @@ sol::object luaCreateSpatialAssociation(const sol::state &lua, const Fe2spRef &s
     case 125: spType = "CompositeCurve"; break;
     case 130: spType = "Surface"; break;
     default:
-        qDebug() << "ref Type " << spAssociation.refType();
+        qDebug(("ref Type " + std::to_string(spAssociation.refType())).c_str());
         throw "Unsupported Spatial type (refType)";
     }
 
     string orient;
     switch (spAssociation.orientation()) {
     case 1: orient = "Forward"; break;
-    case 2: orient = "Forward"; break;
-    case 255: orient = "Reverse"; break;
+    case 2: orient = "Reverse"; break;
+    case 255: orient = "UNDEF"; break;
     default:
         throw "Unsupported Spatial orientation (orientation)";
     }

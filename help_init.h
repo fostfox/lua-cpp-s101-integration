@@ -30,7 +30,7 @@ char* getLine(const uint N, char D){
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-#ifndef NO_DEBUG_OUT
+#ifdef DEBUG_OUT_ENABLE
     static const char *line1 = getLine(120, '_');
     static const char *line2 = getLine(120, '=');
     static const char *line3 = getLine(120, ':');

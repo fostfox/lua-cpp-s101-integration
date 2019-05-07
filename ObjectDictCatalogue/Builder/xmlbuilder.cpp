@@ -110,7 +110,7 @@ FeatureCatalogueController FeatureCatalogueXMLBuilder::build(QFile* xmlPath)
         }
     }
     if (reader.error()){
-        qWarning() << "Some error: %1" + reader.errorString();
+        qWarning(QString("Some error: %1").arg(reader.errorString()).toLocal8Bit().data());
     }
     return fc_controller;
 }
@@ -123,7 +123,7 @@ bool FeatureCatalogueXMLBuilder::isStartElementAndAllowed(std::string tag)
 void FeatureCatalogueXMLBuilder::printErrorIfHapend()
 {
     if (reader.error()){
-        qWarning() << "Some error: %1" + reader.errorString();
+        qWarning(QString("Some error: %1").arg(reader.errorString()).toLocal8Bit().data());
         //throw "Error";
     }
 }

@@ -1,15 +1,6 @@
 #pragma once
 
 
-
-// ----------------------------
-
-#define DEBUG_OUT_ENABLE
-#define DEBUG_TO_LOG_FILE
-#define PROFILING_TIME_ENABLE
-
-// ----------------------------
-
 #include <QDateTime>
 #include <QVariant>
 #include "ObjectMapCatalogue/contextparameter.h"

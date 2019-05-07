@@ -6,13 +6,12 @@
 #include <chrono>
 #include <QMap>
 
-
 #ifdef PROFILING_TIME_ENABLE
 #   define PROFILING_TIME2(functionName) [[maybe_unused]] const auto& ___p = Profiler::instance().createTimeUnit(functionName);
 #   define PROFILING_TIME PROFILING_TIME2(__FUNCTION__)
 #else
-//#define PROFILING_TIME2(functionName)
-//#define PROFILING_TIME
+#   define PROFILING_TIME2(functionName)
+#   define PROFILING_TIME
 #endif
 
 

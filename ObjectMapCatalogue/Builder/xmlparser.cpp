@@ -363,7 +363,7 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
     }
     if (m_xmlReader->error()){  
         #ifdef QT_DEBUG
-            qDebug() << "Some error: " + m_xmlReader->errorString();
+            qDebug(("Some error: " + m_xmlReader->errorString()).toLocal8Bit().data());
         #endif
         throw "Some error";
     }
@@ -565,7 +565,7 @@ std::map<std::string, GM_Object *> FeatureMapXMLBuilder::parseSpatials()
         }
     }
     if (m_xmlSpatial->error()){
-        qWarning() << "Some error: %1" + m_xmlSpatial->errorString();
+        qDebug(("Some error: " + m_xmlSpatial->errorString()).toLocal8Bit().data());
     }
     return m_SpId_to_SpatialObject;
 }
