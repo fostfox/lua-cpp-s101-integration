@@ -1,16 +1,20 @@
 #pragma once
 
+
+#include "config.h"
+
 #include <chrono>
 #include <QMap>
 
-#define PROFILING_TIME_ENABLE
-//#ifndef PROFILING_TIME_ENABLE
-    #define PROFILING_TIME2(functionName) [[maybe_unused]] const auto& p = Profiler::instance().createTimeUnit(functionName);
-    #define PROFILING_TIME PROFILING_TIME2(__FUNCTION__)
-//#else
-    //#define PROFILING_TIME2(functionName)
-    //#define PROFILING_TIME
-//#endif
+
+#ifdef PROFILING_TIME_ENABLE
+#   define PROFILING_TIME2(functionName) [[maybe_unused]] const auto& ___p = Profiler::instance().createTimeUnit(functionName);
+#   define PROFILING_TIME PROFILING_TIME2(__FUNCTION__)
+#else
+//#define PROFILING_TIME2(functionName)
+//#define PROFILING_TIME
+#endif
+
 
 
 class QFile;
@@ -70,4 +74,3 @@ private:
     static QString m_fileName;
     QMap<QString, FunctionTimeInfo> m_funcTimeInfoMap;
 };
-

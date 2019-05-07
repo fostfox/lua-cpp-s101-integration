@@ -1,30 +1,18 @@
 #pragma once
+#include <QDateTime>
+#include <QIODevice>
+#include <QTextStream>
+#include <QFile>
 
-
-//#define NO_DEBUG_OUT
-#define PROFILING_TIME_ENABLE
-#define DEBUG_TO_LOG_FILE
+#include "config.h"
 
 #include "profiler.h"
+#include "ObjectDictCatalogue/Builder/xmlbuilder.h"
+#include "ObjectMapCatalogue/Builder/xmlparser.h"
+#include "ObjectMapCatalogue/contextparameter.h"
+#include "ObjectDrawCatalogue/drawing_instructions_controller.h"
+#include "LuaPortroyal/LuaRuleMashine.h"
 
-///----------------------------------------------------------------------------
-
-#include <QString>
-#include <QDateTime>
-
-static const auto dateTime = QString::number(QDateTime::currentSecsSinceEpoch());
-
-namespace filenames {
-const static QString MAP =          "XMLData/dataset_map.xml";
-const static QString DICT =         "XMLData/S-101FC_1.0.0_20190409.xml";
-const static QString LUA_MAIN =     "lua/main.lua";
-const static QString PORTRAYAL =    dateTime + "-OUTPUT.txt";
-const static QString PROFILE =      dateTime + "-elapsed_time.txt";
-const static QString LOG       =    dateTime + "-log.txt";
-}
-
-
-///----------------------------------------------------------------------------
 
 char* getLine(const uint N, char D){
     char* line = new char[N];
@@ -74,3 +62,50 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     #endif
 }
 
+///----------------------------------------------------------------------------
+
+bool isOpen(QTextStream &errorStream, QFile &file, const QIODevice::OpenMode &flags)
+{
+    if (!file.open(flags)){
+        errorStream << QString(
+                           "Filed to open file %1.\n"
+                           ).arg(file.fileName());
+        return false;
+    }
+    return true;
+}
+
+bool isExists(QTextStream &errorStream, const QString fileName)
+{
+    if (!QFile::exists(fileName)) {
+        errorStream << QString(
+                           "File %1 does not exist.\n"
+                           ).arg(fileName);
+        return false;
+    }
+    return true;
+}
+
+bool isExistsEndOpen(QTextStream &errorStream, QFile &file, const QIODevice::OpenMode &flags)
+{
+    if (!isExists(errorStream, file.fileName())){
+        return false;
+    } else if (!isOpen(errorStream, file, flags)){
+        return false;
+    }
+    return true;
+}
+
+///----------------------------------------------------------------------------
+
+bool writeDrawInst(QFile & portayalFile, const DrawingInstructionsController& drawCtrl, const FeatureCatalogueController& fcCtrl, const FeatureMapController &fmCtrl)
+{
+    QTextStream out(&portayalFile);
+    for (const auto& featureID : fmCtrl.getFeaturesIDs()){
+        std::string featureCode = fmCtrl.getFeatureById(featureID).classAlias();
+        std::string drawInstr = drawCtrl.drawInstr(stoi(featureID)).drawingInstruction();
+        out << "Feature : [" << QString::fromStdString(featureID) << "] " << QString::fromStdString(featureCode)
+                 << "\n " << QString::fromStdString(drawInstr)
+                 << "\n---------------------------------------\n";
+    }
+}

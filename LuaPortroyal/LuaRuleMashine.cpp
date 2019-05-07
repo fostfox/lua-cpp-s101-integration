@@ -7,7 +7,7 @@
 
 #include "ObjectDictCatalogue/Controllers/featurecataloguecontroller.h"
 #include "ObjectMapCatalogue/Controllers/featurescontroller.h"
-#include "drawing_instructions_controller.h"
+#include "ObjectDrawCatalogue/drawing_instructions_controller.h"
 
 #include "host_func_def.h"
 

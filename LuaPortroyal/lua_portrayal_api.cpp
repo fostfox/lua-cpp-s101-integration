@@ -4,6 +4,8 @@
 
 #include "profiler.h"
 
+#include "../ObjectMapCatalogue/contextparameter.h"
+
 #include "../ObjectDictCatalogue/DataTypes/datatypes.h"
 #include "../ObjectDictCatalogue/Entities/fc_item.h"
 #include "../ObjectDictCatalogue/Entities/fc_role.h"
@@ -100,15 +102,6 @@ sol::table helpCreateRoles(sol::state &lua, const QVector<FC_Role> &roles)
     return luaRoles;
 }
 
-//template<typename T>
-//sol::table helpLuaTable(sol::state &lua, const std::vector<T> &seq)
-//{
-//    sol::table luaRoles = lua.create_table();
-//    for (const auto &s : seq) {
-//        luaRoles.add(s);
-//    }
-//    return luaRoles;
-//}
 
 sol::table helpEmptyTable(sol::state &lua)
 {
