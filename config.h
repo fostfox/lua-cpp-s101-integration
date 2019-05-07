@@ -35,7 +35,7 @@ const static QVector<ContextParameter> PARAMS = {
     { SIMPLIFIED_POINTS, true },
     { SAFETY_CONTOUR, 10.5 },
     { SHALLOW_CONTOUR, 10.3 },
-    { DEEP_CONTOUR, 10 },
+    { DEEP_CONTOUR, 10.0 },
     { SHALLOW_PATTERN, true },
     { TWO_SHADES, false },
     { NATIONAL_LANGUAGE, "eng" },
