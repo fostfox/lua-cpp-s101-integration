@@ -1,5 +1,7 @@
 #include "host_func_def.h"
 
+#include "config.h"
+
 #include "lua_portrayal_api.h"
 #include "Geometry/gm_compositecurve.h"
 #include "Geometry/gm_curve.h"
@@ -10,7 +12,7 @@
 
 #include "ObjectDictCatalogue/Controllers/featurecataloguecontroller.h"
 #include "ObjectMapCatalogue/Controllers/featurescontroller.h"
-#include "drawing_instructions_controller.h"
+#include "ObjectDrawCatalogue/drawing_instructions_controller.h"
 
 #include "profiler.h"
 
@@ -20,17 +22,6 @@
 #include <algorithm>
 #include <functional>
 #include <string>
-
-
-//template<typename R, typename ...Args>
-//void LuaHostFunc::setHostFunc(const std::string &funcName, const std::function<R(Args...)> &f)
-//{
-//    m_lua.set_function(funcName
-//                       , [&](Args... args) -> R {
-//        PROFILING_TIME2(funcName)
-//        return f(args...);
-//    });
-//}
 
 
 LuaHostFunc::LuaHostFunc(
@@ -48,41 +39,17 @@ LuaHostFunc::LuaHostFunc(
 {
     loadFunctions();
 
-    ContexParametrController contextParamControl;
     PortrayalInitializeContextParameters(m_lua, contParamController);
 
 
     m_lua["TypeSystemChecks"]("true");
 
-//    func("HostSpecialSetCurrentFeatureId"
-//                , [&](std::string featureId) -> void
-//    {  //TODO: Временное решение
-//        m_currentFeatureId_processFeaturePortrayal = stoi(featureId);
-//        qInfo() << QString::fromStdString("currentFeatureId_processFeaturePortrayal: "
-//                                          + std::to_string(m_currentFeatureId_processFeaturePortrayal));
-
-//    });
     m_lua.set_function("HostSpecialSetCurrentFeatureId", [&](std::string featureId){  //TODO: Временное решение
         m_currentFeatureId_processFeaturePortrayal = stoi(featureId);
         qInfo() << QString::fromStdString("currentFeatureId_processFeaturePortrayal: "
                                           + std::to_string(m_currentFeatureId_processFeaturePortrayal));
     });
 }
-
-//LuaHostFunc::~LuaHostFunc()
-//{
-//    sol::table i1 = m_lua["calls"];
-//    std::cerr << "cals\n" << std::endl;
-//    i1.for_each([](sol::object key, sol::object value){
-//        std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
-//    });
-//    sol::table i2 = m_lua["total"];
-//    std::cerr << "total\n" << std::endl;
-//    i2.for_each([](sol::object key, sol::object value){
-//            std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
-//    });
-
-//}
 
 bool LuaHostFunc::doPortrayal()
 {
@@ -368,10 +335,12 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostFeatureGetAssociatedFeatureIDs"
                      , [&](const string &featureID, const string &associationCode, const sol::object &roleCode)
                        -> sol::table
-    {
+    { // TODO: HOST FUNCTION IS NOT IMPLEMENTED
         PROFILING_TIME2("HostFeatureGetAssociatedFeatureIDs")
         qDebug() << "call HostFeatureGetAssociatedFeatureIDs";
         qWarning() << "Return empty string[] - to the featureID : " << QString::fromStdString(featureID);
+        [[maybe_unused]] const string& ac = associationCode;
+        [[maybe_unused]] const sol::object & rc = roleCode;
         auto featureAssFeatureIDs = helpEmptyTable(m_lua);
         return featureAssFeatureIDs;
     });
@@ -397,10 +366,12 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostFeatureGetAssociatedInformationIDs"
                      , [&](const string &featureID, const string &associationCode, const sol::object &roleCode)
                        -> sol::table
-    {
+    { // TODO: HOST FUNCTION IS NOT IMPLEMENTED
         PROFILING_TIME2("HostFeatureGetAssociatedInformationIDs")
         qDebug() << "call HostFeatureGetAssociatedInformationIDs";
         qWarning() << "Return empty string[] - to the featureID : " << QString::fromStdString(featureID);
+        [[maybe_unused]] const string& ac = associationCode;
+        [[maybe_unused]] const sol::object & rc = roleCode;
         auto featureAssInfIDs = helpEmptyTable(m_lua);
         return featureAssInfIDs;
     });
@@ -478,10 +449,12 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostSpatialGetAssociatedInformationIDs"
                      , [&](const string &spatialID, const string &associationCode, const sol::object &roleCode)
                        -> sol::object
-    {
+    { // TODO: HOST FUNCTION IS NOT IMPLEMENTED
         PROFILING_TIME2("HostSpatialGetAssociatedInformationIDs")
         qDebug() << "call HostSpatialGetAssociatedInformationIDs";
         qWarning() << "Return Empty spatial[] identified by spatialID : " << QString::fromStdString(spatialID);
+        [[maybe_unused]] const string& ac = associationCode;
+        [[maybe_unused]] const sol::object & rc = roleCode;
         sol::object spatialAssInfIDs = helpEmptyTable(m_lua);
         return spatialAssInfIDs;
     });
@@ -533,10 +506,13 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostInformationTypeGetSimpleAttribute"
                      , [&](const string &informationTypeID, const string &path, const string &attributeCode)
                        -> sol::object
-    {
+    { // TODO: HOST FUNCTION IS NOT IMPLEMENTED
         PROFILING_TIME2("HostInformationTypeGetSimpleAttribute")
         qDebug() << "call HostInformationTypeGetSimpleAttribute";
-        sol::object informSimpleAttrValue;
+        qWarning() << "Return nil identified by informationTypeID : " << QString::fromStdString(informationTypeID);
+        [[maybe_unused]] const string& p = path;
+        [[maybe_unused]] const string& ac = attributeCode;
+        sol::object informSimpleAttrValue = sol::nil;
         return informSimpleAttrValue;
     });
 
@@ -560,10 +536,12 @@ void LuaHostFunc::loadFunctions()
     m_lua.set_function("HostInformationTypeGetComplexAttributeCount"
                      , [&](const string &informationTypeID, const string &path, const string &attributeCode)
                        -> int
-    {
+    { // TODO: HOST FUNCTION IS NOT IMPLEMENTED
         PROFILING_TIME2("HostInformationTypeGetComplexAttributeCount")
         qDebug() << "call HostInformationTypeGetComplexAttributeCount";
         qWarning() << "Return 0 - to the informationTypeID : " << QString::fromStdString(informationTypeID);
+        [[maybe_unused]] const string& p = path;
+        [[maybe_unused]] const string& ac = attributeCode;
         int informCompleAttrCount = 0;
         return informCompleAttrCount;
     });
@@ -809,7 +787,7 @@ void LuaHostFunc::loadFunctions()
      * \remarks
      *          Host implementation of this function is optional.
      */
-#ifdef NO_DEBUG_OUT
+#ifdef DEBUG_OUT_ENABLE
     m_lua.set_function("HostDebuggerEntry"
                      , [&](const string &debugAction, const sol::object &msg)
     {
@@ -825,8 +803,6 @@ void LuaHostFunc::loadFunctions()
             message = msg.as<string>();
         }
 
-        //static int level = 0;
-        int level = 0;
         string str;
 
         if ("break" == debugAction){
@@ -843,10 +819,8 @@ void LuaHostFunc::loadFunctions()
                                                   + message);
             return;
         } else if ("start_performance" == debugAction) {
-            str.assign(++level * 5, ' ');
             //return;
         } else if ("stop_performance" == debugAction) {
-            str.assign(level-- * 5, ' ');
             //return;
         } else if ("reset_performance" == debugAction) {
 
@@ -855,7 +829,6 @@ void LuaHostFunc::loadFunctions()
         }
 
         qDebug() << QString::fromStdString(str + " " + debugAction + " # " + message);
-        //std::cerr << str << " " << debugAction << " # " << message << std::endl;
     });
 #endif
 }

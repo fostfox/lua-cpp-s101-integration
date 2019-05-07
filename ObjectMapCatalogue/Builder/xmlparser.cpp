@@ -183,10 +183,11 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
 
 
             if (typeOfAttrs == "complex_attrs"){
-            fixComplex:
+            do{
+
             // complex
             ComplexAttribute complexAttr;
-
+            readNext2(m_xmlReader);
             // Code
             complexAttr.setCode(m_xmlReader->readElementText().toInt());
             readNext2(m_xmlReader);
@@ -296,13 +297,16 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
             readNext2(m_xmlReader);
             }
 
-
             feature.addComplexAttr(complexAttr);
 
-            if (typeOfAttrs == "code") goto fixComplex;
+            } while (m_xmlReader->name() != "complex_attrs");
+            readNext2(m_xmlReader);
+
+            //if (typeOfAttrs == "code") goto fixComplex;
 
             // TAG NAME AFTER </complex_attrs>
             typeOfAttrs = m_xmlReader->name().toString().toStdString();
+
             readNext2(m_xmlReader);
             }
 
@@ -399,12 +403,12 @@ bool FeatureMapXMLBuilder::isStartElementAndAllowed(std::string tag)
 GM_Object *FeatureMapXMLBuilder::buildIsolatedPoint()
 {
     // MUST BE
-    //std::string index = m_xmlSpatial->readElementText().toStdString();
-    //readNext2(m_xmlSpatial);
+    std::string index = m_xmlSpatial->readElementText().toStdString();
+    readNext2(m_xmlSpatial);
     std::string lat = m_xmlSpatial->readElementText().toStdString();
     readNext2(m_xmlSpatial);
     std::string lon = m_xmlSpatial->readElementText().toStdString();
-    //m_SpId_to_SpatialObject[index] = new GM_Point(lat, lon);
+    m_SpId_to_SpatialObject[index] = new GM_Point(lat, lon);
     return new GM_Point(lat, lon);
 }
 
@@ -444,8 +448,8 @@ GM_Object *FeatureMapXMLBuilder::buildSurface()
 GM_Object *FeatureMapXMLBuilder::buildCompositeEdge()
 {
     // MUST BE
-    //std::string index = m_xmlSpatial->readElementText().toStdString();
-    //readNext2(m_xmlSpatial);
+    std::string index = m_xmlSpatial->readElementText().toStdString();
+    readNext2(m_xmlSpatial);
     GM_CompositeCurve* curv = new GM_CompositeCurve();
     while(!(m_xmlSpatial->name().toString().toStdString() == "composite_edge" && m_xmlSpatial->isEndElement())){
         if (m_xmlSpatial->name().toString().toStdString() == "sp2sp_ref" && m_xmlSpatial->isStartElement()){
@@ -466,7 +470,7 @@ GM_Object *FeatureMapXMLBuilder::buildCompositeEdge()
         }
         readNext1(m_xmlSpatial);
     }
-    //m_SpId_to_SpatialObject[index] = curv;
+    m_SpId_to_SpatialObject[index] = curv;
 //    if (index == 331){
 //        std::cout << "!";
 //    }

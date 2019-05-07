@@ -1,10 +1,5 @@
 #pragma once
 
-//namespace std {
-//template<typename _Signature> class function;
-//class string;
-//}
-
 namespace sol {
 class state;
 }
@@ -34,27 +29,7 @@ public:
             , const ContexParametrController &contParamController
             , DrawingInstructionsController &drawInstrCtrl
             );
-    //~LuaHostFunc();
     bool doPortrayal();
 
     void loadFunctions();
-
-//    template<typename R, typename ...Args>
-//    void setHostFunc(const std::string& funcName, const std::function<R(Args...)>& f);
-
-
-    ///----------------------------------------------------------------------------------------------
-    
-    //???
-    //LUA_RET GetSimpleAttribute(lua_State* );
-    //LUA_RET GetComplexAttributeCount(lua_State* );
-    //LUA_RET FeatureTypeGetCode(lua_State* );
-    
-    
-    
-    
-    //LUA_RET DatasetGetFeatureIDs(lua_State* L);
-    //LUA_RET FeatureGetType(lua_State* L);
-    
-    
 };

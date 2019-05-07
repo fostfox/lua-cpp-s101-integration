@@ -125,9 +125,8 @@ SOURCES += \
     ObjectMapCatalogue/Controllers/featurescontroller.cpp \
     ObjectMapCatalogue/Entries/feature.cpp \
     ObjectMapCatalogue/Entries/information.cpp \
-    contextparameter.cpp \
-    drawing_instructions_controller.cpp \
-    main.cpp \
+    ObjectMapCatalogue/contextparameter.cpp \
+    ObjectDrawCatalogue/drawing_instructions_controller.cpp \
     Geometry/gm_point.cpp \
     Geometry/gm_multipoint.cpp \
     Geometry/gm_curvesegment.cpp \
@@ -135,7 +134,8 @@ SOURCES += \
     Geometry/gm_compositecurve.cpp \
     Geometry/gm_surface.cpp \
     Geometry/gm_object.cpp \
-    profiler.cpp
+    profiler.cpp \
+    main.cpp
 
 
 HEADERS += \
@@ -168,8 +168,8 @@ HEADERS += \
     ObjectMapCatalogue/Controllers/featurescontroller.h \
     ObjectMapCatalogue/Entries/feature.h \
     ObjectMapCatalogue/Entries/information.h \
-    contextparameter.h \
-    drawing_instructions_controller.h \
+    ObjectMapCatalogue/contextparameter.h \
+    ObjectDrawCatalogue/drawing_instructions_controller.h \
     Geometry/gm_curve.h \
     Geometry/gm_point.h \
     Geometry/gm_multipoint.h \
@@ -177,5 +177,6 @@ HEADERS += \
     Geometry/gm_compositecurve.h \
     Geometry/gm_surface.h \
     Geometry/gm_object.h \
-    init.h \
-    profiler.h
+    profiler.h \
+    help_init.h \
+    config.h

@@ -1,12 +1,13 @@
 #pragma once
 
-#include "contextparameter.h"
-
 #include <sol/sol.hpp>
 #include <QVector>
 
 #include <vector>
 #include <string>
+
+class ContexParametrController;
+class ContextParameter;
 
 class UnlimitedInteger;
 class FC_Item;
@@ -38,8 +39,6 @@ sol::table helpCreatePointsArray(sol::state &lua, const QVector<GM_Point>& point
 sol::table helpCreateSpatialAssociations(sol::state &lua, const QVector<Fe2spRef> &spatialAssociations);
 sol::table helpCreateRoles(sol::state &lua, const QVector<FC_Role> &roles);
 
-//template <typename T> // TODO: Почему нельзя шаблон в cpp?
-//sol::table helpLuaTable(sol::state &lua, const std::vector<T> &);
 template<typename T>
 sol::table helpLuaTable(sol::state &lua, const std::vector<T> &seq)
 {

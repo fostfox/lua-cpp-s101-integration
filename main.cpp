@@ -1,95 +1,46 @@
-#include <QDebug>
-#include <QFile>
-#include <QTextStream>
-
-#include "init.h"
-
-#include "ObjectDictCatalogue/Builder/xmlbuilder.h"
-#include "ObjectMapCatalogue/Builder/xmlparser.h"
-#include "LuaPortroyal/LuaRuleMashine.h"
-#include "drawing_instructions_controller.h"
-#include "contextparameter.h"
+#include "help_init.h"
 
 
-int main(int argc, char *argv[])
+int main()
 {
     qInstallMessageHandler(myMessageOutput);
 
     QTextStream errorStream(stderr);
 
     QFile mapFile(filenames::MAP);
-    if (!QFile::exists(filenames::MAP)) {
-        errorStream << QString(
-                           "File %1 does not exist.\n"
-                           ).arg(filenames::MAP);
-        return -1;
-    } else if (!mapFile.open(QIODevice::ReadOnly)){
-        errorStream << QString(
-                           "Filed to open file %1.\n"
-                           ).arg(filenames::MAP);
-        return -1;
-    }
+    if (!isExistsEndOpen(errorStream, mapFile, QIODevice::ReadOnly)) { return -1; }
     QFile dictFile(filenames::DICT);
-    if (!QFile::exists(filenames::DICT)) {
-        errorStream << QString(
-                           "File %1 does not exist.\n"
-                           ).arg(filenames::DICT);
-        return -1;
-    } else if (!dictFile.open(QIODevice::ReadOnly)){
-        errorStream << QString(
-                           "Filed to open file %1.\n"
-                           ).arg(filenames::DICT);
-        return -1;
-    }
-    if (!QFile::exists(filenames::LUA_MAIN)) {
-        errorStream << QString(
-                           "File %1 does not exist.\n"
-                           ).arg(filenames::LUA_MAIN);
-        return -1;
-    }
+    if (!isExistsEndOpen(errorStream, dictFile, QIODevice::ReadOnly)) { return -1; }
+    if (!isExists(errorStream, filenames::LUA_MAIN)) { return -1; }
     QFile portayalFile(filenames::PORTRAYAL);
-    if(!portayalFile.open(QIODevice::WriteOnly | QIODevice::Text)){
-            errorStream << QString(
-                               "Filed to open file %1.\n"
-                               ).arg(filenames::PORTRAYAL);
-            return -1;
-        }
+    if (!isOpen(errorStream,portayalFile, QIODevice::WriteOnly | QIODevice::Text)) { return -1; }
+
     /// -----------------------------------------------------
 
-    qInfo() << "START: Map parsing";
+    qInfo("START: Map parsing");
     FeatureMapXMLBuilder mapBuilder(&mapFile);
     auto mapController = mapBuilder.build(true);
     mapFile.close();
-    qInfo() << "END: Map parsing";
+    qInfo("END: Map parsing");
 
-    qInfo() << "START: Feature Catalog parsing";
+    qInfo("START: Feature Catalog parsing");
     FeatureCatalogueXMLBuilder dictBuilder;
     auto dictController = dictBuilder.build(&dictFile);
     dictFile.close();
-    qInfo() << "END: Feature Catalog parsing";
+    qInfo("END: Feature Catalog parsing");
 
-    ContexParametrController contextParamCtrl;
-
+    ContexParametrController contextParamCtrl(contextparams::PARAMS);
     LuaRuleMashine luaPortoyal(filenames::LUA_MAIN, dictController, mapController, contextParamCtrl);
+    auto status = luaPortoyal.doPortrayal();
+    auto msg = std::string(" \n\n--- DO PORTRAYAL STATUS: --- ") + (status ? "true" : "false");
+    qDebug(msg.c_str());
 
-    for (int i = 0; i < 30; ++i){
-        qDebug() << " \n\n--- DO PORTRAYAL STATUS: ---"<< luaPortoyal.doPortrayal();
-    }
-
-
-    QTextStream out(&portayalFile);
     auto drawInstCtrl = luaPortoyal.drawController();
-    for (const auto& featureID : mapController.getFeaturesIDs()){
-        std::string featureCode = mapController.getFeatureById(featureID).classAlias();
-        std::string drawInstr = drawInstCtrl.drawInstr(stoi(featureID)).drawingInstruction();
-        out << "Feature : [" << QString::fromStdString(featureID) << "] " << QString::fromStdString(featureCode)
-                 << "\n " << QString::fromStdString(drawInstr)
-                 << "\n---------------------------------------\n";
-    }
+    writeDrawInst(portayalFile, drawInstCtrl, dictController, mapController);
     portayalFile.close();
 
     /// -----------------------------------------------------
-    ///
+
     Profiler::setLogFile(filenames::PROFILE);
     Profiler::instance().dumpLog();
 }
