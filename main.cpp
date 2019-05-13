@@ -1,14 +1,11 @@
 #include "help_init.h"
 
-
 int main()
 {
     qInstallMessageHandler(myMessageOutput);
 
     QTextStream errorStream(stderr);
 
-    QFile mapFile(filenames::MAP);
-    if (!isExistsEndOpen(errorStream, mapFile, QIODevice::ReadOnly)) { return -1; }
     QFile dictFile(filenames::DICT);
     if (!isExistsEndOpen(errorStream, dictFile, QIODevice::ReadOnly)) { return -1; }
     if (!isExists(errorStream, filenames::LUA_MAIN)) { return -1; }
@@ -18,9 +15,17 @@ int main()
     /// -----------------------------------------------------
 
     qInfo("START: Map parsing");
-    FeatureMapXMLBuilder mapBuilder(&mapFile);
-    auto mapController = mapBuilder.build(true);
-    mapFile.close();
+    //--------
+    QDir directory(filenames::MAP_SET);
+    QStringList fileNames = directory.entryList();
+    for (int i = 2; i < fileNames.size(); ++i){
+        QFile mapFile(filenames::MAP_SET + fileNames[i]);
+        if (!isExistsEndOpen(errorStream, mapFile, QIODevice::ReadOnly)) { return -1; }
+        FeatureMapXMLBuilder mapBuilder(&mapFile);
+        auto mapController = mapBuilder.build(true);
+        mapFile.close();
+
+
     qInfo("END: Map parsing");
 
     qInfo("START: Feature Catalog parsing");
@@ -38,6 +43,7 @@ int main()
     auto drawInstCtrl = luaPortoyal.drawController();
     writeDrawInst(portayalFile, drawInstCtrl, dictController, mapController);
     portayalFile.close();
+    }
 
     /// -----------------------------------------------------
 
