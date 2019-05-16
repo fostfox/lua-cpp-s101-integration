@@ -7,10 +7,11 @@ CONFIG += c++17 console
 CONFIG -= app_bundle
 DEFINES += QT_DEPRECATED_WARNINGS
 
-DEFINES  += DEBUG_OUT_ENABLE
-DEFINES  += DEBUG_TO_LOG_FILE
-DEFINES  += PROFILING_TIME_ENABLE
+#DEFINES  += DEBUG_OUT_ENABLE
+#DEFINES  += DEBUG_TO_LOG_FILE
+#DEFINES  += PROFILING_TIME_ENABLE
 
+QMAKE_CXXFLAGS += -g3
 
 #!!!!!!!!!!!
 #DangerZone!   # A complete project rebuild is required
@@ -19,6 +20,7 @@ DEFINES  += PROFILING_TIME_ENABLE
 #CONFIG += JIT_COMPILING
 #CONFIG += LUA53_COMPILING
 
+#CONFIG += LUA_PROFILING_ENABLE
 
 ###############################################################################
 # Setting ADD INCLUDE and LIBS
@@ -72,10 +74,15 @@ LIBS += -L"$$PWD/3rdparty/$$LUA_P/lib/$${ARCH}_$$COMPILER_P" -l$$LUA_L
 ###############################################################################
 # Copy Lua and XML Files
 
+LUA_R_SUB = Rules
+LUA_PROFILING_ENABLE {
+    LUA_R_SUB = Rules_profiler
+}
+
 XML_SRC = $${_PRO_FILE_PWD_}/XMLData
 XML_DEST1 = $${OUT_PWD}
 XML_DEST2 = $${OUT_PWD}
-LUA_SRC  = $${_PRO_FILE_PWD_}/LuaPortroyal/Rules
+LUA_SRC  = $${_PRO_FILE_PWD_}/LuaPortroyal/$${LUA_R_SUB}
 LUA_SRC2  = $${LUA_SRC}/Rules-lua53
 LUA_DEST1 = $${OUT_PWD}
 LUA_DEST2 = $${OUT_PWD}

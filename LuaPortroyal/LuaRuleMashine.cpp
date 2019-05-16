@@ -11,6 +11,11 @@
 
 #include "host_func_def.h"
 
+#include <unordered_map>
+#include <vector>
+#include <chrono>
+static std::unordered_map<std::string, std::vector<clock_t>> ElapsedTime;
+
 LuaRuleMashine::LuaRuleMashine(
         const QString &fileNameEntryPoint
         , const FeatureCatalogueController & dictObjController
@@ -43,6 +48,25 @@ LuaRuleMashine::LuaRuleMashine(
     qInfo(std::string("Lua: " + luaVersion + ", JIT: " + luaJitVesion).c_str());
 
     m_lua->set_function("HostCall", [&](std::string s) { std::cout << s << "\n"; });
+    m_lua->set_function("start_function_profiling", [&](std::string f) {
+       clock_t m_begin = clock();
+
+       if (ElapsedTime.count(f) == 0) {
+           //std::cout << f << std::endl;
+           ElapsedTime[f] = std::vector<clock_t>();
+       }
+       ElapsedTime[f].push_back(m_begin);
+       return ElapsedTime[f].size() - 1;
+    });
+    m_lua->set_function("stop_function_profiling", [&](size_t func_i, std::string name){
+        double m_end = clock();
+        if (ElapsedTime.count(name) == 0) {
+            std::cout << "NO " << name << std::endl;
+        }
+        double begin = ElapsedTime[name][func_i];
+        clock_t res = m_end - begin;
+        ElapsedTime[name][func_i] = res;
+    });
 
     m_lua->script_file(fileNameEntryPoint.toStdString());
     m_luaHostFunc = new LuaHostFunc(*m_lua, m_dictObjCtrl, m_mapObjCtrl, m_contParamCtrl, *m_drawController);
@@ -61,6 +85,25 @@ const DrawingInstructionsController &LuaRuleMashine::drawController() const
 
 LuaRuleMashine::~LuaRuleMashine()
 {
+#   ifdef LUA_PROFILING_ENABLE
+    std::cout << "function;N;total;average" << std::endl;
+
+    for (auto pair : ElapsedTime) {
+            QStringList msg;
+            double sum(0);
+            for (auto time : pair.second){
+                sum += time;
+                msg << QString::number(time);
+            }
+            std::string func_Name = pair.first;
+            std::cout << func_Name << ";"
+                      << msg.size() << ";"
+                      << sum << ";"
+                      << sum / msg.size() << ";"
+                      << msg.join(";").toLocal8Bit().data()
+                      << std::endl;
+    }
+#   endif
     delete m_drawController;
     delete m_luaHostFunc;
     delete m_lua;
