@@ -4,6 +4,7 @@
 int main()
 {
     qInstallMessageHandler(myMessageOutput);
+    //qInfo("test");
 
     QTextStream errorStream(stderr);
 
@@ -27,9 +28,12 @@ int main()
 
     ContexParametrController contextParamCtrl(contextparams::PARAMS);
     LuaRuleMashine luaPortoyal(filenames::LUA_MAIN, dictController, mapController, contextParamCtrl);
-    auto status = luaPortoyal.doPortrayal();
-    //auto msg = std::string(" \n\n--- DO PORTRAYAL STATUS: --- ") + (status ? "true" : "false");
-    //qDebug(msg.c_str());
+    bool status;
+    for (int i = 0 ; i < 100;i++) {
+        status = luaPortoyal.doPortrayal();
+        //auto msg = std::string(" \n\n--- DO PORTRAYAL STATUS: --- ") + (status ? "true" : "false");
+        //qDebug(msg.c_str());
+    }
 
     auto drawInstCtrl = luaPortoyal.drawController();
     writeDrawInst(portayalFile, drawInstCtrl, dictController, mapController);
