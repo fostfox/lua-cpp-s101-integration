@@ -44,7 +44,12 @@ LuaRuleMashine::LuaRuleMashine(
 
     m_lua->set_function("HostCall", [&](std::string s) { std::cout << s << "\n"; });
 
+    //m_lua->script_file("debug/lua/temp.lua");
     m_lua->script_file(fileNameEntryPoint.toStdString());
+   // m_lua->script_file("debug/lua/temp.lua");
+    //m_lua->script_file("debug/lua/S100Scripting.lua");
+    //m_lua->script_file("debug/lua/temp.lua");
+    //m_lua->script_file("debug/lua/PortrayalAPI.lua");
     m_luaHostFunc = new LuaHostFunc(*m_lua, m_dictObjCtrl, m_mapObjCtrl, m_contParamCtrl, *m_drawController);
 }
 

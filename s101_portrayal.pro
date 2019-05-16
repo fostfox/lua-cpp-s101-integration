@@ -6,9 +6,9 @@ QT -= gui
 CONFIG += c++17 console
 CONFIG -= app_bundle
 DEFINES += QT_DEPRECATED_WARNINGS
-
-DEFINES  += DEBUG_OUT_ENABLE
-DEFINES  += DEBUG_TO_LOG_FILE
+QMAKE_CXXFLAGS += -g
+#DEFINES  += DEBUG_OUT_ENABLE
+#DEFINES  += DEBUG_TO_LOG_FILE
 DEFINES  += PROFILING_TIME_ENABLE
 
 
@@ -16,8 +16,9 @@ DEFINES  += PROFILING_TIME_ENABLE
 #DangerZone!   # A complete project rebuild is required
 #!!!!!!!!!!!   # after activating or deactivating the following flags
 
-#CONFIG += JIT_COMPILING
+CONFIG += JIT_COMPILING
 #CONFIG += LUA53_COMPILING
+
 
 
 ###############################################################################

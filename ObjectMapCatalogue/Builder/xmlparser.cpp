@@ -403,7 +403,7 @@ bool FeatureMapXMLBuilder::isStartElementAndAllowed(std::string tag)
 GM_Object *FeatureMapXMLBuilder::buildIsolatedPoint()
 {
     // MUST BE
-    std::string index = m_xmlSpatial->readElementText().toStdString();
+    int index = m_xmlSpatial->readElementText().toInt();
     readNext2(m_xmlSpatial);
     std::string lat = m_xmlSpatial->readElementText().toStdString();
     readNext2(m_xmlSpatial);
@@ -414,7 +414,7 @@ GM_Object *FeatureMapXMLBuilder::buildIsolatedPoint()
 
 GM_Object *FeatureMapXMLBuilder::buildSurface()
 {
-    std::string index = m_xmlSpatial->readElementText().toStdString();
+    int index = m_xmlSpatial->readElementText().toInt();
     readNext2(m_xmlSpatial);
     GM_Surface* surf = new GM_Surface();
     while(!(m_xmlSpatial->name().toString().toStdString() == "surface" && m_xmlSpatial->isEndElement())){
@@ -448,7 +448,7 @@ GM_Object *FeatureMapXMLBuilder::buildSurface()
 GM_Object *FeatureMapXMLBuilder::buildCompositeEdge()
 {
     // MUST BE
-    std::string index = m_xmlSpatial->readElementText().toStdString();
+    int index = m_xmlSpatial->readElementText().toInt();
     readNext2(m_xmlSpatial);
     GM_CompositeCurve* curv = new GM_CompositeCurve();
     while(!(m_xmlSpatial->name().toString().toStdString() == "composite_edge" && m_xmlSpatial->isEndElement())){
@@ -479,7 +479,7 @@ GM_Object *FeatureMapXMLBuilder::buildCompositeEdge()
 
 GM_Object *FeatureMapXMLBuilder::buildEdge()
 {
-    std::string index = m_xmlSpatial->readElementText().toStdString();
+    int index = m_xmlSpatial->readElementText().toInt();
     readNext2(m_xmlSpatial);
     GM_Curve* curv = new GM_Curve();
     GM_CurveSegment seg;
@@ -534,7 +534,7 @@ Fe2spRef FeatureMapXMLBuilder::buildExteriorRing()
 
 
 
-std::map<std::string, GM_Object *> FeatureMapXMLBuilder::parseSpatials()
+std::map<int, GM_Object *> FeatureMapXMLBuilder::parseSpatials()
 {
     while (!m_xmlSpatial->atEnd()){
         std::string tag = m_xmlSpatial->name().toString().toStdString();
