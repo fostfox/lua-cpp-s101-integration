@@ -54,7 +54,49 @@ bool LuaHostFunc::doPortrayal()
     return isSuccess;
 }
 
-
+LuaHostFunc::~LuaHostFunc()
+{
+//    sol::table i1 = m_lua["calls"];
+//    std::cerr << "cals\n" << std::endl;
+//    i1.for_each([](sol::object key, sol::object value){
+//        std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
+//    });
+//    sol::table i2 = m_lua["total"];
+//    std::cerr << "total\n" << std::endl;
+//    i2.for_each([](sol::object key, sol::object value){
+//            std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
+//    });
+//    sol::table i11 = m_lua["calls1"];
+//    std::cerr << "cals1\n" << std::endl;
+//    i11.for_each([](sol::object key, sol::object value){
+//        std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
+//    });
+//    sol::table i21 = m_lua["total1"];
+//    std::cerr << "total1\n" << std::endl;
+//    i21.for_each([](sol::object key, sol::object value){
+//            std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
+//    });
+//    sol::table i12 = m_lua["calls2"];
+//    std::cerr << "cals2\n" << std::endl;
+//    i12.for_each([](sol::object key, sol::object value){
+//        std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
+//    });
+//    sol::table i22 = m_lua["total2"];
+//    std::cerr << "total2\n" << std::endl;
+//    i22.for_each([](sol::object key, sol::object value){
+//            std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
+//    });
+//    sol::table i13 = m_lua["calls3"];
+//    std::cerr << "cals3\n" << std::endl;
+//    i13.for_each([](sol::object key, sol::object value){
+//        std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
+//    });
+//    sol::table i23 = m_lua["total3"];
+//    std::cerr << "total3\n" << std::endl;
+//    i23.for_each([](sol::object key, sol::object value){
+//            std::cerr << key.as<std::string>() << ";" << value.as<std::string>() << std::endl;
+//    });
+}
 
 void LuaHostFunc::loadFunctions()
 {
@@ -154,7 +196,7 @@ const std::string LuaHostFunc::HostFeatureGetCode(const std::string &featureID)
     //PROFILING_TIME2("HostFeatureGetCode")
     const auto& featCtrl = m_dictObjCtrl.featureTypeCtrl();
 
-    string featureCode = m_mapObjCtrl.getCodeById(featureID);
+    string featureCode = m_mapObjCtrl.getCodeById(stoi(featureID));
     if (!featCtrl.hasInMap(featureCode)){ ///TODO:
 //            // Попробуем найти среди alias'ов
 //            for (const auto& feature : featCtrl.types()){
@@ -216,10 +258,10 @@ const sol::table LuaHostFunc::HostFeatureGetSimpleAttribute(const std::string &f
     //PROFILING_TIME2("HostFeatureGetSimpleAttribute")
 
     sol::table simpleAtrValues;
-    bool isSetSimpleAttrOnMap = m_mapObjCtrl.hasSimpleAttribute(featureID, path, attributeCode);
+    bool isSetSimpleAttrOnMap = m_mapObjCtrl.hasSimpleAttribute(stoi(featureID), path, attributeCode);
 
     if (isSetSimpleAttrOnMap){
-        auto atribute = m_mapObjCtrl.getSimpleAttribute(featureID, path, attributeCode);
+        auto atribute = m_mapObjCtrl.getSimpleAttribute(stoi(featureID), path, attributeCode);
         simpleAtrValues = helpLuaTable(m_lua, atribute.value());
     } else {
         simpleAtrValues = m_lua.create_table();
@@ -250,7 +292,7 @@ int LuaHostFunc::HostFeatureGetComplexAttributeCount(const std::string &featureI
 {
     //PROFILING_TIME2("HostFeatureGetComplexAttributeCount")
     int featureCACount = static_cast<int>(
-                m_mapObjCtrl.getComplexAttributeSize(featureID, path, attributeCode)
+                m_mapObjCtrl.getComplexAttributeSize(stoi(featureID), path, attributeCode)
                 );
     return featureCACount;
 }
@@ -274,8 +316,8 @@ const sol::table LuaHostFunc::HostFeatureGetSpatialAssociations(const std::strin
 
     auto luaFSpatialAssociations = m_lua.create_table();
 
-    if (m_mapObjCtrl.hasSpatialAssotiation(featureID)) {
-        Fe2spRef featureSpatioalAss = m_mapObjCtrl.getFeatureById(featureID).fe2spRef();
+    if (m_mapObjCtrl.hasSpatialAssotiation(stoi(featureID))) {
+        Fe2spRef featureSpatioalAss = m_mapObjCtrl.getFeatureById(stoi(featureID)).fe2spRef();
         auto luaFSAss = luaCreateSpatialAssociation(m_lua, featureSpatioalAss);
         luaFSpatialAssociations.add(luaFSAss);
     }
@@ -354,11 +396,11 @@ const sol::table LuaHostFunc::HostGetSpatial(const std::string &spatialID)
 {
     //PROFILING_TIME2("HostGetSpatial")
 
-    if (!m_mapObjCtrl.hasSpatialObject(spatialID)){
+    if (!m_mapObjCtrl.hasSpatialObject(stoi(spatialID))){
         qFatal(("Ihe spatilalID=" + spatialID + " not on the map").c_str());
         return sol::nil;
     }
-    auto spatialP = m_mapObjCtrl.spatialObjectByRefId(spatialID);
+    auto spatialP = m_mapObjCtrl.spatialObjectByRefId(stoi(spatialID));
 
     sol::object luaSpatial;
     switch (spatialP->getType()) {

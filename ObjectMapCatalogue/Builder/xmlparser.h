@@ -29,7 +29,7 @@ public:
 
     FeatureMapController build(bool onlyFullFeatures = false);
     std::vector<Feature> parse2();
-    std::map<std::string, GM_Object *> parseSpatials();
+    std::map<int, GM_Object *> parseSpatials();
     bool isStartElementAndAllowed(std::string tag);
 
     GM_Object *buildIsolatedPoint();
@@ -48,5 +48,5 @@ private:
 
 private:
     std::vector<std::string> getListAttrByString(std::string strVal);
-    std::map<std::string, GM_Object *> m_SpId_to_SpatialObject;
+    std::map<int, GM_Object *> m_SpId_to_SpatialObject;
 };

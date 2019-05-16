@@ -1,6 +1,5 @@
 #include "help_init.h"
 
-
 int main()
 {
     qInstallMessageHandler(myMessageOutput);
@@ -8,39 +7,55 @@ int main()
 
     QTextStream errorStream(stderr);
 
-    QFile mapFile(filenames::MAP);
-    if (!isExistsEndOpen(errorStream, mapFile, QIODevice::ReadOnly)) { return -1; }
-    QFile dictFile(filenames::DICT);
-    if (!isExistsEndOpen(errorStream, dictFile, QIODevice::ReadOnly)) { return -1; }
     if (!isExists(errorStream, filenames::LUA_MAIN)) { return -1; }
-    QFile portayalFile(filenames::PORTRAYAL);
-    if (!isOpen(errorStream,portayalFile, QIODevice::WriteOnly | QIODevice::Text)) { return -1; }
+//    QFile portayalFile(filenames::PORTRAYAL);
+//    if (!isOpen(errorStream,portayalFile, QIODevice::WriteOnly | QIODevice::Text)) { return -1; }
 
     /// -----------------------------------------------------
 
-    FeatureMapXMLBuilder mapBuilder(&mapFile);
-    auto mapController = mapBuilder.build(true);
-    mapFile.close();
+    //qInfo("START: Map parsing");
 
+    QFile elapsedTimesFile("MapSetResults.csv");
+    if (!elapsedTimesFile.open(QFile::WriteOnly)) {
+        qFatal("The file did not open");
+    }
+    QTextStream outElapsedTimes(&elapsedTimesFile);
+
+    QFile dictFile(filenames::DICT);
+    if (!isExistsEndOpen(errorStream, dictFile, QIODevice::ReadOnly)) { return -1; }
     FeatureCatalogueXMLBuilder dictBuilder;
     auto dictController = dictBuilder.build(&dictFile);
     dictFile.close();
 
     ContexParametrController contextParamCtrl(contextparams::PARAMS);
-    LuaRuleMashine luaPortoyal(filenames::LUA_MAIN, dictController, mapController, contextParamCtrl);
-    bool status;
-    for (int i = 0 ; i < 100;i++) {
-        status = luaPortoyal.doPortrayal();
+
+    //--------
+    QDir directory(filenames::MAP_SET);
+    QStringList fileNames = directory.entryList();
+    
+    for (int i = 2; i < fileNames.size(); ++i){
+        QFile mapFile(filenames::MAP_SET + fileNames[i]);
+        if (!isExistsEndOpen(errorStream, mapFile, QIODevice::ReadOnly)) { return -1; }
+        FeatureMapXMLBuilder mapBuilder(&mapFile);
+        auto mapController = mapBuilder.build(true);
+        mapFile.close();
+        
+        LuaRuleMashine luaPortoyal(filenames::LUA_MAIN, dictController, mapController, contextParamCtrl);
+        auto status = luaPortoyal.doPortrayal();
         //auto msg = std::string(" \n\n--- DO PORTRAYAL STATUS: --- ") + (status ? "true" : "false");
         //qDebug(msg.c_str());
+
+        QFile instractionFile(fileNames[i] + "-OUTPUT.txt");
+        if (!isOpen(errorStream, instractionFile, QIODevice::WriteOnly | QIODevice::Text)) { return -1; }
+
+        auto drawInstCtrl = luaPortoyal.drawController();
+        writeDrawInst(instractionFile, drawInstCtrl, dictController, mapController);
+        instractionFile.close();
+        
+        Profiler::instance().dumpLogMultiMap(outElapsedTimes, fileNames[i]);
+        Profiler::instance().clear();
     }
 
-    auto drawInstCtrl = luaPortoyal.drawController();
-    writeDrawInst(portayalFile, drawInstCtrl, dictController, mapController);
-    portayalFile.close();
-
     /// -----------------------------------------------------
-
-    Profiler::setLogFile(filenames::PROFILE);
-    Profiler::instance().dumpLog();
+    elapsedTimesFile.close();
 }

@@ -5,6 +5,7 @@
 
 #include <chrono>
 #include <QMap>
+#include <QTextStream>
 
 #ifdef PROFILING_TIME_ENABLE
 #   define PROFILING_TIME2(functionName) [[maybe_unused]] const auto& ___p = Profiler::instance().createTimeUnit(functionName);
@@ -46,6 +47,8 @@ public:
     [[nodiscard]]
     TimeUnit createTimeUnit(const QString &functionName);
     void dumpLog();
+    void dumpLogMultiMap(QTextStream& stream, const QString& mapSetName, const std::string& funcName = "PortrayalMain");
+    void clear();
 
 private:
     Profiler() = default;

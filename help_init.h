@@ -3,6 +3,7 @@
 #include <QIODevice>
 #include <QTextStream>
 #include <QFile>
+#include <QDir>
 
 #include "config.h"
 
@@ -102,7 +103,8 @@ bool writeDrawInst(QFile & portayalFile, const DrawingInstructionsController& dr
 {
     QTextStream out(&portayalFile);
     for (const auto& featureID : fmCtrl.getFeaturesIDs()){
-        std::string featureCode = fmCtrl.getFeatureById(featureID).classAlias();
+        int intFeatureID = std::stoi(featureID);
+        std::string featureCode = fmCtrl.getFeatureById(intFeatureID).classAlias();
         std::string drawInstr = drawCtrl.drawInstr(stoi(featureID)).drawingInstruction();
         out << "Feature : [" << QString::fromStdString(featureID) << "] " << QString::fromStdString(featureCode)
                  << "\n " << QString::fromStdString(drawInstr)

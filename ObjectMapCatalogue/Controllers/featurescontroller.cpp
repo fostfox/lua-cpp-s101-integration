@@ -2,7 +2,7 @@
 #include "featurescontroller.h"
 
 
-std::vector<std::pair<std::string, std::string> > getAttributeNames(std::string path){
+std::vector<std::pair<std::string, std::string> > getAttributeNames(const std::string &path){
     std::string s = path;
     std::string semicolon = ";";
     std::string colon = ":";
@@ -35,23 +35,23 @@ void FeatureMapController::setFeatures(std::vector<Feature> fs)
 {
     fs_ = fs;
     for (auto f : fs){
-        id_to_f_.insert(std::make_pair(std::to_string(f.id()), f));
+        id_to_f_.insert(std::make_pair(f.id(), f));
         if (f.fe2spRef().refId() != -1)
-            refId_to_Fe2SpRef.insert(std::make_pair(std::to_string(f.fe2spRef().refId()), f.fe2spRef()));
+            refId_to_Fe2SpRef.insert(std::make_pair(f.fe2spRef().refId(), f.fe2spRef()));
     }
 }
 
-void FeatureMapController::setSpatials(std::map<std::string, GM_Object *> SpId_to_SpatialObject)
+void FeatureMapController::setSpatials(std::map<int, GM_Object *> SpId_to_SpatialObject)
 {
     spId_to_SpatialObject = SpId_to_SpatialObject;
 }
 
-bool FeatureMapController::hasSpatialObject(const std::string &spatialId) const
+bool FeatureMapController::hasSpatialObject(int spatialId) const
 {
     return spId_to_SpatialObject.count(spatialId) != 0;
 }
 
-GM_Object *FeatureMapController::spatialObjectByRefId(const std::string &refId) const
+GM_Object *FeatureMapController::spatialObjectByRefId(int refId) const
 {
     return spId_to_SpatialObject.at(refId);
 }
@@ -66,15 +66,15 @@ std::vector<std::string> FeatureMapController::getFeaturesIDs() const
     return ids;
 }
 
-const std::string &FeatureMapController::getCodeById(const std::string &id) const
+const std::string &FeatureMapController::getCodeById(int id) const
 {
     if(!id_to_f_.count(id)){
-        qFatal(QString("'id_to_f_' has no key '%1'").arg(QString::fromStdString(id)).toUtf8());
+        //qFatal(QString("'id_to_f_' has no key '%1'").arg(QString::fromStdString(id)).toUtf8());
     }
     return id_to_f_.at(id).classAlias();
 }
 
-const Attribute& FeatureMapController::getSimpleAttribute(const std::string &id, const std::string &path, const std::string &attrCode) const
+const Attribute& FeatureMapController::getSimpleAttribute(int id, const std::string& path, const std::string& attrCode) const
 {
     const Feature& f = id_to_f_.at(id);
     std::vector<std::pair<std::string, std::string> > attrsFull
@@ -93,20 +93,20 @@ const Attribute& FeatureMapController::getSimpleAttribute(const std::string &id,
     return f.getAttributeByCode(attrCode);
 }
 
-const Feature &FeatureMapController::getFeatureById(const std::string &id) const
+const Feature& FeatureMapController::getFeatureById(int id) const
 {
     return id_to_f_.at(id);
 }
 
-const Fe2spRef &FeatureMapController::getFe2spRefByRefId(const std::string &refId) const
+const Fe2spRef &FeatureMapController::getFe2spRefByRefId(int refId) const
 {
     if(!refId_to_Fe2SpRef.count(refId)){
-        qFatal(QString("'refId_to_Fe2SpRef' has no key '%1'").arg(QString::fromStdString(refId)).toUtf8());
+        //qFatal(QString("'refId_to_Fe2SpRef' has no key '%1'").arg(QString::fromStdString(refId)).toUtf8());
     }
     return refId_to_Fe2SpRef.at(refId);
 }
 
-bool FeatureMapController::hasSimpleAttribute(const std::string& id, const std::string& path, const std::string& attributeCode) const
+bool FeatureMapController::hasSimpleAttribute(int id, const std::string& path, const std::string& attributeCode) const
 {
     const Feature &f = id_to_f_.at(id);
     std::vector<std::pair<std::string, std::string> > attrsFull
@@ -134,13 +134,13 @@ bool FeatureMapController::hasSimpleAttribute(const std::string& id, const std::
     return true;
 }
 
-bool FeatureMapController::hasSpatialAssotiation(const std::string &featureId) const
+bool FeatureMapController::hasSpatialAssotiation(int featureId) const
 {
     const Feature &f = id_to_f_.at(featureId);
     return (f.fe2spRef().refId() != -1) ? true : false;
 }
 
-size_t FeatureMapController::getComplexAttributeSize(const std::string &featureId, const std::string &path, const std::string &attributeCode) const
+size_t FeatureMapController::getComplexAttributeSize(int featureId, const std::string &path, const std::string &attributeCode) const
 {
     if (!path.empty()) {
         //qWarning("In FeatureMapController::getComplexAttributeSize path is not processing");

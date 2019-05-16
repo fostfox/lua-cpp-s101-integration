@@ -5,7 +5,7 @@
 #include <map>
 #include <Geometry/gm_object.h>
 
-std::vector<std::pair<std::string, std::string> > getAttributeNames(std::string path);
+std::vector<std::pair<std::string, std::string> > getAttributeNames(const std::string &path);
 class FeatureMapController
 {
 public:
@@ -13,24 +13,24 @@ public:
     void setFeatures(std::vector<Feature> fs);
 
     std::vector<std::string> getFeaturesIDs() const;
-    const std::string& getCodeById(const std::string &id) const;
-    const Attribute &getSimpleAttribute(const std::string &id, const std::string &path, const std::string &attributeCode) const;
-    const Feature &getFeatureById(const std::string &id) const;
-    const Fe2spRef &getFe2spRefByRefId(const std::string &refId) const;
+    const std::string& getCodeById(int id) const;
+    const Attribute& getSimpleAttribute(int id, const std::string &path, const std::string &attributeCode) const;
+    const Feature& getFeatureById(int id) const;
+    const Fe2spRef& getFe2spRefByRefId(int refId) const;
 
-    bool hasSimpleAttribute(const std::string &id, const std::string &path, const std::string &attributeCode) const;
-    bool hasSpatialAssotiation(const std::string &featureId) const;
+    bool hasSimpleAttribute(int id, const std::string &path, const std::string &attributeCode) const;
+    bool hasSpatialAssotiation(int featureId) const;
 
-    size_t getComplexAttributeSize(const std::string &featureId, const std::string &path, const std::string &attributeCode) const;
+    size_t getComplexAttributeSize(int featureId, const std::string &path, const std::string &attributeCode) const;
 
-    void setSpatials(std::map<std::string, GM_Object *> SpId_to_SpatialObject);
-    bool hasSpatialObject(const std::string &spatialId) const;
-    GM_Object* spatialObjectByRefId(const std::string &refId) const;
+    void setSpatials(std::map<int, GM_Object *> SpId_to_SpatialObject);
+    bool hasSpatialObject(int spatialId) const;
+    GM_Object* spatialObjectByRefId(int refId) const;
 
 private:
     std::vector<Feature> fs_;
-    std::map<std::string, Feature> id_to_f_;
-    std::map<std::string, Fe2spRef> refId_to_Fe2SpRef;
-    std::map<std::string, GM_Object *> spId_to_SpatialObject;
+    std::map<int, Feature> id_to_f_;
+    std::map<int, Fe2spRef> refId_to_Fe2SpRef;
+    std::map<int, GM_Object *> spId_to_SpatialObject;
 };
 
