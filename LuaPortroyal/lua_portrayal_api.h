@@ -213,4 +213,4 @@ sol::object luaCreateFeatureBinding(sol::state &lua, const FC_FeatureBinding *fe
  * described functionalities.
  */
 
-sol::object luaGetUnknownAttributeString(sol::state &lua);
+std::string luaGetUnknownAttributeString(sol::state &lua);

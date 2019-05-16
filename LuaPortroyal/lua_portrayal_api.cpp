@@ -436,7 +436,7 @@ sol::object luaCreateSurface(sol::state &lua, const GM_Surface& ss)
 
 
 
-sol::object luaGetUnknownAttributeString(sol::state &lua)
+std::string luaGetUnknownAttributeString(sol::state &lua)
 {
     return lua["GetUnknownAttributeString"](
             );

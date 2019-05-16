@@ -187,7 +187,7 @@ const std::string LuaHostFunc::HostFeatureGetCode(const std::string &featureID)
  *          Instructs the host to return the information type code for the information type instance
  *          identified by informationTypeID.
  */
-const sol::object LuaHostFunc::HostInformationTypeGetCode(const std::string &informationTypeID)
+const std::string LuaHostFunc::HostInformationTypeGetCode(const std::string &informationTypeID)
 {
     //PROFILING_TIME2("HostInformationTypeGetCode")
     const auto& informationTypeCode = luaGetUnknownAttributeString(m_lua);
@@ -596,7 +596,7 @@ const sol::table LuaHostFunc::HostGetFeatureAssociationTypeCodes()
 const sol::table LuaHostFunc::HostGetFeatureTypeInfo(std::string featureCode)
 {
     //PROFILING_TIME2("HostGetFeatureTypeInfo")
-    FC_FeatureType featureType = m_dictObjCtrl.featureTypeCtrl().type(featureCode);
+    const FC_FeatureType &featureType = m_dictObjCtrl.featureTypeCtrl().type(featureCode);
 
 
     auto luaAttributeBindings = helpCreateAttributeBindings(m_lua, featureType.attributeBindings());

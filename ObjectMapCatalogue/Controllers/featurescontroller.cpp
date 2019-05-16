@@ -46,12 +46,12 @@ void FeatureMapController::setSpatials(std::map<std::string, GM_Object *> SpId_t
     spId_to_SpatialObject = SpId_to_SpatialObject;
 }
 
-bool FeatureMapController::hasSpatialObject(std::string spatialId) const
+bool FeatureMapController::hasSpatialObject(const std::string &spatialId) const
 {
     return spId_to_SpatialObject.count(spatialId) != 0;
 }
 
-GM_Object *FeatureMapController::spatialObjectByRefId(std::string refId) const
+GM_Object *FeatureMapController::spatialObjectByRefId(const std::string &refId) const
 {
     return spId_to_SpatialObject.at(refId);
 }
@@ -59,13 +59,14 @@ GM_Object *FeatureMapController::spatialObjectByRefId(std::string refId) const
 std::vector<std::string> FeatureMapController::getFeaturesIDs() const
 {
     std::vector<std::string> ids;
-    for (auto f : fs_){
+    ids.reserve(fs_.size());
+    for (const auto &f : fs_){
         ids.push_back(std::to_string(f.id()));
     }
     return ids;
 }
 
-const std::string &FeatureMapController::getCodeById(std::string id) const
+const std::string &FeatureMapController::getCodeById(const std::string &id) const
 {
     if(!id_to_f_.count(id)){
         qFatal(QString("'id_to_f_' has no key '%1'").arg(QString::fromStdString(id)).toUtf8());
@@ -73,14 +74,12 @@ const std::string &FeatureMapController::getCodeById(std::string id) const
     return id_to_f_.at(id).classAlias();
 }
 
-Attribute FeatureMapController::getSimpleAttribute(std::string id, std::string path, std::string attrCode) const
+const Attribute& FeatureMapController::getSimpleAttribute(const std::string &id, const std::string &path, const std::string &attrCode) const
 {
-    Feature f = id_to_f_.at(id);
+    const Feature& f = id_to_f_.at(id);
     std::vector<std::pair<std::string, std::string> > attrsFull
             = getAttributeNames(path);
 
-    ComplexAttribute cAttr;
-    Attribute attr;
     if (attrsFull.size() == 1){
         if (attrsFull[0].first == ""){
             attrsFull.clear();
@@ -88,18 +87,18 @@ Attribute FeatureMapController::getSimpleAttribute(std::string id, std::string p
     }
     // такая реализация пока что, так как у нас в xml complex содержит только simple
     if (attrsFull.size() == 1){
-        cAttr = f.getComplexAttributeByCode(attrsFull[0].first);
+        const ComplexAttribute& cAttr = f.getComplexAttributeByCode(attrsFull[0].first);
         return cAttr.getAttributeByCode(attrCode);
     }
     return f.getAttributeByCode(attrCode);
 }
 
-Feature FeatureMapController::getFeatureById(std::string id) const
+const Feature &FeatureMapController::getFeatureById(const std::string &id) const
 {
     return id_to_f_.at(id);
 }
 
-Fe2spRef FeatureMapController::getFe2spRefByRefId(std::string refId) const
+const Fe2spRef &FeatureMapController::getFe2spRefByRefId(const std::string &refId) const
 {
     if(!refId_to_Fe2SpRef.count(refId)){
         qFatal(QString("'refId_to_Fe2SpRef' has no key '%1'").arg(QString::fromStdString(refId)).toUtf8());
@@ -107,14 +106,12 @@ Fe2spRef FeatureMapController::getFe2spRefByRefId(std::string refId) const
     return refId_to_Fe2SpRef.at(refId);
 }
 
-bool FeatureMapController::hasSimpleAttribute(std::string id, std::string path, std::string attributeCode) const
+bool FeatureMapController::hasSimpleAttribute(const std::string& id, const std::string& path, const std::string& attributeCode) const
 {
-    Feature f = id_to_f_.at(id);
+    const Feature &f = id_to_f_.at(id);
     std::vector<std::pair<std::string, std::string> > attrsFull
             = getAttributeNames(path);
 
-    ComplexAttribute cAttr;
-    Attribute attr;
     if (attrsFull.size() == 1){
         if (attrsFull[0].first == ""){
             attrsFull.clear();
@@ -125,7 +122,7 @@ bool FeatureMapController::hasSimpleAttribute(std::string id, std::string path, 
         if (!f.hasComplexAttribute(attrsFull[0].first)){
             return false;
         };
-        cAttr = f.getComplexAttributeByCode(attrsFull[0].first);
+        const ComplexAttribute &cAttr = f.getComplexAttributeByCode(attrsFull[0].first);
         if (!cAttr.hasAttribute(attributeCode)){
             return false;
         }
@@ -137,29 +134,29 @@ bool FeatureMapController::hasSimpleAttribute(std::string id, std::string path, 
     return true;
 }
 
-bool FeatureMapController::hasSpatialAssotiation(std::string featureId) const
+bool FeatureMapController::hasSpatialAssotiation(const std::string &featureId) const
 {
-    Feature f = id_to_f_.at(featureId);
+    const Feature &f = id_to_f_.at(featureId);
     return (f.fe2spRef().refId() != -1) ? true : false;
 }
 
-size_t FeatureMapController::getComplexAttributeSize(std::string featureId, std::string path, std::string attributeCode) const
+size_t FeatureMapController::getComplexAttributeSize(const std::string &featureId, const std::string &path, const std::string &attributeCode) const
 {
     if (!path.empty()) {
-        qWarning("In FeatureMapController::getComplexAttributeSize path is not processing");
+        //qWarning("In FeatureMapController::getComplexAttributeSize path is not processing");
     }
     size_t complexAttrSize = 0;
 
-    Feature f = id_to_f_.at(featureId);
+    const Feature &f = id_to_f_.at(featureId);
     if (!f.hasComplexAttribute(attributeCode)){
         return complexAttrSize;
     }
-    ComplexAttribute cAttr = f.getComplexAttributeByCode(attributeCode);
+    const ComplexAttribute &cAttr = f.getComplexAttributeByCode(attributeCode);
 
     complexAttrSize = cAttr.attibutes().size();
     if (!complexAttrSize){
-        qWarning("In FeatureMapController::getComplexAttributeSize ComplexAttribute:",
-                 attributeCode.c_str(), " hasn't SimpleAttributes");
+        //qWarning("In FeatureMapController::getComplexAttributeSize ComplexAttribute:",
+          //       attributeCode.c_str(), " hasn't SimpleAttributes");
     }
 
     return complexAttrSize;

@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
-#include <map>
+#include <unordered_map>
 
 class Attribute
 {
@@ -34,17 +34,17 @@ public:
     int code() const;
     std::string alias() const;
     std::vector<Attribute> attibutes() const;
-    Attribute getAttributeByCode(std::string code) const;
+    const Attribute &getAttributeByCode(std::string code) const;
     void setCode(int code);
     void setAlias(std::string alias);
     void addAttribute(Attribute attr);
 
-    bool hasAttribute(std::string code) const;
+    bool hasAttribute(const std::string &code) const;
 private:
     int m_code;
     std::string m_alias;
     std::vector<Attribute> m_attrs;
-    std::map<std::string, Attribute> m_code_to_attr;
+    std::unordered_map<std::string, Attribute> m_code_to_attr;
 };
 
 class Fe2spRef
@@ -108,7 +108,7 @@ public:
     std::vector<Attribute> intAttrs() const;
     std::vector<ComplexAttribute> complexAttrs() const;
     IsolatedPoint isolatedPoint() const;
-    Fe2spRef fe2spRef() const;
+    const Fe2spRef &fe2spRef() const;
 
     void setId(int id);
     void setClass(int classId);
@@ -119,11 +119,11 @@ public:
     void setFe2spRef(const Fe2spRef &fe2spRef);
     void addIntAttr(Attribute attr);
     void addComplexAttr(ComplexAttribute attr);
-    Attribute getAttributeByCode(std::string code) const;
-    ComplexAttribute getComplexAttributeByCode(std::string code) const;
+    const Attribute &getAttributeByCode(std::string code) const;
+    const ComplexAttribute &getComplexAttributeByCode(const std::string &code) const;
 
-    bool hasComplexAttribute(std::string code) const;
-    bool hasSimpleAttribute(std::string code) const;
+    bool hasComplexAttribute(const std::string &code) const;
+    bool hasSimpleAttribute(const std::string &code) const;
 
 private:
     int m_id;
@@ -133,6 +133,6 @@ private:
     std::vector<ComplexAttribute> m_complexAttrs;
     Fe2spRef m_fe2spRef;
     IsolatedPoint m_isolatedPoint;
-    std::map<std::string, Attribute> m_code_to_attr;
-    std::map<std::string, ComplexAttribute> m_code_to_cAttr;
+    std::unordered_map<std::string, Attribute> m_code_to_attr;
+    std::unordered_map<std::string, ComplexAttribute> m_code_to_cAttr;
 };

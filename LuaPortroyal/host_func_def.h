@@ -83,7 +83,7 @@ public:
      */
     const sol::table HostGetFeatureIDs();
     const std::string HostFeatureGetCode(const std::string &featureID);
-    const sol::object HostInformationTypeGetCode(const std::string &informationTypeID);
+    const std::string HostInformationTypeGetCode(const std::string &informationTypeID);
     const sol::table HostFeatureGetSimpleAttribute(const std::string &featureID, const std::string &path, const std::string &attributeCode);
     int HostFeatureGetComplexAttributeCount(const std::string &featureID, const std::string &path, const std::string &attributeCode);
     const sol::table HostFeatureGetSpatialAssociations(const std::string &featureID);

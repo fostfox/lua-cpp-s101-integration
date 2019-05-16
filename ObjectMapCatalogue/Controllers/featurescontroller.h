@@ -13,19 +13,19 @@ public:
     void setFeatures(std::vector<Feature> fs);
 
     std::vector<std::string> getFeaturesIDs() const;
-    const std::string& getCodeById(std::string id) const;
-    Attribute getSimpleAttribute(std::string id, std::string path, std::string attributeCode) const;
-    Feature getFeatureById(std::string id) const;
-    Fe2spRef getFe2spRefByRefId(std::string refId) const;
+    const std::string& getCodeById(const std::string &id) const;
+    const Attribute &getSimpleAttribute(const std::string &id, const std::string &path, const std::string &attributeCode) const;
+    const Feature &getFeatureById(const std::string &id) const;
+    const Fe2spRef &getFe2spRefByRefId(const std::string &refId) const;
 
-    bool hasSimpleAttribute(std::string id, std::string path, std::string attributeCode) const;
-    bool hasSpatialAssotiation(std::string featureId) const;
+    bool hasSimpleAttribute(const std::string &id, const std::string &path, const std::string &attributeCode) const;
+    bool hasSpatialAssotiation(const std::string &featureId) const;
 
-    size_t getComplexAttributeSize(std::string featureId, std::string path, std::string attributeCode) const;
+    size_t getComplexAttributeSize(const std::string &featureId, const std::string &path, const std::string &attributeCode) const;
 
     void setSpatials(std::map<std::string, GM_Object *> SpId_to_SpatialObject);
-    bool hasSpatialObject(std::string spatialId) const;
-    GM_Object* spatialObjectByRefId(std::string refId) const;
+    bool hasSpatialObject(const std::string &spatialId) const;
+    GM_Object* spatialObjectByRefId(const std::string &refId) const;
 
 private:
     std::vector<Feature> fs_;
