@@ -41,12 +41,13 @@ sol::table helpCreateRoles(sol::state &lua, const QVector<FC_Role> &roles);
 
 template<typename T>
 sol::table helpLuaTable(sol::state &lua, const std::vector<T> &seq)
-{
+{   
     sol::table luaRoles = lua.create_table();
     for (const auto &s : seq) {
         luaRoles.add(s);
     }
     return luaRoles;
+    //return sol::as_table(seq);
 }
 
 sol::table helpEmptyTable(sol::state& lua);
