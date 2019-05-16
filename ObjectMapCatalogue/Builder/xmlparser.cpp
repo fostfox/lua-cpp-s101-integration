@@ -4,7 +4,6 @@
 #include <QFile>
 #include <QTextStream>
 #include <QMap>
-#include <QDebug>
 #include <iostream>
 #include <sstream>
 
@@ -362,7 +361,7 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
          readNext1(m_xmlReader);
     }
     if (m_xmlReader->error()){  
-        #ifdef QT_DEBUG
+        #ifdef DEBUG_OUT_ENABLE
             qDebug(("Some error: " + m_xmlReader->errorString()).toLocal8Bit().data());
         #endif
         throw "Some error";
@@ -565,7 +564,9 @@ std::map<std::string, GM_Object *> FeatureMapXMLBuilder::parseSpatials()
         }
     }
     if (m_xmlSpatial->error()){
+#ifdef DEBUG_OUT_ENABLE
         qDebug(("Some error: " + m_xmlSpatial->errorString()).toLocal8Bit().data());
+#endif
     }
     return m_SpId_to_SpatialObject;
 }

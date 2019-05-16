@@ -5,8 +5,6 @@ require 'Default'
 
 -- Main entry point for portrayal
 function PortrayalMain(featureIDs)
-    if type(jit) == 'table' then Debug.Trace(jit.version) end
-
 	Debug.StartPerformance('Lua Code - Total')
 
 	if not portrayalContext then
@@ -118,7 +116,6 @@ function PortrayalMain(featureIDs)
 
 	if featureIDs then
 		for _,  featureID in ipairs(featureIDs) do
-			HostSpecialSetCurrentFeatureId(featureID)
 			if not ProcessFeaturePortrayalItem(featurePortrayalItems[featureID]) then
 				return false
 			end

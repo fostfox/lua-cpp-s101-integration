@@ -2,8 +2,6 @@
 
 #include <QXmlStreamReader>
 
-#include <QDebug>
-
 
 enum BuildTypes { SimpleAttribute_, ComplexAttribute_,
     Role_, InformationAssociation_, FeatureAssociation_,

@@ -17,23 +17,19 @@ int main()
 
     /// -----------------------------------------------------
 
-    qInfo("START: Map parsing");
     FeatureMapXMLBuilder mapBuilder(&mapFile);
     auto mapController = mapBuilder.build(true);
     mapFile.close();
-    qInfo("END: Map parsing");
 
-    qInfo("START: Feature Catalog parsing");
     FeatureCatalogueXMLBuilder dictBuilder;
     auto dictController = dictBuilder.build(&dictFile);
     dictFile.close();
-    qInfo("END: Feature Catalog parsing");
 
     ContexParametrController contextParamCtrl(contextparams::PARAMS);
     LuaRuleMashine luaPortoyal(filenames::LUA_MAIN, dictController, mapController, contextParamCtrl);
     auto status = luaPortoyal.doPortrayal();
-    auto msg = std::string(" \n\n--- DO PORTRAYAL STATUS: --- ") + (status ? "true" : "false");
-    qDebug(msg.c_str());
+    //auto msg = std::string(" \n\n--- DO PORTRAYAL STATUS: --- ") + (status ? "true" : "false");
+    //qDebug(msg.c_str());
 
     auto drawInstCtrl = luaPortoyal.drawController();
     writeDrawInst(portayalFile, drawInstCtrl, dictController, mapController);

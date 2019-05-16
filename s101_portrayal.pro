@@ -7,10 +7,11 @@ CONFIG += c++17 console
 CONFIG -= app_bundle
 DEFINES += QT_DEPRECATED_WARNINGS
 
-DEFINES  += DEBUG_OUT_ENABLE
-DEFINES  += DEBUG_TO_LOG_FILE
+#DEFINES  += DEBUG_OUT_ENABLE
+#DEFINES  += DEBUG_TO_LOG_FILE
 DEFINES  += PROFILING_TIME_ENABLE
 
+QMAKE_CXXFLAGS += -g3
 
 #!!!!!!!!!!!
 #DangerZone!   # A complete project rebuild is required

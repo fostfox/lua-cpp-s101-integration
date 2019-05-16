@@ -27,7 +27,6 @@
 
 #include "../ObjectMapCatalogue/Entries/feature.h"
 
-#include <QDebug>
 
 using std::string;
 using std::vector;
@@ -337,7 +336,7 @@ sol::object luaCreateSpatialAssociation(const sol::state &lua, const Fe2spRef &s
     case 125: spType = "CompositeCurve"; break;
     case 130: spType = "Surface"; break;
     default:
-        qDebug(("ref Type " + std::to_string(spAssociation.refType())).c_str());
+        qFatal(("ref Type " + std::to_string(spAssociation.refType())).c_str());
         throw "Unsupported Spatial type (refType)";
     }
 

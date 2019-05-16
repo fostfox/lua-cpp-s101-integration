@@ -38,12 +38,6 @@ LuaRuleMashine::LuaRuleMashine(
         m_lua->open_libraries(sol::lib::jit);
 #   endif
 
-    std::string luaVersion = m_lua->load("return _VERSION")();
-    std::string luaJitVesion = m_lua->load("return (jit and jit.version) or 'NO'")();
-    qInfo(std::string("Lua: " + luaVersion + ", JIT: " + luaJitVesion).c_str());
-
-    m_lua->set_function("HostCall", [&](std::string s) { std::cout << s << "\n"; });
-
     m_lua->script_file(fileNameEntryPoint.toStdString());
     m_luaHostFunc = new LuaHostFunc(*m_lua, m_dictObjCtrl, m_mapObjCtrl, m_contParamCtrl, *m_drawController);
 }
