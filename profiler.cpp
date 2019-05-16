@@ -55,23 +55,6 @@ void Profiler::setLogFile(const QString &fileName)
 void Profiler::dumpLog()
 {
 #ifdef PROFILING_TIME_ENABLE
-//    if (m_fileName.isEmpty()){
-//        qFatal("File name not specified");
-//    }
-//    QFile logFile(m_fileName);
-//    if (!logFile.open(QFile::WriteOnly)) {
-//        qFatal("The file did not open");
-//    }
-
-//    QTextStream out(&logFile);
-//    for (const auto &funcInf : m_funcTimeInfoMap) {
-//        out << QString("Function: '%1', total: %2, run count: %3, average: %4\n")
-//               .arg(funcInf.name())
-//               .arg(funcInf.totalElapsed())
-//               .arg(funcInf.runCount())
-//               .arg(funcInf.averageElapsed());
-//    }
-//    logFile.close();
     QFile logFile("excelResults.csv");
     if (!logFile.open(QFile::WriteOnly)) {
         qFatal("The file did not open");
@@ -86,6 +69,18 @@ void Profiler::dumpLog()
     }
     logFile.close();
 #endif
+}
+
+void Profiler::dumpLogMultiMap(QTextStream& stream, const QString& mapSetName, const std::string& funcName)
+{
+    QString qfuncName = QString::fromStdString(funcName);
+    FunctionTimeInfo mapInfo = m_funcTimeInfoMap.value(qfuncName);
+    stream << mapSetName << ";" << mapInfo.averageElapsed() << "\n";
+}
+
+void Profiler::clear()
+{
+    m_funcTimeInfoMap.clear();
 }
 
 void Profiler::addElapsedTime(const QString &functionName, double time)
