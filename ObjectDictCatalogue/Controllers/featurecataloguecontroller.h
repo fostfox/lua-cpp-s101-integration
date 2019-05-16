@@ -10,6 +10,8 @@
 
 #include "entitycontroller.h"
 
+#include <unordered_map>
+
 template <typename FC_T>
 class EntityController;
 
@@ -35,6 +37,9 @@ class FeatureCatalogueController
     const EntityController<FC_InformationType> &informationTypeCrtl() const;
     const EntityController<FC_FeatureType> &featureTypeCtrl() const;
 
+    const std::string& featureCode(const std::string &alias) const;
+    bool hasInfeatureAliasMap(const std::string& alias) const;
+
 private:
     EntityController<FC_SimpleAttribute> m_simpleAttributeCtrl;
     EntityController<FC_ComplexAttribute> m_complexAttributeCtrl;
@@ -43,4 +48,6 @@ private:
     EntityController<FC_FeatureAssociation> m_featureAssociationCtrl;
     EntityController<FC_InformationType> m_informationTypeCrtl;
     EntityController<FC_FeatureType> m_featureTypeCtrl;
+
+    std::unordered_map<std::string, std::string> m_featureTypeFromAliasMap; //TODO: хранить ссылки
 };

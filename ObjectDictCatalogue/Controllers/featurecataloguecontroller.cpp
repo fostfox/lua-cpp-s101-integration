@@ -19,6 +19,16 @@ void FeatureCatalogueController::addComplexAttr(const FC_ComplexAttribute &ca)
 void FeatureCatalogueController::addFeatureType(const FC_FeatureType &ft)
 {
     m_featureTypeCtrl.addType(ft);
+
+    //TODO: Берем всегда alias из первой встреченной feature (потому что alias неоднозначные (повторяются))
+    if (ft.header().alias().size()!=0){
+        const auto& code = ft.header().code();
+        for (const auto & alias : ft.header().alias()) {
+            if (!hasInfeatureAliasMap(alias)){
+                m_featureTypeFromAliasMap[alias] = code;
+            }
+        }
+    }
 }
 
 void FeatureCatalogueController::addInformationType(const FC_InformationType &it)
@@ -74,4 +84,14 @@ const EntityController<FC_InformationType> &FeatureCatalogueController::informat
 const EntityController<FC_FeatureType> &FeatureCatalogueController::featureTypeCtrl() const
 {
     return m_featureTypeCtrl;
+}
+
+const std::string &FeatureCatalogueController::featureCode(const std::string &alias) const
+{
+    return m_featureTypeFromAliasMap.at(alias);
+}
+
+bool FeatureCatalogueController::hasInfeatureAliasMap(const std::string &alias) const
+{
+    return m_featureTypeFromAliasMap.count(alias) != 0;
 }

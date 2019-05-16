@@ -166,15 +166,21 @@ void LuaHostFunc::loadFunctions()
 
         string featureCode = m_mapObjCtrl.getCodeById(featureID);
         if (!featCtrl.hasInMap(featureCode)){ ///TODO:
-            // Попробуем найти среди alias'ов
-            for (const auto& feature : featCtrl.types()){
-                const auto& featAliases = feature.header().alias();
-                auto it = std::find(featAliases.begin(), featAliases.end(), featureCode);
-                // Обновляем на реальный FeatureCode, если alias совпадает
-                if (it != featAliases.end()){
-                    featureCode = feature.header().code();
-                    break;
-                }
+//            // Попробуем найти среди alias'ов
+//            for (const auto& feature : featCtrl.types()){
+//                const auto& featAliases = feature.header().alias();
+//                auto it = std::find(featAliases.begin(), featAliases.end(), featureCode);
+//                // Обновляем на реальный FeatureCode, если alias совпадает
+//                if (it != featAliases.end()){
+//                    featureCode = feature.header().code();
+//                    break;
+//                }
+//            }
+
+            if (m_dictObjCtrl.hasInfeatureAliasMap(featureCode)){
+                featureCode = m_dictObjCtrl.featureCode(featureCode);
+            } else {
+                qFatal(("No Feature " + featureID).c_str());
             }
         }
         return featureCode;
@@ -716,7 +722,6 @@ void LuaHostFunc::loadFunctions()
         PROFILING_TIME2("HostGetComplexAttributeTypeInfo")
         const auto &complAttrType = m_dictObjCtrl.complexAttributeCtrl().type(attributeCode);
         auto complexAttrs = luaCreateComplexAttribute(m_lua, &complAttrType);
-        qWarning(("HostGetComplexAttributeTypeInfo not working well. attributeCode = " + attributeCode).c_str());
         return complexAttrs;
     });
 
