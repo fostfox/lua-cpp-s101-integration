@@ -91,7 +91,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &featureID, const string &drawingInstructions, const string &observedParameters)
                        -> bool
     {
-        PROFILING_TIME2("HostPortrayalEmit")
+        //PROFILING_TIME2("HostPortrayalEmit")
         m_drawInstrCtrl.setDrawInstr(stoi(featureID),
                                       DrawingInstructions (drawingInstructions)
                                       );
@@ -141,7 +141,7 @@ void LuaHostFunc::loadFunctions()
                      , [&]()
                        -> sol::table
     {
-        PROFILING_TIME2("HostGetFeatureIDs")
+        //PROFILING_TIME2("HostGetFeatureIDs")
         auto luaFeaturesIds = helpLuaTable(m_lua, m_mapObjCtrl.getFeaturesIDs());
         return luaFeaturesIds;
     });
@@ -161,7 +161,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &featureID)
                        -> string
     {
-        PROFILING_TIME2("HostFeatureGetCode")
+        //PROFILING_TIME2("HostFeatureGetCode")
         const auto& featCtrl = m_dictObjCtrl.featureTypeCtrl();
 
         string featureCode = m_mapObjCtrl.getCodeById(featureID);
@@ -201,7 +201,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &informationTypeID)
                        -> sol::object
     {
-        PROFILING_TIME2("HostInformationTypeGetCode")
+        //PROFILING_TIME2("HostInformationTypeGetCode")
         auto informationTypeCode = luaGetUnknownAttributeString(m_lua);
         return informationTypeCode;
     });
@@ -227,7 +227,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &featureID, const string &path, const string &attributeCode)
                        -> sol::table
     {
-        PROFILING_TIME2("HostFeatureGetSimpleAttribute")
+        //PROFILING_TIME2("HostFeatureGetSimpleAttribute")
 
         sol::table simpleAtrValues;
         bool isSetSimpleAttrOnMap = m_mapObjCtrl.hasSimpleAttribute(featureID, path, attributeCode);
@@ -264,7 +264,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &featureID, const string &path, const string &attributeCode)
                        -> int
     {
-        PROFILING_TIME2("HostFeatureGetComplexAttributeCount")
+        //PROFILING_TIME2("HostFeatureGetComplexAttributeCount")
         int featureCACount = static_cast<int>(
                     m_mapObjCtrl.getComplexAttributeSize(featureID, path, attributeCode)
                     );
@@ -288,7 +288,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &featureID)
                        -> sol::table
     {
-        PROFILING_TIME2("HostFeatureGetSpatialAssociations")
+        //PROFILING_TIME2("HostFeatureGetSpatialAssociations")
 
         auto luaFSpatialAssociations = m_lua.create_table();
 
@@ -323,7 +323,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &featureID, const string &associationCode, const sol::object &roleCode)
                        -> sol::table
     { // TODO: HOST FUNCTION IS NOT IMPLEMENTED
-        PROFILING_TIME2("HostFeatureGetAssociatedFeatureIDs")
+        //PROFILING_TIME2("HostFeatureGetAssociatedFeatureIDs")
         [[maybe_unused]] const string& ac = associationCode;
         [[maybe_unused]] const sol::object & rc = roleCode;
         auto featureAssFeatureIDs = helpEmptyTable(m_lua);
@@ -352,7 +352,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &featureID, const string &associationCode, const sol::object &roleCode)
                        -> sol::table
     { // TODO: HOST FUNCTION IS NOT IMPLEMENTED
-        PROFILING_TIME2("HostFeatureGetAssociatedInformationIDs")
+        //PROFILING_TIME2("HostFeatureGetAssociatedInformationIDs")
         [[maybe_unused]] const string& ac = associationCode;
         [[maybe_unused]] const sol::object & rc = roleCode;
         auto featureAssInfIDs = helpEmptyTable(m_lua);
@@ -374,7 +374,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &spatialID)
                        -> sol::object  //TODO: impl
     {
-        PROFILING_TIME2("HostGetSpatial")
+        //PROFILING_TIME2("HostGetSpatial")
 
         if (!m_mapObjCtrl.hasSpatialObject(spatialID)){
             qFatal(("Ihe spatilalID=" + spatialID + " not on the map").c_str());
@@ -432,7 +432,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &spatialID, const string &associationCode, const sol::object &roleCode)
                        -> sol::object
     { // TODO: HOST FUNCTION IS NOT IMPLEMENTED
-        PROFILING_TIME2("HostSpatialGetAssociatedInformationIDs")
+        //PROFILING_TIME2("HostSpatialGetAssociatedInformationIDs")
         [[maybe_unused]] const string& ac = associationCode;
         [[maybe_unused]] const sol::object & rc = roleCode;
         sol::object spatialAssInfIDs = helpEmptyTable(m_lua);
@@ -458,7 +458,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &spatialID)
                        -> sol::object
     {
-        PROFILING_TIME2("HostSpatialGetAssociatedFeatureIDs")
+        //PROFILING_TIME2("HostSpatialGetAssociatedFeatureIDs")
         sol::object spatialAssFeaturesIDs = helpEmptyTable(m_lua);
         return spatialAssFeaturesIDs;
     });
@@ -485,7 +485,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &informationTypeID, const string &path, const string &attributeCode)
                        -> sol::object
     { // TODO: HOST FUNCTION IS NOT IMPLEMENTED
-        PROFILING_TIME2("HostInformationTypeGetSimpleAttribute")
+        //PROFILING_TIME2("HostInformationTypeGetSimpleAttribute")
         [[maybe_unused]] const string& p = path;
         [[maybe_unused]] const string& ac = attributeCode;
         sol::object informSimpleAttrValue = sol::nil;
@@ -513,7 +513,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &informationTypeID, const string &path, const string &attributeCode)
                        -> int
     { // TODO: HOST FUNCTION IS NOT IMPLEMENTED
-        PROFILING_TIME2("HostInformationTypeGetComplexAttributeCount")
+        //PROFILING_TIME2("HostInformationTypeGetComplexAttributeCount")
         [[maybe_unused]] const string& p = path;
         [[maybe_unused]] const string& ac = attributeCode;
         int informCompleAttrCount = 0;
@@ -538,7 +538,7 @@ void LuaHostFunc::loadFunctions()
                      , [&]()
                        -> sol::table
     {
-        PROFILING_TIME2("HostGetFeatureTypeCodes")
+        //PROFILING_TIME2("HostGetFeatureTypeCodes")
         const auto& featureTypeCodes = m_dictObjCtrl.featureTypeCtrl().codes();
         auto luafeatureTypeCodes = helpLuaTable(m_lua, featureTypeCodes);
         return luafeatureTypeCodes;
@@ -552,7 +552,7 @@ void LuaHostFunc::loadFunctions()
                      , [&]()
                        -> sol::table
     {
-        PROFILING_TIME2("HostGetInformationTypeCodes")
+        //PROFILING_TIME2("HostGetInformationTypeCodes")
         const auto& informTypeCodes = m_dictObjCtrl.informationTypeCrtl().codes();
         auto luaInformTypeCodes = helpLuaTable(m_lua, informTypeCodes);
         return luaInformTypeCodes;
@@ -566,7 +566,7 @@ void LuaHostFunc::loadFunctions()
                      , [&]()
                        -> sol::table
     {
-        PROFILING_TIME2("HostGetSimpleAttributeTypeCodes")
+        //PROFILING_TIME2("HostGetSimpleAttributeTypeCodes")
         const auto& simpleAtrTypeCodes = m_dictObjCtrl.simpleAttributeCtrl().codes();
         auto luaSimpleAtrTypeCodes = helpLuaTable(m_lua, simpleAtrTypeCodes);
         return luaSimpleAtrTypeCodes;
@@ -581,7 +581,7 @@ void LuaHostFunc::loadFunctions()
                      , [&]()
                        -> sol::table
     {
-        PROFILING_TIME2("HostGetComplexAttributeTypeCodes")
+        //PROFILING_TIME2("HostGetComplexAttributeTypeCodes")
         const auto& complexAttrTypeCodes = m_dictObjCtrl.complexAttributeCtrl().codes();
         auto luaComplexAttrTypeCodes = helpLuaTable(m_lua, complexAttrTypeCodes);
         return luaComplexAttrTypeCodes;
@@ -595,7 +595,7 @@ void LuaHostFunc::loadFunctions()
                      , [&]()
                        -> sol::table
     {
-        PROFILING_TIME2("HostGetRoleTypeCodes")
+        //PROFILING_TIME2("HostGetRoleTypeCodes")
         const auto& roleTypeCodes = m_dictObjCtrl.rolesCtrl().codes();
         auto luaRoleTypeCodes = helpLuaTable(m_lua, roleTypeCodes);
         return luaRoleTypeCodes;
@@ -610,7 +610,7 @@ void LuaHostFunc::loadFunctions()
                      , [&]()
                        -> sol::table
     {
-        PROFILING_TIME2("HostGetInformationAssociationTypeCodes")
+        //PROFILING_TIME2("HostGetInformationAssociationTypeCodes")
         const auto& infAssTypeCodes = m_dictObjCtrl.informationAssociationCtrl().codes();
         auto luaInfAssTypeCodes = helpLuaTable(m_lua, infAssTypeCodes);
         return luaInfAssTypeCodes;
@@ -625,7 +625,7 @@ void LuaHostFunc::loadFunctions()
                      , [&]()
                        -> sol::table
     {
-        PROFILING_TIME2("HostGetFeatureAssociationTypeCodes")
+        //PROFILING_TIME2("HostGetFeatureAssociationTypeCodes")
         const auto& featureAssTypeCodes = m_dictObjCtrl.featureAssociationCtrl().codes();
         auto luaFeatureAssTypeCodes = helpLuaTable(m_lua, featureAssTypeCodes);
         return luaFeatureAssTypeCodes;
@@ -641,7 +641,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](string featureCode)
                        -> sol::table
     {
-        PROFILING_TIME2("HostGetFeatureTypeInfo")
+        //PROFILING_TIME2("HostGetFeatureTypeInfo")
         FC_FeatureType featureType = m_dictObjCtrl.featureTypeCtrl().type(featureCode);
 
 
@@ -679,7 +679,7 @@ void LuaHostFunc::loadFunctions()
                        -> sol::object
     {
         //PROFILING_TIME
-        PROFILING_TIME2("HostGetInformationTypeInfo")
+        //PROFILING_TIME2("HostGetInformationTypeInfo")
         const auto &infType = m_dictObjCtrl.informationTypeCrtl().type(informationCode);
 
         auto luaAttributeBindings = helpCreateAttributeBindings(m_lua, infType.attributeBindings());
@@ -703,7 +703,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &attributeCode)
                        -> sol::object
     {
-        PROFILING_TIME2("HostGetSimpleAttributeTypeInfo")
+        //PROFILING_TIME2("HostGetSimpleAttributeTypeInfo")
         const auto &simplAttrType = m_dictObjCtrl.simpleAttributeCtrl().type(attributeCode);
         auto simpleAttrs = luaCreateSimpleAttribute(m_lua, &simplAttrType);
         return simpleAttrs;
@@ -719,7 +719,7 @@ void LuaHostFunc::loadFunctions()
                      , [&](const string &attributeCode)
                        -> sol::object   //WARNING: TODO: Not Emplementer
     {
-        PROFILING_TIME2("HostGetComplexAttributeTypeInfo")
+        //PROFILING_TIME2("HostGetComplexAttributeTypeInfo")
         const auto &complAttrType = m_dictObjCtrl.complexAttributeCtrl().type(attributeCode);
         auto complexAttrs = luaCreateComplexAttribute(m_lua, &complAttrType);
         return complexAttrs;
