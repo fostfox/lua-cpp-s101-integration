@@ -16,7 +16,7 @@ CD_FeatureUseType::CD_FeatureUseType(CD_FeatureUseTypes type)
     initMaps();
 }
 
-CD_FeatureUseType::CD_FeatureUseType(std::string type)
+CD_FeatureUseType::CD_FeatureUseType(const std::string &type)
     :EnumType<Type>(type)
 {
     initMaps();

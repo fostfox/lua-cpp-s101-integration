@@ -1,27 +1,27 @@
 #include "fc_listedvalue.h"
 
 
-CharacterString FC_ListedValue::label() const
+const CharacterString &FC_ListedValue::label() const
 {
     return m_label;
 }
 
-CharacterString FC_ListedValue::defenition() const
+const CharacterString& FC_ListedValue::defenition() const
 {
     return m_defenition;
 }
 
-PositiveInteger FC_ListedValue::code() const
+const PositiveInteger &FC_ListedValue::code() const
 {
     return m_code;
 }
 
-std::vector<CharacterString> FC_ListedValue::alias() const
+const std::vector<CharacterString> &FC_ListedValue::alias() const
 {
     return m_alias;
 }
 
-std::vector<CharacterString> FC_ListedValue::remarks() const
+const std::vector<CharacterString> &FC_ListedValue::remarks() const
 {
     return m_remarks;
 }

@@ -13,7 +13,7 @@ class FC_AttributeBinding
 
     Multiplicity multiplicity() const;
     Boolean sequentional() const;
-    std::vector<ValueEnumAttrType> permittedValues() const;
+    const std::vector<ValueEnumAttrType>& permittedValues() const;
     const AttrCode& attributeCode() const;
 
     void setSequentional(const Boolean &sequentional);

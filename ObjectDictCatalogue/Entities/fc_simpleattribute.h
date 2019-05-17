@@ -10,9 +10,9 @@ class FC_SimpleAttribute
   public:
     FC_SimpleAttribute() = default;
     FC_SimpleAttribute(
-            FC_Attribute header
-            ,CD_AttributeValueType valueType
-            ,QVector<FC_ListedValue> listedValues
+            const FC_Attribute& header
+            ,const CD_AttributeValueType& valueType
+            ,const QVector<FC_ListedValue>& listedValues
             );
 
     const FC_Attribute& header() const;

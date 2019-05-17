@@ -9,7 +9,7 @@ FC_RoleType::FC_RoleType()
     initMaps();
 }
 
-FC_RoleType::FC_RoleType(std::string type)
+FC_RoleType::FC_RoleType(const std::string &type)
     :EnumType<Type> (type)
 {
     initMaps();

@@ -14,11 +14,11 @@ public:
     FC_FeatureType() = default;
     FC_FeatureType(
             const FC_Item &header
-            ,CD_FeatureUseType featureUseType
-            ,QVector<FC_SpatialPrimitiveType> permittedPrimitives
-            ,QVector<FC_AttributeBinding> attributeBindings
-            ,QVector<FC_FeatureBinding> featureBindings
-            ,QVector<FC_InformationBinding> informationBindings
+            ,const CD_FeatureUseType &featureUseType
+            ,const QVector<FC_SpatialPrimitiveType> &permittedPrimitives
+            ,const QVector<FC_AttributeBinding> &attributeBindings
+            ,const QVector<FC_FeatureBinding> &featureBindings
+            ,const QVector<FC_InformationBinding> &informationBindings
             );
 
     const FC_Item& header() const;

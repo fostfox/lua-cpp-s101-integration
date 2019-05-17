@@ -2,33 +2,31 @@
 
 #include "../ObjectDictCatalogue/DataTypes/datatypes.h"
 #include "gm_object.h"
+#include <optional>
 
-namespace std{
-template< class T >
-class optional;
+//namespace std{
+//template< class T >
+//class optional;
 
-}
+//}
 
 
 class GM_Point : public GM_Object
 {
 public:
     GM_Point() = default;
-    GM_Point(std::string x, std::string y);
-    GM_Point(std::string x, std::string y, std::string z);
-
-    ~GM_Point() = default;
-
+    GM_Point(const std::string& x, const std::string& y);
+    GM_Point(const std::string& x, std::string y, const std::string& z);
 
     bool hasZ() const;
     Type getType() const;
 
-    std::string x() const;
-    std::string y() const;
-    std::string z() const;
+    const std::string& x() const;
+    const std::string& y() const;
+    const std::string& z() const;
 
 private:
     std::string m_x;
     std::string m_y;
-    std::optional<std::string>* m_z;
+    std::optional<std::string> m_z;
 };

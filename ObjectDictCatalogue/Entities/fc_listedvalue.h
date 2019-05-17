@@ -8,18 +8,18 @@ class FC_ListedValue
   public:
     FC_ListedValue() = default;
     FC_ListedValue(
-             CharacterString label
-            ,CharacterString defenition
-            ,PositiveInteger code
-            ,CharacterString remarks
-            ,CharacterString alias
+             const CharacterString& label
+            ,const CharacterString defenition
+            ,const PositiveInteger& code
+            ,const CharacterString& remarks
+            ,const CharacterString& alias
             );
 
-    CharacterString label() const;
-    CharacterString defenition() const;
-    PositiveInteger code() const;
-    std::vector<CharacterString> remarks() const;
-    std::vector<CharacterString> alias() const;
+    const CharacterString& label() const;
+    const CharacterString& defenition() const;
+    const PositiveInteger& code() const;
+    const std::vector<CharacterString>& remarks() const;
+    const std::vector<CharacterString>& alias() const;
 
     void setLabel(const CharacterString &label);
     void setDefenition(const CharacterString &defenition);

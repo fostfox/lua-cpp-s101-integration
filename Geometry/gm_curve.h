@@ -15,9 +15,9 @@ public:
     void setSegments(const QVector<GM_CurveSegment>& seg);
     void addSegment(const GM_CurveSegment& seg);
 
-    GM_Point startPoint() const;
-    GM_Point endPoint() const;
-    QVector<GM_CurveSegment> segments() const;
+    const GM_Point& startPoint() const;
+    const GM_Point& endPoint() const;
+    const QVector<GM_CurveSegment>& segments() const;
     Type getType() const;
 
 private:

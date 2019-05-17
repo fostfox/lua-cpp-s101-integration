@@ -8,16 +8,16 @@ class FC_Item
 {
 public:
     FC_Item() = default;
-    FC_Item(CharacterString name
-           , CharacterString defenition
-           , CharacterString code
-           , CharacterString remarks
-           , std::vector<CharacterString> alias
+    FC_Item(const CharacterString& name
+           , const CharacterString& defenition
+           , const CharacterString& code
+           , const CharacterString& remarks
+           , const std::vector<CharacterString>& alias
             );
 
-    CharacterString name() const;
-    CharacterString defenition() const;
-    CharacterString code() const;
+    const CharacterString& name() const;
+    const CharacterString& defenition() const;
+    const CharacterString& code() const;
     const CharacterString& remarks() const;
     const std::vector<CharacterString>& alias() const;
 

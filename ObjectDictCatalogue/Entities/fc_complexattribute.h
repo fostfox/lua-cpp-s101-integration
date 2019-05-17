@@ -10,8 +10,8 @@ class FC_ComplexAttribute
 public:
     FC_ComplexAttribute() = default;
     FC_ComplexAttribute(
-            FC_Attribute header
-            ,QVector<FC_AttributeBinding> attributeBindings
+            const FC_Attribute& header
+            ,const QVector<FC_AttributeBinding>& attributeBindings
     );
 
     const FC_Attribute& header() const;

@@ -7,10 +7,10 @@
 
 #include "ObjectDictCatalogue/Controllers/featurecataloguecontroller.h"
 #include "ObjectMapCatalogue/Controllers/featurescontroller.h"
-#include "ObjectDrawCatalogue/drawing_instructions_controller.h"
+
 
 #include "host_func_def.h"
-
+//#include "luajit.h"
 LuaRuleMashine::LuaRuleMashine(
         const QString &fileNameEntryPoint
         , const FeatureCatalogueController & dictObjController
@@ -21,7 +21,6 @@ LuaRuleMashine::LuaRuleMashine(
     ,m_mapObjCtrl(mapObjController)
     ,m_contParamCtrl(contParamController)
 {
-    m_drawController = new DrawingInstructionsController();
 
     m_lua = new sol::state();
 
@@ -38,12 +37,15 @@ LuaRuleMashine::LuaRuleMashine(
         m_lua->open_libraries(sol::lib::jit);
 #   endif
 
+    //luaJIT_setmode(m_lua->lua_state(), 0, LUAJIT_MODE_ON | LUAJIT_MODE_DEBUG);
+
     m_lua->script_file(fileNameEntryPoint.toStdString());
+    //luaJIT_setmode(m_lua->lua_state(), 0, LUAJIT_MODE_ON | LUAJIT_MODE_DEBUG);
    // m_lua->script_file("debug/lua/temp.lua");
     //m_lua->script_file("debug/lua/S100Scripting.lua");
     //m_lua->script_file("debug/lua/temp.lua");
     //m_lua->script_file("debug/lua/PortrayalAPI.lua");
-    m_luaHostFunc = new LuaHostFunc(*m_lua, m_dictObjCtrl, m_mapObjCtrl, m_contParamCtrl, *m_drawController);
+    m_luaHostFunc = new LuaHostFunc(*m_lua, m_dictObjCtrl, m_mapObjCtrl, m_contParamCtrl, m_drawController);
 }
 
 bool LuaRuleMashine::doPortrayal()
@@ -54,12 +56,11 @@ bool LuaRuleMashine::doPortrayal()
 
 const DrawingInstructionsController &LuaRuleMashine::drawController() const
 {
-    return *m_drawController;
+    return m_drawController;
 }
 
 LuaRuleMashine::~LuaRuleMashine()
 {
-    delete m_drawController;
     delete m_luaHostFunc;
     delete m_lua;
 }

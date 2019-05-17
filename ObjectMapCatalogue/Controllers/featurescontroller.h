@@ -5,6 +5,8 @@
 #include <map>
 #include <Geometry/gm_object.h>
 
+#include <memory>
+
 std::vector<std::pair<std::string, std::string> > getAttributeNames(const std::string &path);
 class FeatureMapController
 {
@@ -23,14 +25,14 @@ public:
 
     size_t getComplexAttributeSize(int featureId, const std::string &path, const std::string &attributeCode) const;
 
-    void setSpatials(std::map<int, GM_Object *> SpId_to_SpatialObject);
+    void setSpatials(const std::map<int, std::shared_ptr<GM_Object>>& SpId_to_SpatialObject);
     bool hasSpatialObject(int spatialId) const;
-    GM_Object* spatialObjectByRefId(int refId) const;
+    std::shared_ptr<GM_Object> spatialObjectByRefId(int refId) const;
 
 private:
     std::vector<Feature> fs_;
     std::map<int, Feature> id_to_f_;
     std::map<int, Fe2spRef> refId_to_Fe2SpRef;
-    std::map<int, GM_Object *> spId_to_SpatialObject;
+    std::map<int, std::shared_ptr<GM_Object>> spId_to_SpatialObject;
 };
 

@@ -405,19 +405,19 @@ const sol::table LuaHostFunc::HostGetSpatial(const std::string &spatialID)
     sol::object luaSpatial;
     switch (spatialP->getType()) {
     case GM_Object::POINT: {
-        luaSpatial = luaCreatePoint(m_lua, *static_cast<GM_Point*>(spatialP));
+        luaSpatial = luaCreatePoint(m_lua, *std::static_pointer_cast<GM_Point>(spatialP));
     } break;
     case GM_Object::MULTIPOINT: {
-        luaSpatial = luaCreateMultiPoint(m_lua, *static_cast<GM_MultiPoint*>(spatialP));
+        luaSpatial = luaCreateMultiPoint(m_lua, *std::static_pointer_cast<GM_MultiPoint>(spatialP));
     } break;
     case GM_Object::CURVE: {
-        luaSpatial = luaCreateCurve(m_lua, *static_cast<GM_Curve*>(spatialP));
+        luaSpatial = luaCreateCurve(m_lua, *std::static_pointer_cast<GM_Curve>(spatialP));
     } break;
     case GM_Object::COMPOSITE_CURVE: {
-        luaSpatial = luaCreateCompositeCurve(m_lua, *static_cast<GM_CompositeCurve*>(spatialP));
+        luaSpatial = luaCreateCompositeCurve(m_lua, *std::static_pointer_cast<GM_CompositeCurve>(spatialP));
     } break;
     case GM_Object::SURFACE: {
-        luaSpatial = luaCreateSurface(m_lua, *static_cast<GM_Surface*>(spatialP));
+        luaSpatial = luaCreateSurface(m_lua, *std::static_pointer_cast<GM_Surface>(spatialP));
     } break;
     default:
         //qFatal("Unsupported switch statment);

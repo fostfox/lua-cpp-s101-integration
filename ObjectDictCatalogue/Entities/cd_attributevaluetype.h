@@ -65,7 +65,7 @@ class CD_AttributeValueType : public EnumType<CD_AttributeValueTypes>
   public:
     CD_AttributeValueType();
     CD_AttributeValueType(CD_AttributeValueTypes t);
-    CD_AttributeValueType(std::string t);
+    CD_AttributeValueType(const std::string& t);
 
   private:
     void initMaps();

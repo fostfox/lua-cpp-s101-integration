@@ -15,7 +15,7 @@ public:
 
     void addPoint(const GM_Point& point);
 
-    QVector<GM_Point> points() const;
+    const QVector<GM_Point>& points() const;
     Type getType() const;
 
 private:

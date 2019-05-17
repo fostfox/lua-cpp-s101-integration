@@ -28,7 +28,7 @@ class InterpolationType : public EnumType<InterpolationTypes>
   public:
     InterpolationType();
     InterpolationType(InterpolationTypes t);
-    InterpolationType(std::string t);
+    InterpolationType(const std::string& t);
 
   private:
     void initMaps();
@@ -44,8 +44,8 @@ public:
 
     void addControlPoint(const GM_Point &controlPoint);
 
-    QVector<GM_Point> controlPoints() const;
-    InterpolationType interpolation() const;
+    const QVector<GM_Point>& controlPoints() const;
+    const InterpolationType& interpolation() const;
     Type getType() const;
 
 

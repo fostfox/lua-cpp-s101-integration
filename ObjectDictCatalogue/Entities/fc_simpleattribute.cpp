@@ -1,9 +1,8 @@
 #include "fc_simpleattribute.h"
 
-FC_SimpleAttribute::FC_SimpleAttribute(
-        FC_Attribute header
-        , CD_AttributeValueType valueType
-        , QVector<FC_ListedValue> listedValues)
+FC_SimpleAttribute::FC_SimpleAttribute(const FC_Attribute &header
+        , const CD_AttributeValueType &valueType
+        , const QVector<FC_ListedValue> &listedValues)
     :m_header(header)
     ,m_valueType(valueType)
     ,m_listedValues(listedValues)

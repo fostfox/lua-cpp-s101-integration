@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ObjectDrawCatalogue/drawing_instructions_controller.h"
+
 class FeatureMapController;
 class FeatureCatalogueController;
 class ContexParametrController;
@@ -42,7 +44,7 @@ private:
     const FeatureCatalogueController & m_dictObjCtrl;
     const FeatureMapController & m_mapObjCtrl;
     const ContexParametrController & m_contParamCtrl;
-    DrawingInstructionsController* m_drawController;
+    DrawingInstructionsController m_drawController;
 
     LuaHostFunc* m_luaHostFunc;
 

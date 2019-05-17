@@ -1,7 +1,7 @@
 #include "fc_informationassociation.h"
 
 
-FC_InformationAssociation::FC_InformationAssociation(FC_Item item
+FC_InformationAssociation::FC_InformationAssociation(const FC_Item& item
         , const QVector<FC_Role> &rolesRef)
     : m_header(item)
     , m_rolesRef(rolesRef)

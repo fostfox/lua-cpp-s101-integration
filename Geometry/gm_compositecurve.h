@@ -13,7 +13,7 @@ public:
     ~GM_CompositeCurve() = default;
 
     void addCurveAssotiation(const Fe2spRef& curveAssotiation);
-    QVector<Fe2spRef> curveAssociations() const;
+    const QVector<Fe2spRef>& curveAssociations() const;
     Type getType() const;
 
 private:

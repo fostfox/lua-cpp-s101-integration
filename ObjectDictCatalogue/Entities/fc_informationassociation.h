@@ -10,7 +10,7 @@ class FC_InformationAssociation
   public:
     FC_InformationAssociation() = default;
     FC_InformationAssociation(
-            FC_Item header
+            const FC_Item& header
             , const QVector<FC_Role>& rolesRef
     );
 

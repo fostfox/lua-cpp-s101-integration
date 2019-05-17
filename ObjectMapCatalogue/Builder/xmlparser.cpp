@@ -27,6 +27,12 @@ FeatureMapXMLBuilder::FeatureMapXMLBuilder(QFile * const inputFile)
     m_xmlSpatial = new QXmlStreamReader(inputFile);
 }
 
+FeatureMapXMLBuilder::~FeatureMapXMLBuilder()
+{
+    delete m_xmlReader;
+    delete m_xmlSpatial;
+}
+
 FeatureMapController FeatureMapXMLBuilder::build(bool onlyFullFeatures)
 {
     auto spatials = parseSpatials();
@@ -399,7 +405,7 @@ bool FeatureMapXMLBuilder::isStartElementAndAllowed(std::string tag)
     return m_xmlSpatial->isStartElement() && strTagToParserTags.contains(tag);
 }
 
-GM_Object *FeatureMapXMLBuilder::buildIsolatedPoint()
+std::shared_ptr<GM_Object> FeatureMapXMLBuilder::buildIsolatedPoint()
 {
     // MUST BE
     int index = m_xmlSpatial->readElementText().toInt();
@@ -407,15 +413,15 @@ GM_Object *FeatureMapXMLBuilder::buildIsolatedPoint()
     std::string lat = m_xmlSpatial->readElementText().toStdString();
     readNext2(m_xmlSpatial);
     std::string lon = m_xmlSpatial->readElementText().toStdString();
-    m_SpId_to_SpatialObject[index] = new GM_Point(lat, lon);
-    return new GM_Point(lat, lon);
+    m_SpId_to_SpatialObject[index] = std::make_shared<GM_Point>(GM_Point(lat, lon));
+    return std::static_pointer_cast<GM_Object>(std::make_shared<GM_Point>(GM_Point(lat, lon)));
 }
 
-GM_Object *FeatureMapXMLBuilder::buildSurface()
+std::shared_ptr<GM_Object> FeatureMapXMLBuilder::buildSurface()
 {
     int index = m_xmlSpatial->readElementText().toInt();
     readNext2(m_xmlSpatial);
-    GM_Surface* surf = new GM_Surface();
+    std::shared_ptr<GM_Surface> surf = std::make_shared<GM_Surface>();
     while(!(m_xmlSpatial->name().toString().toStdString() == "surface" && m_xmlSpatial->isEndElement())){
         if (m_xmlSpatial->name().toString().toStdString() == "sp2sp_ref" && m_xmlSpatial->isStartElement()){
             m_xmlSpatial->readNextStartElement();
@@ -441,15 +447,15 @@ GM_Object *FeatureMapXMLBuilder::buildSurface()
         readNext1(m_xmlSpatial);
     }
     m_SpId_to_SpatialObject[index] = surf;
-    return static_cast<GM_Object*>(surf);
+    return surf;
 }
 
-GM_Object *FeatureMapXMLBuilder::buildCompositeEdge()
+std::shared_ptr<GM_Object> FeatureMapXMLBuilder::buildCompositeEdge()
 {
     // MUST BE
     int index = m_xmlSpatial->readElementText().toInt();
     readNext2(m_xmlSpatial);
-    GM_CompositeCurve* curv = new GM_CompositeCurve();
+    std::shared_ptr<GM_CompositeCurve> curv = std::make_shared<GM_CompositeCurve>();
     while(!(m_xmlSpatial->name().toString().toStdString() == "composite_edge" && m_xmlSpatial->isEndElement())){
         if (m_xmlSpatial->name().toString().toStdString() == "sp2sp_ref" && m_xmlSpatial->isStartElement()){
             m_xmlSpatial->readNextStartElement();
@@ -473,14 +479,14 @@ GM_Object *FeatureMapXMLBuilder::buildCompositeEdge()
 //    if (index == 331){
 //        std::cout << "!";
 //    }
-    return static_cast<GM_Object*>(curv);
+    return std::static_pointer_cast<GM_Object>(curv);
 }
 
-GM_Object *FeatureMapXMLBuilder::buildEdge()
+std::shared_ptr<GM_Object> FeatureMapXMLBuilder::buildEdge()
 {
     int index = m_xmlSpatial->readElementText().toInt();
     readNext2(m_xmlSpatial);
-    GM_Curve* curv = new GM_Curve();
+    std::shared_ptr<GM_Curve> curv = std::make_shared<GM_Curve>();
     GM_CurveSegment seg;
     while(!(m_xmlSpatial->name().toString().toStdString() == "edge" && m_xmlSpatial->isEndElement())){
         if (m_xmlSpatial->name().toString().toStdString() == "geo_point" && m_xmlSpatial->isStartElement()){
@@ -498,7 +504,7 @@ GM_Object *FeatureMapXMLBuilder::buildEdge()
     curv->setSegments(QVector<GM_CurveSegment>{ seg });
 
     m_SpId_to_SpatialObject[index] = curv;
-    return static_cast<GM_Object*>(curv);
+    return std::static_pointer_cast<GM_Object>(curv);
 }
 
 Fe2spRef FeatureMapXMLBuilder::buildFe2Sp()
@@ -533,27 +539,27 @@ Fe2spRef FeatureMapXMLBuilder::buildExteriorRing()
 
 
 
-std::map<int, GM_Object *> FeatureMapXMLBuilder::parseSpatials()
+const std::map<int, std::shared_ptr<GM_Object> > &FeatureMapXMLBuilder::parseSpatials()
 {
     while (!m_xmlSpatial->atEnd()){
-        std::string tag = m_xmlSpatial->name().toString().toStdString();
+        const std::string &tag = m_xmlSpatial->name().toString().toStdString();
         if (isStartElementAndAllowed(tag)){
             switch (strTagToParserTags[tag]) {
                 case isolated_point : {
                     m_xmlSpatial->readNextStartElement(); // readNext1
-                    GM_Object* obj = buildIsolatedPoint();
+                    auto obj = buildIsolatedPoint();
                 } break;
                 case surface : {
                     m_xmlSpatial->readNextStartElement(); // readNext1
-                    GM_Object* obj = buildSurface();
+                    auto obj = buildSurface();
                 } break;
             case edge : {
                 m_xmlSpatial->readNextStartElement(); // readNext1
-                GM_Object* obj = buildEdge();
+                auto obj = buildEdge();
             } break;
             case composite_edge : {
                 m_xmlSpatial->readNextStartElement(); // readNext1
-                GM_Object* obj = buildCompositeEdge();
+                auto obj = buildCompositeEdge();
             } break;
             default:
                 readNext1(m_xmlSpatial);

@@ -28,17 +28,17 @@ void GM_Curve::addSegment(const GM_CurveSegment &seg)
     m_segments.push_back(seg);
 }
 
-GM_Point GM_Curve::startPoint() const
+const GM_Point &GM_Curve::startPoint() const
 {
     return m_startPoint;
 }
 
-GM_Point GM_Curve::endPoint() const
+const GM_Point &GM_Curve::endPoint() const
 {
     return m_endPoint;
 }
 
-QVector<GM_CurveSegment> GM_Curve::segments() const
+const QVector<GM_CurveSegment> &GM_Curve::segments() const
 {
     return m_segments;
 }

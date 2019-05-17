@@ -20,7 +20,7 @@ class FC_RoleType : public EnumType<FC_RoleTypes>
 {
   public:
     FC_RoleType();
-    FC_RoleType(std::string type);
+    FC_RoleType(const std::string& type);
     FC_RoleType(FC_RoleTypes type);
 
   private:

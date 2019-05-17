@@ -5,6 +5,7 @@ require 'Default'
 
 -- Main entry point for portrayal
 function PortrayalMain(featureIDs)
+	--require("jit.p").start(options, output)
 	Debug.StartPerformance('Lua Code - Total')
 
 	if not portrayalContext then
@@ -129,7 +130,7 @@ function PortrayalMain(featureIDs)
 	end
 
 	Debug.StopPerformance('Lua Code - Total')
-
+	--require("jit.p").stop()
 	return true
 end
 

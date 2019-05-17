@@ -1,9 +1,9 @@
 #include "fc_informationbinding.h"
 
-FC_InformationBinding::FC_InformationBinding(Multiplicity multiplicity
-        , FC_RoleType roleType
-        , FC_InformationAssociation associationRef
-        , InformationTypeCode informationType, FC_Role roleRef)
+FC_InformationBinding::FC_InformationBinding(const Multiplicity &multiplicity
+        , const FC_RoleType &roleType
+        , const FC_InformationAssociation &associationRef
+        , const InformationTypeCode &informationType, const FC_Role &roleRef)
     :m_multiplicity(multiplicity)
     ,m_roleType(roleType)
     ,m_associationRef(associationRef)
@@ -13,7 +13,7 @@ FC_InformationBinding::FC_InformationBinding(Multiplicity multiplicity
     m_association = associationRef.header().code();
 }
 
-Multiplicity FC_InformationBinding::multiplicity() const
+const Multiplicity &FC_InformationBinding::multiplicity() const
 {
     return m_multiplicity;
 }
@@ -23,7 +23,7 @@ void FC_InformationBinding::setMultiplicity(const Multiplicity &multiplicity)
     m_multiplicity = multiplicity;
 }
 
-FC_RoleType FC_InformationBinding::roleType() const
+const FC_RoleType &FC_InformationBinding::roleType() const
 {
     return m_roleType;
 }
@@ -33,7 +33,7 @@ void FC_InformationBinding::setRoleType(const FC_RoleType &roleType)
     m_roleType = roleType;
 }
 
-InformationAssociationCode FC_InformationBinding::association() const
+const InformationAssociationCode &FC_InformationBinding::association() const
 {
     return m_association;
 }
@@ -44,7 +44,7 @@ void FC_InformationBinding::setAssociationRef(const FC_InformationAssociation &a
     m_associationRef = associationRef;
 }
 
-InformationTypeCode FC_InformationBinding::informationType() const
+const InformationTypeCode &FC_InformationBinding::informationType() const
 {
     return m_informationType;
 }

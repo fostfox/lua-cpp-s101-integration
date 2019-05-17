@@ -10,25 +10,25 @@ class FC_InformationBinding
   public:
     FC_InformationBinding() = default;
     FC_InformationBinding(
-            Multiplicity multiplicity
-            ,FC_RoleType roleType
-            ,FC_InformationAssociation associationRef
-            ,InformationTypeCode informationType
-            ,FC_Role roleRef
+            const Multiplicity& multiplicity
+            ,const FC_RoleType& roleType
+            ,const FC_InformationAssociation& associationRef
+            ,const InformationTypeCode& informationType
+            ,const FC_Role& roleRef
             );
 
 
-    Multiplicity multiplicity() const;
+    const Multiplicity& multiplicity() const;
     void setMultiplicity(const Multiplicity &multiplicity);
 
-    FC_RoleType roleType() const;
+    const FC_RoleType& roleType() const;
     void setRoleType(const FC_RoleType &roleType);
 
-    InformationAssociationCode association() const;
+    const InformationAssociationCode& association() const;
     const FC_InformationAssociation& associationRef() const;
     void setAssociationRef(const FC_InformationAssociation &associationRef);
 
-    InformationTypeCode informationType() const;
+    const InformationTypeCode& informationType() const;
     void setInformationType(const InformationTypeCode &informationType);
 
     const FC_Role& roleRef() const;

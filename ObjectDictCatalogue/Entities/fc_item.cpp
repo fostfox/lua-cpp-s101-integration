@@ -1,11 +1,11 @@
 #include "fc_item.h"
 
 
-FC_Item::FC_Item(CharacterString name
-                 ,CharacterString defenition
-                 ,CharacterString code
-                 ,CharacterString remarks
-                 ,std::vector<CharacterString> alias)
+FC_Item::FC_Item(const CharacterString& name
+                 ,const CharacterString& defenition
+                 ,const CharacterString& code
+                 ,const CharacterString& remarks
+                 ,const std::vector<CharacterString>& alias)
     :m_name(name)
     ,m_defenition(defenition)
     ,m_code(code)
@@ -15,17 +15,17 @@ FC_Item::FC_Item(CharacterString name
 
 }
 
-CharacterString FC_Item::name() const
+const CharacterString& FC_Item::name() const
 {
     return m_name;
 }
 
-CharacterString FC_Item::defenition() const
+const CharacterString &FC_Item::defenition() const
 {
     return m_defenition;
 }
 
-CharacterString FC_Item::code() const
+const CharacterString &FC_Item::code() const
 {
     return m_code;
 }

@@ -44,7 +44,7 @@ class CD_FeatureUseType : public EnumType<CD_FeatureUseTypes>
   public:
     CD_FeatureUseType();
     CD_FeatureUseType(CD_FeatureUseTypes type);
-    CD_FeatureUseType(std::string type);
+    CD_FeatureUseType(const std::string& type);
 
   private:
     void initMaps();

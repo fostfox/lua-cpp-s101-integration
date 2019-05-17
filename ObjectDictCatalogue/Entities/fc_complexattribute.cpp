@@ -1,8 +1,7 @@
 #include "fc_complexattribute.h"
 
-FC_ComplexAttribute::FC_ComplexAttribute(
-        FC_Attribute header
-        , QVector<FC_AttributeBinding> attributeBindings)
+FC_ComplexAttribute::FC_ComplexAttribute(const FC_Attribute &header
+        , const QVector<FC_AttributeBinding> &attributeBindings)
     :m_header(header)
      ,m_attributeBindings(attributeBindings)
 {

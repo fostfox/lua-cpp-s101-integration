@@ -22,7 +22,7 @@ Boolean FC_AttributeBinding::sequentional() const
     return m_sequentional;
 }
 
-std::vector<ValueEnumAttrType> FC_AttributeBinding::permittedValues() const
+const std::vector<ValueEnumAttrType> &FC_AttributeBinding::permittedValues() const
 {
     return m_permittedValues;
 }

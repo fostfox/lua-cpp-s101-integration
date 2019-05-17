@@ -14,8 +14,8 @@ public:
     GM_Surface(const Fe2spRef &exteriorRing, const QVector<Fe2spRef> &interiorRings);
     ~GM_Surface() = default;
 
-    Fe2spRef exteriorRing() const;
-    QVector<Fe2spRef> interiorRings() const;
+    const Fe2spRef& exteriorRing() const;
+    const QVector<Fe2spRef>& interiorRings() const;
 
     void setExteriorRing(const Fe2spRef &exter);
     void setInteriorRings(const QVector<Fe2spRef> &inter);

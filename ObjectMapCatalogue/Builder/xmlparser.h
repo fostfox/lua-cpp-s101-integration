@@ -26,16 +26,18 @@ class FeatureMapXMLBuilder
 {
 public:
     FeatureMapXMLBuilder(QFile * const inputFile);
+    ~FeatureMapXMLBuilder();
+
 
     FeatureMapController build(bool onlyFullFeatures = false);
     std::vector<Feature> parse2();
-    std::map<int, GM_Object *> parseSpatials();
+    const std::map<int, std::shared_ptr<GM_Object> >& parseSpatials();
     bool isStartElementAndAllowed(std::string tag);
 
-    GM_Object *buildIsolatedPoint();
-    GM_Object *buildSurface();
-    GM_Object *buildCompositeEdge();
-    GM_Object *buildEdge();
+    std::shared_ptr<GM_Object> buildIsolatedPoint();
+    std::shared_ptr<GM_Object> buildSurface();
+    std::shared_ptr<GM_Object> buildCompositeEdge();
+    std::shared_ptr<GM_Object> buildEdge();
     Fe2spRef buildFe2Sp();
     Fe2spRef buildExteriorRing();
 
@@ -48,5 +50,5 @@ private:
 
 private:
     std::vector<std::string> getListAttrByString(std::string strVal);
-    std::map<int, GM_Object *> m_SpId_to_SpatialObject;
+    std::map<int, std::shared_ptr<GM_Object>> m_SpId_to_SpatialObject;
 };

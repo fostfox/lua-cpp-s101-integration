@@ -1,12 +1,11 @@
 #include "fc_featuretype.h"
 
-FC_FeatureType::FC_FeatureType(
-        const FC_Item &header
-        , CD_FeatureUseType featureUseType
-        , QVector<FC_SpatialPrimitiveType> permittedPrimitives
-        , QVector<FC_AttributeBinding> attributeBindings
-        , QVector<FC_FeatureBinding> featureBindings
-        , QVector<FC_InformationBinding> informationBindings
+FC_FeatureType::FC_FeatureType(const FC_Item &header
+        , const CD_FeatureUseType &featureUseType
+        , const QVector<FC_SpatialPrimitiveType> &permittedPrimitives
+        , const QVector<FC_AttributeBinding> &attributeBindings
+        , const QVector<FC_FeatureBinding> &featureBindings
+        , const QVector<FC_InformationBinding> &informationBindings
         )
     :m_header(header)
     ,m_featureUseType(featureUseType)

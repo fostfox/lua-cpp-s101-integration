@@ -3,25 +3,25 @@
 
 #include <optional>
 
-using std::optional;
+//using std::optional;
 
 
 
-GM_Point::GM_Point(std::string x, std::string y)
+GM_Point::GM_Point(const std::string &x, const std::string &y)
     :m_x(x), m_y(y)
 {
-    m_z = new std::optional<std::string>{};
 }
 
-GM_Point::GM_Point(std::string x, std::string y, std::string z)
+GM_Point::GM_Point(const std::string &x, std::string y, const std::string &z)
     :m_x(x), m_y(y)
 {
-    m_z = new std::optional<std::string>{z};
+    m_z = z;
 }
+
 
 bool GM_Point::hasZ() const
 {
-    return m_z->has_value();
+    return m_z.has_value();
 }
 
 GM_Object::Type GM_Point::getType() const
@@ -30,17 +30,17 @@ GM_Object::Type GM_Point::getType() const
 }
 
 
-std::string GM_Point::x() const
+const std::string& GM_Point::x() const
 {
     return m_x;
 }
 
-std::string GM_Point::y() const
+const std::string& GM_Point::y() const
 {
     return m_y;
 }
 
-std::string GM_Point::z() const
+const std::string &GM_Point::z() const
 {
-    return m_z->value();
+    return m_z.value();
 }

@@ -8,8 +8,8 @@ class Attribute
 public:
     enum class AttrTypes { INT, DOUBLE, STRING, LIST };
     Attribute();
-    Attribute(int code, std::string alias, AttrTypes type,
-              std::vector<std::string> value);
+    Attribute(int code, const std::string &alias, const AttrTypes &type,
+              const std::vector<std::string> &value);
     const int& code() const;
     const std::string& alias() const;
     const AttrTypes& type() const;
@@ -21,8 +21,8 @@ public:
 
 private:
     int m_code;
-    std::string m_alias;
     AttrTypes m_type;
+    std::string m_alias;
     std::vector<std::string> m_value;
 };
 
@@ -30,21 +30,21 @@ class ComplexAttribute
 {
 public:
     ComplexAttribute();
-    ComplexAttribute(int code, std::string alias, const std::vector<Attribute> &attrs);
+    ComplexAttribute(int code, const std::string &alias, const std::vector<Attribute> &attrs);
     int code() const;
     std::string alias() const;
-    std::vector<Attribute> attibutes() const;
+    const std::vector<Attribute> &attibutes() const;
     const Attribute &getAttributeByCode(std::string code) const;
     void setCode(int code);
-    void setAlias(std::string alias);
-    void addAttribute(Attribute attr);
+    void setAlias(const std::string &alias);
+    void addAttribute(const Attribute &attr);
 
     bool hasAttribute(const std::string &code) const;
 private:
-    int m_code;
-    std::string m_alias;
-    std::vector<Attribute> m_attrs;
     std::unordered_map<std::string, Attribute> m_code_to_attr;
+    std::vector<Attribute> m_attrs;
+    std::string m_alias;
+    int m_code;
 };
 
 class Fe2spRef
@@ -95,24 +95,24 @@ private:
 class Feature
 {
 public:
-    Feature(int m_id, int m_class, std::string alias
-           , std::vector<Attribute> m_intAttrs
-           , std::vector<ComplexAttribute> m_complexAttrs
-           , Fe2spRef fe2sp
+    Feature(int m_id, int m_class, const std::string &alias
+           , const std::vector<Attribute> &m_intAttrs
+           , const std::vector<ComplexAttribute> &m_complexAttrs
+           , const Fe2spRef &fe2sp
            /*, IsolatedPoint m_isolatedPoint*/);
     Feature();
 
     int id() const;
     int classId() const;
     const std::string &classAlias() const;
-    std::vector<Attribute> intAttrs() const;
-    std::vector<ComplexAttribute> complexAttrs() const;
-    IsolatedPoint isolatedPoint() const;
+    const std::vector<Attribute> &intAttrs() const;
+    const std::vector<ComplexAttribute>& complexAttrs() const;
+    const IsolatedPoint &isolatedPoint() const;
     const Fe2spRef &fe2spRef() const;
 
     void setId(int id);
     void setClass(int classId);
-    void setClassAlias(std::string classAlias);
+    void setClassAlias(const std::string &classAlias);
     void setIntAttrs(std::vector<Attribute> intAttrs);
     void setComplexAttrs(const std::vector<ComplexAttribute> &complexAttrs);
     void setIsolatedPoint(const IsolatedPoint &isolatedPoint);

@@ -16,7 +16,7 @@ InterpolationType::InterpolationType(InterpolationTypes t)
     initMaps();
 }
 
-InterpolationType::InterpolationType(std::string t)
+InterpolationType::InterpolationType(const std::string &t)
     :EnumType<Type>(t)
 {
     initMaps();
@@ -54,12 +54,12 @@ void GM_CurveSegment::addControlPoint(const GM_Point &controlPoint)
     m_controlPoints.push_back(controlPoint);
 }
 
-QVector<GM_Point> GM_CurveSegment::controlPoints() const
+const QVector<GM_Point>& GM_CurveSegment::controlPoints() const
 {
     return m_controlPoints;
 }
 
-InterpolationType GM_CurveSegment::interpolation() const
+const InterpolationType &GM_CurveSegment::interpolation() const
 {
     return m_interpolation;
 }

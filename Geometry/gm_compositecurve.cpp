@@ -11,7 +11,7 @@ void GM_CompositeCurve::addCurveAssotiation(const Fe2spRef &curveAssotiation)
     m_curveAssociations.push_back(curveAssotiation);
 }
 
-QVector<Fe2spRef> GM_CompositeCurve::curveAssociations() const
+const QVector<Fe2spRef>& GM_CompositeCurve::curveAssociations() const
 {
     return m_curveAssociations;
 }

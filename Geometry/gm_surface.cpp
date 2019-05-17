@@ -13,12 +13,12 @@ GM_Surface::GM_Surface(const Fe2spRef &exteriorRing, const QVector<Fe2spRef> &in
 
 }
 
-Fe2spRef GM_Surface::exteriorRing() const
+const Fe2spRef &GM_Surface::exteriorRing() const
 {
     return m_exteriorRing;
 }
 
-QVector<Fe2spRef> GM_Surface::interiorRings() const
+const QVector<Fe2spRef> &GM_Surface::interiorRings() const
 {
     return m_interiorRings;
 }

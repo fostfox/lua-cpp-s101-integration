@@ -7,8 +7,8 @@ Attribute::Attribute()
 
 }
 
-Attribute::Attribute(int code, std::string alias, Attribute::AttrTypes type, std::vector<std::string> value)
-    :m_code(code), m_alias(alias), m_type(type), m_value(value)
+Attribute::Attribute(int code, const std::string &alias, const Attribute::AttrTypes &type, const std::vector<std::string> &value)
+    :m_code(code), m_type(type), m_alias(alias),m_value(value)
 {
 
 }
@@ -162,10 +162,10 @@ void IsolatedPoint::setLon(float lon)
 
 Feature::Feature(int id
                 , int classId
-                , std::string alias
-                , std::vector<Attribute> intAttrs
-                , std::vector<ComplexAttribute> complexAttrs
-                , Fe2spRef fe2sp
+                ,const  std::string &alias
+                , const std::vector<Attribute> &intAttrs
+                , const std::vector<ComplexAttribute> &complexAttrs
+                , const Fe2spRef &fe2sp
                 /*, IsolatedPoint isolatedPoint*/)
     : m_id(id)
     , m_class(classId)
@@ -196,12 +196,12 @@ const std::string& Feature::classAlias() const{
     return m_classAlias;
 }
 
-std::vector<Attribute> Feature::intAttrs() const
+const std::vector<Attribute>& Feature::intAttrs() const
 {
     return m_intAttrs;
 }
 
-IsolatedPoint Feature::isolatedPoint() const
+const IsolatedPoint &Feature::isolatedPoint() const
 {
     return m_isolatedPoint;
 }
@@ -283,12 +283,12 @@ void Feature::setClass(int classId)
     m_class = classId;
 }
 
-void Feature::setClassAlias(std::string classAlias)
+void Feature::setClassAlias(const std::string &classAlias)
 {
     m_classAlias = classAlias;
 }
 
-std::vector<ComplexAttribute> Feature::complexAttrs() const
+const std::vector<ComplexAttribute> &Feature::complexAttrs() const
 {
     return m_complexAttrs;
 }
@@ -303,10 +303,10 @@ ComplexAttribute::ComplexAttribute()
 
 }
 
-ComplexAttribute::ComplexAttribute(int code, std::string alias, const std::vector<Attribute> &attrs)
-    : m_code(code), m_alias(alias), m_attrs(attrs)
+ComplexAttribute::ComplexAttribute(int code, const std::string &alias, const std::vector<Attribute> &attrs)
+    :   m_attrs(attrs), m_alias(alias), m_code(code)
 {
-    for (auto attr : attrs)
+    for (const auto &attr : attrs)
         m_code_to_attr.insert(std::make_pair(attr.alias(), attr));
 }
 
@@ -320,7 +320,7 @@ std::string ComplexAttribute::alias() const
     return m_alias;
 }
 
-std::vector<Attribute> ComplexAttribute::attibutes() const
+const std::vector<Attribute>& ComplexAttribute::attibutes() const
 {
     return m_attrs;
 }
@@ -338,12 +338,12 @@ void ComplexAttribute::setCode(int code)
     m_code = code;
 }
 
-void ComplexAttribute::setAlias(std::string alias)
+void ComplexAttribute::setAlias(const std::string &alias)
 {
     m_alias = alias;
 }
 
-void ComplexAttribute::addAttribute(Attribute attr)
+void ComplexAttribute::addAttribute(const Attribute &attr)
 {
     m_attrs.push_back(attr);
     m_code_to_attr.insert(std::make_pair(attr.alias(), attr));
