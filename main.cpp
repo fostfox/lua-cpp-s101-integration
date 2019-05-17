@@ -1,4 +1,5 @@
 #include "help_init.h"
+#include <iostream>
 
 int main()
 {
@@ -37,7 +38,13 @@ int main()
         QFile mapFile(filenames::MAP_SET + fileNames[i]);
         if (!isExistsEndOpen(errorStream, mapFile, QIODevice::ReadOnly)) { return -1; }
         FeatureMapXMLBuilder mapBuilder(&mapFile);
-        auto mapController = mapBuilder.build(true);
+        FeatureMapController mapController;
+        try {
+            mapController = mapBuilder.build(true);
+        }
+        catch (QString mapName){
+            std::cerr << mapName.toStdString();
+        }
         mapFile.close();
         
         LuaRuleMashine luaPortoyal(filenames::LUA_MAIN, dictController, mapController, contextParamCtrl);
