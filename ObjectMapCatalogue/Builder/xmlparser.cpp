@@ -364,7 +364,7 @@ std::vector<Feature> FeatureMapXMLBuilder::parse2()
         #ifdef DEBUG_OUT_ENABLE
             qDebug(("Some error: " + m_xmlReader->errorString()).toLocal8Bit().data());
         #endif
-        throw "Some error";
+        throw m_inputFile->fileName();
     }
     return features;
 }
