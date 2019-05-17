@@ -44,6 +44,8 @@ int main()
         }
         catch (QString mapName){
             std::cerr << mapName.toStdString();
+            outElapsedTimes << mapName << ";" << "error";
+            elapsedTimesFile.close();
         }
         mapFile.close();
         
