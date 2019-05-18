@@ -5,11 +5,20 @@ These functions are called by the host program.
 
 portrayalContext = nil
 
+local featureCache = {}
+local informationCache = {}
+spatialCache = {}
+
+
 function PortrayalInitializeContextParameters(contextParameters)
 	--Debug.StartPerformance('Lua Code - Total')
 	--CheckType(contextParameters, 'array:ContextParameter', 2)
 
 	--Debug.StartPerformance('Lua Code - PortrayalInitializeContextParameters')
+
+	featureCache = {}
+	informationCache = {}
+	spatialCache = {}
 
 	portrayalContext = PortrayalModel.CreatePortrayalContext()
 
@@ -21,6 +30,7 @@ function PortrayalInitializeContextParameters(contextParameters)
 		pccp[cp.Name] = cp.DefaultValue
 		pccp._parameterTypes[cp.Name] = cp.ParameterType
 	end
+
 
 	--Debug.StopPerformance('Lua Code - PortrayalInitializeContextParameters')
 	--Debug.StopPerformance('Lua Code - Total')
@@ -575,10 +585,6 @@ end
 --
 --
 --
-
-local featureCache = {}
-local informationCache = {}
-spatialCache = {}
 
 function CreateAttributeBinding(attributeCode, multiplicityLower, multiplicityUpper, sequential, permittedValues)
 	--CheckType(attributeCode, 'string', 2)
