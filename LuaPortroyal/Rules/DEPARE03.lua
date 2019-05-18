@@ -9,7 +9,7 @@ local sdMinus1 = CreateScaledDecimal(-1, 0)
 
 -- Main entry point for CSP.
 function DEPARE03(feature, featurePortrayal, contextParameters)
-	Debug.StartPerformance('Lua Code - DEPARE03')
+	--Debug.StartPerformance('Lua Code - DEPARE03')
 
 	local depthRangeMinimumValue = feature.depthRangeMinimumValue or -1.0
 	local depthRangeMaximumValue = feature.depthRangeMaximumValue
@@ -26,11 +26,11 @@ function DEPARE03(feature, featurePortrayal, contextParameters)
 		end
 	end
 
-	Debug.StopPerformance('Lua Code - DEPARE03')
-	Debug.StartPerformance('Lua Code - DEPARE03 GetFlattenedSpatialAssociations')
+	--Debug.StopPerformance('Lua Code - DEPARE03')
+	--Debug.StartPerformance('Lua Code - DEPARE03 GetFlattenedSpatialAssociations')
 	for curveAssociation in feature:GetFlattenedSpatialAssociations() do
-		Debug.StopPerformance('Lua Code - DEPARE03 GetFlattenedSpatialAssociations')
-		Debug.StartPerformance('Lua Code - DEPARE03')
+		--Debug.StopPerformance('Lua Code - DEPARE03 GetFlattenedSpatialAssociations')
+		--Debug.StartPerformance('Lua Code - DEPARE03')
 		local associatedFeatures = curveAssociation.AssociatedFeatures
 
 		local sharedFeatures = {}
@@ -141,5 +141,5 @@ function DEPARE03(feature, featurePortrayal, contextParameters)
 		end
 	end
 
-	Debug.StopPerformance('Lua Code - DEPARE03')
+	--Debug.StopPerformance('Lua Code - DEPARE03')
 end

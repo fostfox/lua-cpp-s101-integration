@@ -6,7 +6,7 @@ require 'QUALIN02'
 
 -- Main entry point for CSP.
 function QUAPOS01(feature, featurePortrayal, contextParameters)
-	Debug.StartPerformance('Lua Code - QUAPOS01')
+	--Debug.StartPerformance('Lua Code - QUAPOS01')
 
 	if feature.PrimitiveType == PrimitiveType.Curve then
 		QUALIN02(feature, featurePortrayal, contextParameters)
@@ -18,5 +18,5 @@ function QUAPOS01(feature, featurePortrayal, contextParameters)
 		end
 	end
 
-	Debug.StopPerformance('Lua Code - QUAPOS01')
+	--Debug.StopPerformance('Lua Code - QUAPOS01')
 end

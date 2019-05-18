@@ -2,7 +2,7 @@
 
 -- Main entry point for CSP.
 function RESARE04(feature, featurePortrayal, contextParameters)
-	Debug.StartPerformance('Lua Code - RESARE04')
+	--Debug.StartPerformance('Lua Code - RESARE04')
 
 	local restriction = feature.restriction
 	local categoryOfRestrictedArea = feature.categoryOfRestrictedArea
@@ -143,5 +143,5 @@ function RESARE04(feature, featurePortrayal, contextParameters)
 		end
 	end
 
-	Debug.StopPerformance('Lua Code - RESARE04')
+	--Debug.StopPerformance('Lua Code - RESARE04')
 end

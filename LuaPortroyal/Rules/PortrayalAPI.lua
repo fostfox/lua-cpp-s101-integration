@@ -6,10 +6,10 @@ These functions are called by the host program.
 portrayalContext = nil
 
 function PortrayalInitializeContextParameters(contextParameters)
-	Debug.StartPerformance('Lua Code - Total')
-	CheckType(contextParameters, 'array:ContextParameter', 2)
+	--Debug.StartPerformance('Lua Code - Total')
+	--CheckType(contextParameters, 'array:ContextParameter', 2)
 
-	Debug.StartPerformance('Lua Code - PortrayalInitializeContextParameters')
+	--Debug.StartPerformance('Lua Code - PortrayalInitializeContextParameters')
 
 	portrayalContext = PortrayalModel.CreatePortrayalContext()
 
@@ -22,13 +22,13 @@ function PortrayalInitializeContextParameters(contextParameters)
 		pccp._parameterTypes[cp.Name] = cp.ParameterType
 	end
 
-	Debug.StopPerformance('Lua Code - PortrayalInitializeContextParameters')
-	Debug.StopPerformance('Lua Code - Total')
+	--Debug.StopPerformance('Lua Code - PortrayalInitializeContextParameters')
+	--Debug.StopPerformance('Lua Code - Total')
 end
 
 function PortrayalCreateContextParameter(contextParameterName, parameterType, defaultValue)
-	CheckType(contextParameterName, 'string', 2)
-	CheckType(parameterType, 'string', 2)
+	--CheckType(contextParameterName, 'string', 2)
+	--CheckType(parameterType, 'string', 2)
 
 	if parameterType ~= 'boolean' and parameterType ~= 'integer' and parameterType ~= 'real' and parameterType ~= 'text' and parameterType ~= 'date' then
 		error('Invalid parameter type.')
@@ -38,9 +38,9 @@ function PortrayalCreateContextParameter(contextParameterName, parameterType, de
 end
 
 function PortrayalSetContextParameter(contextParameterName, value)
-	Debug.StartPerformance('Lua Code - Total')
-	CheckType(contextParameterName, 'string', 2)
-	CheckType(value, 'string', 2)
+	--Debug.StartPerformance('Lua Code - Total')
+	--CheckType(contextParameterName, 'string', 2)
+	--CheckType(value, 'string', 2)
 
 	if not portrayalContext then
 		error('Portrayal context not initialized.')
@@ -50,7 +50,7 @@ function PortrayalSetContextParameter(contextParameterName, value)
 
 	portrayalContext.ContextParameters[contextParameterName] = ConvertEncodedValue(pccp._parameterTypes[contextParameterName], value)
 
-	Debug.StopPerformance('Lua Code - Total')
+	--Debug.StopPerformance('Lua Code - Total')
 end
 
 local nilAttribute = {}
@@ -109,7 +109,7 @@ local function LookupAttributeValue(container, attributeCode, HostGetSimpleAttri
 		error('Not implemented')
 	end
 
-	--Debug.Break()
+	----Debug.Break()
 
 	if not containerTypeInfo.AttributeBindings[attributeCode] then
 		if nilIfMissing then
@@ -129,9 +129,9 @@ local function LookupAttributeValue(container, attributeCode, HostGetSimpleAttri
 	end
 
 	if complexAttributeTypeInfo then
-		Debug.StopPerformance('Lua Code - Total')
+		--Debug.StopPerformance('Lua Code - Total')
 		local attributeCount = HostGetComplexAttributeCount(container.ID, attributePath, attributeCode)
-		Debug.StartPerformance('Lua Code - Total')
+		--Debug.StartPerformance('Lua Code - Total')
 
 		if containerTypeInfo.AttributeBindings[attributeCode].MultiplicityUpper == 1 then
 			-- Single valued
@@ -157,11 +157,11 @@ local function LookupAttributeValue(container, attributeCode, HostGetSimpleAttri
 			container[attributeCode] = values
 		end
 	else
-		Debug.StopPerformance('Lua Code - Total')
+		--Debug.StopPerformance('Lua Code - Total')
 		local values = HostGetSimpleAttribute(container.ID, attributePath, attributeCode)
-		Debug.StartPerformance('Lua Code - Total')
+		--Debug.StartPerformance('Lua Code - Total')
 
-		--Debug.Break()
+		----Debug.Break()
 
 		if containerTypeInfo.AttributeBindings[attributeCode].MultiplicityUpper == 1 then
 			-- Single valued
@@ -241,11 +241,11 @@ Interpolation =
 --
 
 function CreateItem(code, name, definition, remarks, alias)
-	CheckType(code, 'string')
-	CheckType(name, 'string')
-	CheckType(definition, 'string')
-	CheckTypeOrNil(remarks, 'string')
-	CheckTypeOrNil(alias, 'array:string')
+	--CheckType(code, 'string')
+	--CheckType(name, 'string')
+	--CheckType(definition, 'string')
+	--CheckTypeOrNil(remarks, 'string')
+	--CheckTypeOrNil(alias, 'array:string')
 
 	return { Type = 'Item', Code = code, Name = name, Definition = definition, Remarks = remarks, Alias  = alias }
 end
@@ -255,9 +255,9 @@ end
 --
 
 local function CreateNamedTypeExact(item, abstract, attributeBindings)
-	CheckType(item, 'Item', 2)
-	CheckType(abstract, 'boolean', 2)
-	CheckType(attributeBindings, 'array:AttributeBinding', 2)
+	--CheckType(item, 'Item', 2)
+	--CheckType(abstract, 'boolean', 2)
+	--CheckType(attributeBindings, 'array:AttributeBinding', 2)
 
 	for _, ab in ipairs(attributeBindings) do
 		attributeBindings[ab.AttributeCode] = ab
@@ -283,8 +283,8 @@ end
 --
 
 local function CreateObjectTypeExact(namedType, informationBindings)
-	CheckType(namedType, 'NamedType', 2)
-	CheckType(informationBindings, 'array:InformationBinding', 2)
+	--CheckType(namedType, 'NamedType', 2)
+	--CheckType(informationBindings, 'array:InformationBinding', 2)
 
 	return DerivedType{ Type = 'ObjectType', Base = namedType, InformationBindings = informationBindings }
 end
@@ -312,9 +312,9 @@ end
 --
 
 local function CreateInformationTypeExact(objectType, superType, subType)
-	CheckType(objectType, 'ObjectType', 2)
-	CheckTypeOrNil(superType, 'InformationType', 2)
-	CheckTypeOrNil(subType, 'array:InformationType', 2)
+	--CheckType(objectType, 'ObjectType', 2)
+	--CheckTypeOrNil(superType, 'InformationType', 2)
+	--CheckTypeOrNil(subType, 'array:InformationType', 2)
 
 	return DerivedType{ Type = 'InformationType', Base = objectType, SuperType = superType, SubType = subType }
 end
@@ -330,8 +330,8 @@ function CreateInformationType(...)
 		if ttype == 'ObjectType' then
 			return CreateInformationTypeExact(unpack(params, 1, 3))
 		else
-			Debug.Trace("Break in CreateInformationType")
-			Debug.Break()
+			--Debug.Trace("Break in CreateInformationType")
+			--Debug.Break()
 		end
 	else
 		return CreateInformationTypeExact(CreateObjectType(unpack(params, 1, 8)), unpack(params, 9, 10))
@@ -343,12 +343,12 @@ end
 --
 
 local function CreateFeatureTypeExact(objectType, featureUseType, permittedPrimitives, featureBindings, superType, subType)
-	CheckType(objectType, 'ObjectType', 2)
-	CheckType(featureUseType, 'string', 2)
-	CheckType(permittedPrimitives, 'array:string', 2)
-	CheckType(featureBindings, 'array:FeatureBinding', 2)
-	CheckTypeOrNil(superType, 'FeatureType', 2)
-	CheckTypeOrNil(subType, 'array:FeatureType', 2)
+	--CheckType(objectType, 'ObjectType', 2)
+	--CheckType(featureUseType, 'string', 2)
+	--CheckType(permittedPrimitives, 'array:string', 2)
+	--CheckType(featureBindings, 'array:FeatureBinding', 2)
+	--CheckTypeOrNil(superType, 'FeatureType', 2)
+	--CheckTypeOrNil(subType, 'array:FeatureType', 2)
 
 	return DerivedType{ Type = 'FeatureType', Base = objectType, FeatureUseType = featureUseType, PermittedPrimitives = permittedPrimitives, FeatureBindings = featureBindings, SuperType = superType, SubType = subType }
 end
@@ -364,8 +364,8 @@ function CreateFeatureType(...)
 		if ttype == 'ObjectType' then
 			return CreateFeatureTypeExact(unpack(params, 1, 6))
 		else
-			Debug.Trace("Break in CreateFeatureType")
-			Debug.Break()
+			--Debug.Trace("Break in CreateFeatureType")
+			--Debug.Break()
 		end
 	else
 		return CreateFeatureTypeExact(CreateObjectType(unpack(params, 1, 8)), unpack(params, 9, 13))
@@ -377,10 +377,10 @@ end
 --
 
 local function CreateInformationAssociationExact(namedType, roles, superType, subType)
-	CheckType(namedType, 'NamedType', 2)
-	CheckType(roles, 'array:Role', 2)
-	CheckTypeOrNil(superType, 'InformationAssociation', 2)
-	CheckTypeOrNil(subType, 'array:InformationAssociation', 2)
+	--CheckType(namedType, 'NamedType', 2)
+	--CheckType(roles, 'array:Role', 2)
+	--CheckTypeOrNil(superType, 'InformationAssociation', 2)
+	--CheckTypeOrNil(subType, 'array:InformationAssociation', 2)
 
 	return DerivedType{ Type = 'InformationAssociation', Base = namedType, Roles = roles, SuperType = superType, SubType = subType }
 end
@@ -394,11 +394,11 @@ function CreateInformationAssociation(...)
 		local ttype = params[1].Type
 
 		if ttype == 'NamedType' then
-			--Debug.Break() // < Is this break really needed? 
+			----Debug.Break() // < Is this break really needed? 
 			return CreateInformationAssociationExact(unpack(params, 1, 4))
 		else
-			Debug.Trace("Break in CreateInformationAssociation")
-			Debug.Break()
+			--Debug.Trace("Break in CreateInformationAssociation")
+			--Debug.Break()
 		end
 	else
 		return CreateInformationAssociationExact(CreateNamedType(unpack(params, 1, 7)), unpack(params, 8, 10))
@@ -410,10 +410,10 @@ end
 --
 
 local function CreateFeatureAssociationExact(namedType, roles, superType, subType)
-	CheckType(namedType, 'NamedType', 2)
-	CheckType(roles, 'array:Role', 2)
-	CheckTypeOrNil(superType, 'FeatureAssociation', 2)
-	CheckTypeOrNil(subType, 'array:FeatureAssociation', 2)
+	--CheckType(namedType, 'NamedType', 2)
+	--CheckType(roles, 'array:Role', 2)
+	--CheckTypeOrNil(superType, 'FeatureAssociation', 2)
+	--CheckTypeOrNil(subType, 'array:FeatureAssociation', 2)
 
 	return DerivedType{ Type = 'FeatureAssociation', Base = namedType, Roles = roles, SuperType = superType, SubType = subType }
 end
@@ -427,11 +427,11 @@ function CreateFeatureAssociation(...)
 		local ttype = params[1].Type
 
 		if ttype == 'NamedType' then
-			-- Debug.Break() // < Is this break really needed? 
+			-- --Debug.Break() // < Is this break really needed? 
 			return CreateFeatureAssociationExact(unpack(params, 1, 4))
 		else
-			Debug.Trace("CreateFeatureAssociation")
-			Debug.Break()
+			--Debug.Trace("CreateFeatureAssociation")
+			--Debug.Break()
 		end
 	else
 		return CreateFeatureAssociationExact(CreateNamedType(unpack(params, 1, 7)), unpack(params, 8, 10))
@@ -443,7 +443,7 @@ end
 --
 
 local function CreateRoleExact(item)
-	CheckType(item, 'Item', 2)
+	--CheckType(item, 'Item', 2)
 
 	return DerivedType{ Type = 'Role', Base = item }
 end
@@ -465,12 +465,12 @@ end
 --
 
 local function CreateSimpleAttributeExact(item, valueType, uom, quantitySpecification, attributeContraints, listedValues)
-	CheckType(item, 'Item', 2)
-	CheckType(valueType, 'string', 2)
-	CheckTypeOrNil(uom, 'string', 2)
-	CheckTypeOrNil(quantitySpecification, 'string', 2)
-	CheckTypeOrNil(attributeContraints, 'AttributeConstraints', 2)
-	CheckType(listedValues, 'array:ListedValue', 2)
+	--CheckType(item, 'Item', 2)
+	--CheckType(valueType, 'string', 2)
+	--CheckTypeOrNil(uom, 'string', 2)
+	--CheckTypeOrNil(quantitySpecification, 'string', 2)
+	--CheckTypeOrNil(attributeContraints, 'AttributeConstraints', 2)
+	--CheckType(listedValues, 'array:ListedValue', 2)
 
 	return DerivedType{ Type = 'SimpleAttribute', Base = item, ValueType = valueType, Uom = uom, QuantitySpecification = quantitySpecification, AttributeContraints = attributeContraints, ListedValues = listedValues }
 end
@@ -492,8 +492,8 @@ end
 --
 
 local function CreateComplexAttributeExact(item, subAttributeBindings)
-	CheckType(item, 'Item', 2)
-	CheckType(subAttributeBindings, 'array:AttributeBinding', 2)
+	--CheckType(item, 'Item', 2)
+	--CheckType(subAttributeBindings, 'array:AttributeBinding', 2)
 
 	for _, ab in ipairs(subAttributeBindings) do
 		subAttributeBindings[ab.AttributeCode] = ab
@@ -519,11 +519,11 @@ end
 --
 
 function CreateListedValue(label, definition, code, remarks, aliases)
-	CheckType(label, 'string', 2)
-	CheckType(definition, 'string', 2)
-	CheckType(code, 'number', 2)
-	CheckTypeOrNil(remarks, 'string', 2)
-	CheckTypeOrNil(aliases, 'array:string', 2)
+	--CheckType(label, 'string', 2)
+	--CheckType(definition, 'string', 2)
+	--CheckType(code, 'number', 2)
+	--CheckTypeOrNil(remarks, 'string', 2)
+	--CheckTypeOrNil(aliases, 'array:string', 2)
 
 	return { Type = 'ListedValue', Label = label, Definition = definition, Code = code, Remarks = remarks, Aliases = aliases }
 end
@@ -533,11 +533,11 @@ end
 --
 
 function CreateAttributeBinding(attributeCode, lowerMultiplicity, upperMultiplicity, sequential, permittedValues)
-	CheckType(attributeCode, 'string', 2)
-	CheckType(lowerMultiplicity, 'number', 2)
-	CheckTypeOrNil(upperMultiplicity, 'number', 2)
-	CheckType(sequential, 'boolean', 2)
-	CheckType(permittedValues, 'array:number', 2)
+	--CheckType(attributeCode, 'string', 2)
+	--CheckType(lowerMultiplicity, 'number', 2)
+	--CheckTypeOrNil(upperMultiplicity, 'number', 2)
+	--CheckType(sequential, 'boolean', 2)
+	--CheckType(permittedValues, 'array:number', 2)
 
 	return { Type = 'AttributeBinding', AttributeCode = attributeCode, LowerMultiplicity = lowerMultiplicity, UpperMultiplicity = upperMultiplicity, Sequential = sequential, PermittedValues = permittedValues }
 end
@@ -547,12 +547,12 @@ end
 --
 
 function CreateInformationBinding(informationTypeCode, lowerMultiplicity, upperMultiplicity, roleType, role, association)
-	CheckType(informationTypeCode, 'string', 2)
-	CheckType(lowerMultiplicity, 'number', 2)
-	CheckTypeOrNil(upperMultiplicity, 'number', 2)
-	CheckType(roleType, 'string', 2)
-	CheckTypeOrNil(role, 'Role', 2)
-	CheckType(association, 'InformationAssociation', 2)
+	--CheckType(informationTypeCode, 'string', 2)
+	--CheckType(lowerMultiplicity, 'number', 2)
+	--CheckTypeOrNil(upperMultiplicity, 'number', 2)
+	--CheckType(roleType, 'string', 2)
+	--CheckTypeOrNil(role, 'Role', 2)
+	--CheckType(association, 'InformationAssociation', 2)
 
 	return { Type = 'InformationBinding', InformationTypeCode = informationTypeCode, LowerMultiplicity = lowerMultiplicity, UpperMultiplicity = upperMultiplicity, RoleType = roleType, Role = role, Association = association }
 end
@@ -562,12 +562,12 @@ end
 --
 
 function CreateFeatureBinding(featureTypeCode, lowerMultiplicity, upperMultiplicity, roleType, role, association)
-	CheckType(featureTypeCode, 'string', 2)
-	CheckType(lowerMultiplicity, 'number', 2)
-	CheckTypeOrNil(upperMultiplicity, 'number', 2)
-	CheckType(roleType, 'string', 2)
-	CheckType(role, 'Role', 2)
-	CheckType(association, 'FeatureAssociation', 2)
+	--CheckType(featureTypeCode, 'string', 2)
+	--CheckType(lowerMultiplicity, 'number', 2)
+	--CheckTypeOrNil(upperMultiplicity, 'number', 2)
+	--CheckType(roleType, 'string', 2)
+	--CheckType(role, 'Role', 2)
+	--CheckType(association, 'FeatureAssociation', 2)
 
 	return { Type = 'FeatureBinding', FeatureTypeCode = featureTypeCode, LowerMultiplicity = lowerMultiplicity, UpperMultiplicity = upperMultiplicity, RoleType = roleType, Role = role, Association = association }
 end
@@ -581,17 +581,17 @@ local informationCache = {}
 spatialCache = {}
 
 function CreateAttributeBinding(attributeCode, multiplicityLower, multiplicityUpper, sequential, permittedValues)
-	CheckType(attributeCode, 'string', 2)
-	CheckType(multiplicityLower, 'number', 2)
-	CheckTypeOrNil(multiplicityLower, 'number', 2)
-	CheckType(sequential, 'boolean', 2)
-	CheckTypeOrNil(permittedValues, 'array:number', 2)
+	--CheckType(attributeCode, 'string', 2)
+	--CheckType(multiplicityLower, 'number', 2)
+	--CheckTypeOrNil(multiplicityLower, 'number', 2)
+	--CheckType(sequential, 'boolean', 2)
+	--CheckTypeOrNil(permittedValues, 'array:number', 2)
 
 	return { Type = 'AttributeBinding', AttributeCode = attributeCode, MultiplicityLower = multiplicityLower, MultiplicityUpper = multiplicityUpper, Sequential = sequential, PermittedValues = permittedValues }
 end
 
 function CreateFeature(featureID, featureCode)
-	Debug.StartPerformance('Lua Code - Total')
+	--Debug.StartPerformance('Lua Code - Total')
 	local featureMetatable =
 	{
 		__index = function (t, k)
@@ -649,24 +649,24 @@ function CreateFeature(featureID, featureCode)
 	function feature:GetInformationAssociations(associationCode, roleCode)
 		-- Allow for passing in of informationTypeCode
 		CheckSelf(self, 'Feature')
-		CheckType(associationCode, 'string')
-		CheckTypeOrNil(roleCode, 'string')
+		--CheckType(associationCode, 'string')
+		--CheckTypeOrNil(roleCode, 'string')
 
 		local tuple = associationCode .. '|' .. (roleCode or '')
 
 		local ias = self.InformationAssociations[tuple]
 
 		if not ias then
-			Debug.StopPerformance('Lua Code - Total')
+			--Debug.StopPerformance('Lua Code - Total')
 			local informationIDs = HostFeatureGetAssociatedInformationIDs(self.ID, associationCode, roleCode)
-			Debug.StartPerformance('Lua Code - Total')
+			--Debug.StartPerformance('Lua Code - Total')
 
 			ias = {}
 
 			for _, informationID in ipairs(informationIDs) do
-				Debug.StopPerformance('Lua Code - Total')
+				--Debug.StopPerformance('Lua Code - Total')
 				local code = HostInformationTypeGetCode(informationID)
-				Debug.StartPerformance('Lua Code - Total')
+				--Debug.StartPerformance('Lua Code - Total')
 				ias[#ias + 1] = CreateInformation(informationID, code)
 			end
 
@@ -678,9 +678,9 @@ function CreateFeature(featureID, featureCode)
 
 	function feature:GetInformationAssociation(associationCode, roleCode, informationTypeCode)
 		CheckSelf(self, 'Feature')
-		CheckType(associationCode, 'string')
-		CheckTypeOrNil(roleCode, 'string')
-		CheckTypeOrNil(informationTypeCode, 'string')
+		--CheckType(associationCode, 'string')
+		--CheckTypeOrNil(roleCode, 'string')
+		--CheckTypeOrNil(informationTypeCode, 'string')
 
 		local ias = self:GetInformationAssociations(associationCode, roleCode)
 		
@@ -700,24 +700,24 @@ function CreateFeature(featureID, featureCode)
 	function feature:GetFeatureAssociations(associationCode, roleCode)
 		-- Allow for passing in of featureTypeCode
 		CheckSelf(self, 'Feature')
-		CheckType(associationCode, 'string')
-		CheckTypeOrNil(roleCode, 'string')
+		--CheckType(associationCode, 'string')
+		--CheckTypeOrNil(roleCode, 'string')
 
 		local tuple = associationCode .. '|' .. (roleCode or '')
 
 		local fas = self.FeatureAssociations[tuple]
 
 		if not fas then
-			Debug.StopPerformance('Lua Code - Total')
+			--Debug.StopPerformance('Lua Code - Total')
 			local featureIDs = HostFeatureGetAssociatedFeatureIDs(self.ID, associationCode, roleCode)
-			Debug.StartPerformance('Lua Code - Total')
+			--Debug.StartPerformance('Lua Code - Total')
 
 			fas = {}
 
 			for _, featureID in ipairs(featureIDs) do
-				Debug.StopPerformance('Lua Code - Total')
+				--Debug.StopPerformance('Lua Code - Total')
 				local code = HostFeatureTypeGetCode(featureID)
-				Debug.StartPerformance('Lua Code - Total')
+				--Debug.StartPerformance('Lua Code - Total')
 				fas[#fas + 1] = CreateFeature(featureID, code)
 			end
 
@@ -729,8 +729,8 @@ function CreateFeature(featureID, featureCode)
 
 	function feature:GetFeatureAssociation(associationCode, roleCode, featureTypeCode)
 		CheckSelf(self, 'Feature')
-		CheckType(associationCode, 'string')
-		CheckTypeOrNil(roleCode, 'string')
+		--CheckType(associationCode, 'string')
+		--CheckTypeOrNil(roleCode, 'string')
 
 		local fas = self:GetFeatureAssociations(associationCode, roleCode)
 
@@ -752,13 +752,13 @@ function CreateFeature(featureID, featureCode)
 
 		local sas = rawget(self, 'SpatialAssociations')
 
-		Debug.StopPerformance('Lua Code - Total')
+		--Debug.StopPerformance('Lua Code - Total')
 		sas = sas or HostFeatureGetSpatialAssociations(self.ID)
-		Debug.StartPerformance('Lua Code - Total')
+		--Debug.StartPerformance('Lua Code - Total')
 
 		self['SpatialAssociations'] = sas
 
-		CheckTypeOrNil(sas, 'array:SpatialAssociation')
+		--CheckTypeOrNil(sas, 'array:SpatialAssociation')
 
 		return sas
 	end
@@ -852,13 +852,13 @@ function CreateFeature(featureID, featureCode)
 
 	setmetatable(feature, featureMetatable)
 	
-	Debug.StopPerformance('Lua Code - Total')
+	--Debug.StopPerformance('Lua Code - Total')
 
 	return feature
 end
 
 function CreateInformation(informationID, informationCode)
-	Debug.StartPerformance('Lua Code - Total')
+	--Debug.StartPerformance('Lua Code - Total')
 
 	local informationMetatable =
 	{
@@ -887,43 +887,43 @@ function CreateInformation(informationID, informationCode)
 
 	setmetatable(information, informationMetatable)
 
-	Debug.StopPerformance('Lua Code - Total')
+	--Debug.StopPerformance('Lua Code - Total')
 
 	return information
 end
 
 function CreateSpatialAssociation(spatialType, spatialID, orientation, scaleMinimum, scaleMaximum)
-	Debug.StartPerformance('Lua Code - Total')
+	--Debug.StartPerformance('Lua Code - Total')
 
 	local spatialAssociationMetatable =
 	{
 		__index = function (t, k)
 			if k == 'Spatial' then
-				Debug.StartPerformance('Lua Code - Spatial')
+				--Debug.StartPerformance('Lua Code - Spatial')
 				local spatial = spatialCache[t.SpatialID]
 
 				if not spatial then
-					Debug.StartPerformance('Lua Code - HostGetSpatial')
-					Debug.StopPerformance('Lua Code - Total')
+					--Debug.StartPerformance('Lua Code - HostGetSpatial')
+					--Debug.StopPerformance('Lua Code - Total')
 					spatial = HostGetSpatial(t.SpatialID) or nilMarker
-					Debug.StartPerformance('Lua Code - Total')
-					Debug.StopPerformance('Lua Code - HostGetSpatial')
+					--Debug.StartPerformance('Lua Code - Total')
+					--Debug.StopPerformance('Lua Code - HostGetSpatial')
 
 					spatialCache[t.SpatialID] = spatial
 
 					if spatial ~= nilMarker then
-						CheckType(spatial, 'Spatial')
+						--CheckType(spatial, 'Spatial')
 						spatial['SpatialID'] = t.SpatialID
 				
 						t['Spatial'] = spatial
 					else
-						--Debug.Break()
+						----Debug.Break()
 					end
 				else
-					--Debug.Break()
+					----Debug.Break()
 				end
 
-				Debug.StopPerformance('Lua Code - Spatial')
+				--Debug.StopPerformance('Lua Code - Spatial')
 				if spatial ~= nilMarker then
 					return spatial
 				end
@@ -941,24 +941,24 @@ function CreateSpatialAssociation(spatialType, spatialID, orientation, scaleMini
 		orientation = Orientation[orientation]
 	end
 
-	CheckType(spatialType, 'SpatialType', 2)
-	CheckTypeOrNil(orientation, 'Orientation', 2)
-	CheckTypeOrNil(scaleMinimum, 'number', 2)
-	CheckTypeOrNil(scaleMaximum, 'number', 2)
+	--CheckType(spatialType, 'SpatialType', 2)
+	--CheckTypeOrNil(orientation, 'Orientation', 2)
+	--CheckTypeOrNil(scaleMinimum, 'number', 2)
+	--CheckTypeOrNil(scaleMaximum, 'number', 2)
 
 	local spatialAssociation = { Type = 'SpatialAssociation', SpatialType = spatialType, SpatialID = spatialID, Orientation = orientation, ScaleMinimum = scaleMinimum, ScaleMaximum = scaleMaximum, InformationAssociations = {} }
 
 	function spatialAssociation:GetAssociatedFeatures()
-		Debug.StopPerformance('Lua Code - Total')
+		--Debug.StopPerformance('Lua Code - Total')
 		local featureIDs = HostSpatialGetAssociatedFeatureIDs(self.SpatialID)
-		Debug.StartPerformance('Lua Code - Total')
+		--Debug.StartPerformance('Lua Code - Total')
 
 		self.AssociatedFeatures = {}
 
 		for _, featureID in ipairs(featureIDs) do
 			self.AssociatedFeatures[#self.AssociatedFeatures + 1] = featureCache[featureID];
 
-			CheckType(featureCache[featureID], 'Feature');
+			--CheckType(featureCache[featureID], 'Feature');
 		end
 
 		return self.AssociatedFeatures
@@ -966,24 +966,24 @@ function CreateSpatialAssociation(spatialType, spatialID, orientation, scaleMini
 
 	function spatialAssociation:GetInformationAssociations(associationCode, roleCode)
 		CheckSelf(self, 'SpatialAssociation')
-		CheckType(associationCode, 'string')
-		CheckTypeOrNil(roleCode, 'string')
+		--CheckType(associationCode, 'string')
+		--CheckTypeOrNil(roleCode, 'string')
 
 		local tuple = associationCode .. '|' .. (roleCode or '')
 
 		local ias = self.InformationAssociations[tuple]
 
 		if not ias then
-			Debug.StopPerformance('Lua Code - Total')
+			--Debug.StopPerformance('Lua Code - Total')
 			local informationIDs = HostSpatialGetAssociatedInformationIDs(self.SpatialID, associationCode, roleCode)
-			Debug.StartPerformance('Lua Code - Total')
+			--Debug.StartPerformance('Lua Code - Total')
 
 			ias = {}
 
 			for _, informationID in ipairs(informationIDs) do
-				Debug.StopPerformance('Lua Code - Total')
+				--Debug.StopPerformance('Lua Code - Total')
 				local code = HostInformationTypeGetCode(informationID)
-				Debug.StartPerformance('Lua Code - Total')
+				--Debug.StartPerformance('Lua Code - Total')
 				ias[#ias + 1] = CreateInformation(informationID, code)
 			end
 
@@ -995,9 +995,9 @@ function CreateSpatialAssociation(spatialType, spatialID, orientation, scaleMini
 
 	function spatialAssociation:GetInformationAssociation(associationCode, roleCode, informationTypeCode)
 		CheckSelf(self, 'SpatialAssociation')
-		CheckType(associationCode, 'string')
-		CheckTypeOrNil(roleCode, 'string')
-		CheckTypeOrNil(informationTypeCode, 'string')
+		--CheckType(associationCode, 'string')
+		--CheckTypeOrNil(roleCode, 'string')
+		--CheckTypeOrNil(informationTypeCode, 'string')
 
 		local ias = self:GetInformationAssociations(associationCode, roleCode)
 
@@ -1016,36 +1016,36 @@ function CreateSpatialAssociation(spatialType, spatialID, orientation, scaleMini
 
 	setmetatable(spatialAssociation, spatialAssociationMetatable)
 
-	Debug.StopPerformance('Lua Code - Total')
+	--Debug.StopPerformance('Lua Code - Total')
 
 	return spatialAssociation
 end
 
 local function CreateSpatial(spatialType, spatial)
-	CheckType(spatialType, 'SpatialType')
+	--CheckType(spatialType, 'SpatialType')
 
 	local spatial = { Type = 'Spatial', SpatialType = spatialType, Spatial = spatial, InformationAssociations = {} }
 
 	function spatial:GetInformationAssociations(associationCode, roleCode)
 		CheckSelf(self, 'Spatial')
-		CheckType(associationCode, 'string')
-		CheckTypeOrNil(roleCode, 'string')
+		--CheckType(associationCode, 'string')
+		--CheckTypeOrNil(roleCode, 'string')
 
 		local tuple = associationCode .. '|' .. (roleCode or '')
 
 		local ias = self.InformationAssociations[tuple]
 
 		if not ias then
-			Debug.StopPerformance('Lua Code - Total')
+			--Debug.StopPerformance('Lua Code - Total')
 			local informationIDs = HostSpatialGetAssociatedInformationIDs(self.SpatialID, associationCode, roleCode)
-			Debug.StartPerformance('Lua Code - Total')
+			--Debug.StartPerformance('Lua Code - Total')
 
 			ias = {}
 
 			for _, informationID in ipairs(informationIDs) do
-				Debug.StopPerformance('Lua Code - Total')
+				--Debug.StopPerformance('Lua Code - Total')
 				local code = HostInformationTypeGetCode(informationID)
-				Debug.StartPerformance('Lua Code - Total')
+				--Debug.StartPerformance('Lua Code - Total')
 				ias[#ias + 1] = CreateInformation(informationID, code)
 			end
 
@@ -1057,9 +1057,9 @@ local function CreateSpatial(spatialType, spatial)
 
 	function spatial:GetInformationAssociation(associationCode, roleCode, informationTypeCode)
 		CheckSelf(self, 'Spatial')
-		CheckType(associationCode, 'string')
-		CheckTypeOrNil(roleCode, 'string')
-		CheckTypeOrNil(informationTypeCode, 'string')
+		--CheckType(associationCode, 'string')
+		--CheckTypeOrNil(roleCode, 'string')
+		--CheckTypeOrNil(informationTypeCode, 'string')
 
 		local ias = self:GetInformationAssociations(associationCode, roleCode)
 
@@ -1080,11 +1080,11 @@ local function CreateSpatial(spatialType, spatial)
 end
 
 function CreatePoint(x, y, z)
-	Debug.StartPerformance('Lua Code - Total')
+	--Debug.StartPerformance('Lua Code - Total')
 
-	CheckType(x, 'string', 2)
-	CheckType(y, 'string', 2)
-	CheckTypeOrNil(z, 'string', 2)
+	--CheckType(x, 'string', 2)
+	--CheckType(y, 'string', 2)
+	--CheckTypeOrNil(z, 'string', 2)
 
 	local point = CreateSpatial(SpatialType.Point, { X = tonumber(x), Y = tonumber(y), Z = tonumber(z), ScaledX = StringToScaledDecimal(x), ScaledY = StringToScaledDecimal(y), ScaledZ = StringToScaledDecimal(z) })
 
@@ -1095,27 +1095,27 @@ function CreatePoint(x, y, z)
 	point.ScaledY = point.Spatial.ScaledY
 	point.ScaledZ = point.Spatial.ScaledZ
 
-	Debug.StopPerformance('Lua Code - Total')
+	--Debug.StopPerformance('Lua Code - Total')
 
 	return point
 end
 
 function CreateMultiPoint(points)
-	Debug.StartPerformance('Lua Code - Total')
+	--Debug.StartPerformance('Lua Code - Total')
 
-	CheckType(points, 'array:Spatial', 2)
+	--CheckType(points, 'array:Spatial', 2)
 
 	local multiPoint = CreateSpatial(SpatialType.MultiPoint, points)
 
 	multiPoint.Points = multiPoint.Spatial
 
-	Debug.StopPerformance('Lua Code - Total')
+	--Debug.StopPerformance('Lua Code - Total')
 
 	return multiPoint
 end
 
 function CreateCurveSegment(controlPoints, interpolation)
-	Debug.StartPerformance('Lua Code - Total')
+	--Debug.StartPerformance('Lua Code - Total')
 
 	interpolation = interpolation or Interpolation.Loxodromic
 
@@ -1123,20 +1123,20 @@ function CreateCurveSegment(controlPoints, interpolation)
 		interpolation = Interpolation[interpolation]
 	end
 
-	CheckType(controlPoints, 'array:Spatial', 2)
-	CheckType(interpolation, 'Interpolation', 2)
+	--CheckType(controlPoints, 'array:Spatial', 2)
+	--CheckType(interpolation, 'Interpolation', 2)
 
-	Debug.StopPerformance('Lua Code - Total')
+	--Debug.StopPerformance('Lua Code - Total')
 
 	return { Type = 'CurveSegment', ControlPoints = controlPoints, Interpolation = interpolation }
 end
 
 function CreateCurve(startPoint, endPoint, segments)
-	Debug.StartPerformance('Lua Code - Total')
+	--Debug.StartPerformance('Lua Code - Total')
 
-	CheckType(startPoint, 'Spatial', 2)
-	CheckType(endPoint, 'Spatial', 2)
-	CheckTypeOrNil(segments, 'array:CurveSegment', 2)
+	--CheckType(startPoint, 'Spatial', 2)
+	--CheckType(endPoint, 'Spatial', 2)
+	--CheckTypeOrNil(segments, 'array:CurveSegment', 2)
 
 	local curve = CreateSpatial(SpatialType.Curve, { StartPoint = startPoint, EndPoint = endPoint, Segments = segments })
 
@@ -1144,37 +1144,37 @@ function CreateCurve(startPoint, endPoint, segments)
 	curve.EndPoint = curve.Spatial.EndPoint
 	curve.Segments = curve.Spatial.Segments
 
-	Debug.StopPerformance('Lua Code - Total')
+	--Debug.StopPerformance('Lua Code - Total')
 
 	return curve
 end
 
 function CreateCompositeCurve(curveAssociations)
-	Debug.StartPerformance('Lua Code - Total')
+	--Debug.StartPerformance('Lua Code - Total')
 
-	CheckType(curveAssociations, 'array:SpatialAssociation', 2)
+	--CheckType(curveAssociations, 'array:SpatialAssociation', 2)
 
 	local compositeCurve = CreateSpatial(SpatialType.CompositeCurve, curveAssociations)
 
 	compositeCurve.CurveAssociations = compositeCurve.Spatial
 
-	Debug.StopPerformance('Lua Code - Total')
+	--Debug.StopPerformance('Lua Code - Total')
 
 	return compositeCurve
 end
 
 function CreateSurface(exteriorRing, interiorRings)
-	Debug.StartPerformance('Lua Code - Total')
+	--Debug.StartPerformance('Lua Code - Total')
 
-	CheckType(exteriorRing, 'SpatialAssociation', 2)
-	CheckType(interiorRings, 'array:SpatialAssociation', 2)
+	--CheckType(exteriorRing, 'SpatialAssociation', 2)
+	--CheckType(interiorRings, 'array:SpatialAssociation', 2)
 
 	local surface = CreateSpatial(SpatialType.Surface, { ExteriorRing = exteriorRing, InteriorRings = interiorRings })
 
 	surface.ExteriorRing = surface.Spatial.ExteriorRing
 	surface.InteriorRings = surface.Spatial.InteriorRings
 
-	Debug.StopPerformance('Lua Code - Total')
+	--Debug.StopPerformance('Lua Code - Total')
 
 	return surface
 end
@@ -1184,7 +1184,7 @@ function GetUnknownAttributeString()
 end
 
 function EncodeDEFString(input)
-	CheckType(input, 'string')
+	--CheckType(input, 'string')
 
 	input = input:gsub('&', '&a')
 	input = input:gsub(';', '&s')
@@ -1195,7 +1195,7 @@ function EncodeDEFString(input)
 end
 
 function DecodeDEFString(encodedString)
-	CheckType(encodedString, 'string')
+	--CheckType(encodedString, 'string')
 
 	encodedString = encodedString:gsub('&s', ';')
 	encodedString = encodedString:gsub('&c', ':')

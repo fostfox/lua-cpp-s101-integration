@@ -81,7 +81,7 @@ function NormalizeScaledDecimals(scaledDecimal1, scaledDecimal2)
 end
 
 local function ScaledDecimalToNumber(scaledDecimal)
-	CheckType(scaledDecimal, 'ScaledDecimal')
+	--CheckType(scaledDecimal, 'ScaledDecimal')
 
 	local value = scaledDecimal.Value
 
@@ -93,8 +93,8 @@ local function ScaledDecimalToNumber(scaledDecimal)
 end
 
 function ScaledDecimalCompare(scaledDecimal1, scaledDecimal2)
-	CheckType(scaledDecimal1, 'ScaledDecimal')
-	CheckType(scaledDecimal2, 'ScaledDecimal')
+	--CheckType(scaledDecimal1, 'ScaledDecimal')
+	--CheckType(scaledDecimal2, 'ScaledDecimal')
 
 	local sd1 = { Value = scaledDecimal1.Value, Scale = scaledDecimal1.Scale }
 	local sd2 = { Value = scaledDecimal2.Value, Scale = scaledDecimal2.Scale }
@@ -105,7 +105,7 @@ function ScaledDecimalCompare(scaledDecimal1, scaledDecimal2)
 end
 
 local function ScaledDecimalSplit(scaledDecimal)
-	CheckType(scaledDecimal, 'ScaledDecimal')
+	--CheckType(scaledDecimal, 'ScaledDecimal')
 
 	local sign
 	local value
@@ -208,8 +208,8 @@ local scaledDecimalMetatable =
 function CreateScaledDecimal(value, scale)
 	scale = scale or 0
 
-	CheckType(value, 'number')
-	CheckType(scale, 'number')
+	--CheckType(value, 'number')
+	--CheckType(scale, 'number')
 
 	local scaledDecimal = { Type = 'ScaledDecimal', Value = value, Scale = scale,
 		Split = ScaledDecimalSplit,
@@ -391,7 +391,7 @@ typeInfo = nil
 function GetTypeInfo()
 	if not typeInfo then
 		local ti = {}
-		Debug.StopPerformance('Lua Code - Total')
+		--Debug.StopPerformance('Lua Code - Total')
 		local featureTypeCodes = HostGetFeatureTypeCodes()
 		local informationTypeCodes = HostGetInformationTypeCodes()
 		local simpleAttributeCodes = HostGetSimpleAttributeTypeCodes()
@@ -400,7 +400,7 @@ function GetTypeInfo()
 		local informationAssociationCodes = HostGetInformationAssociationTypeCodes()
 		local featureAssociationCodes = HostGetFeatureAssociationTypeCodes()
 		
-		Debug.StartPerformance('Lua Code - Total')
+		--Debug.StartPerformance('Lua Code - Total')
 
 		ti.FeatureTypeInfos = {}
 
@@ -458,9 +458,9 @@ function GetFeatureTypeInfo(code)
 	end
 
 	if not typeInfo.FeatureTypeInfos[code].TypeInfo then
-		Debug.StopPerformance('Lua Code - Total')
+		--Debug.StopPerformance('Lua Code - Total')
 		typeInfo.FeatureTypeInfos[code].TypeInfo = HostGetFeatureTypeInfo(code)
-		Debug.StartPerformance('Lua Code - Total')
+		--Debug.StartPerformance('Lua Code - Total')
 	end
 
 	return typeInfo.FeatureTypeInfos[code].TypeInfo
@@ -474,9 +474,9 @@ function GetInformationTypeInfo(code)
 	end
 
 	if not typeInfo.InformationTypeInfos[code].TypeInfo then
-		Debug.StopPerformance('Lua Code - Total')
+		--Debug.StopPerformance('Lua Code - Total')
 		typeInfo.InformationTypeInfos[code].TypeInfo = HostGetInformationTypeInfo(code)
-		Debug.StartPerformance('Lua Code - Total')
+		--Debug.StartPerformance('Lua Code - Total')
 	end
 
 	return typeInfo.InformationTypeInfos[code].TypeInfo
@@ -490,9 +490,9 @@ function GetSimpleAttributeTypeInfo(code)
 	end
 
 	if not typeInfo.SimpleAttributeInfos[code].TypeInfo then
-		Debug.StopPerformance('Lua Code - Total')
+		--Debug.StopPerformance('Lua Code - Total')
 		typeInfo.SimpleAttributeInfos[code].TypeInfo = HostGetSimpleAttributeTypeInfo(code)
-		Debug.StartPerformance('Lua Code - Total')
+		--Debug.StartPerformance('Lua Code - Total')
 	end
 
 	return typeInfo.SimpleAttributeInfos[code].TypeInfo
@@ -506,9 +506,9 @@ function GetComplexAttributeTypeInfo(code)
 	end
 
 	if not typeInfo.ComplexAttributeInfos[code].TypeInfo then
-		Debug.StopPerformance('Lua Code - Total')
+		--Debug.StopPerformance('Lua Code - Total')
 		typeInfo.ComplexAttributeInfos[code].TypeInfo = HostGetComplexAttributeTypeInfo(code)
-		Debug.StartPerformance('Lua Code - Total')
+		--Debug.StartPerformance('Lua Code - Total')
 	end
 
 	return typeInfo.ComplexAttributeInfos[code].TypeInfo

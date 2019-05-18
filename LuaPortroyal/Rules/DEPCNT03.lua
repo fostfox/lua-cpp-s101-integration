@@ -31,19 +31,19 @@ end
 
 -- Main entry point for CSP.
 function DEPCNT03(feature, featurePortrayal, contextParameters)
-	Debug.StartPerformance('Lua Code - DEPCNT03')
+	--Debug.StartPerformance('Lua Code - DEPCNT03')
 
 	local function GenerateCurves()
-		Debug.StartPerformance('Lua Code - DEPCNT03 GenerateCurves')
+		--Debug.StartPerformance('Lua Code - DEPCNT03 GenerateCurves')
 
 		local dashedAssociations = {}
 		local solidAssociations = {}
 
 		for curveAssociation in feature:GetFlattenedSpatialAssociations() do
-			--Debug.Break()
-			Debug.StartPerformance('Lua Code - DEPCNT03 GetInformationAssociation')
+			----Debug.Break()
+			--Debug.StartPerformance('Lua Code - DEPCNT03 GetInformationAssociation')
 			local spatialQuality = curveAssociation:GetInformationAssociation(unpack(sqParams))
-			Debug.StopPerformance('Lua Code - DEPCNT03 GetInformationAssociation')
+			--Debug.StopPerformance('Lua Code - DEPCNT03 GetInformationAssociation')
 			local qualityOfPosition = spatialQuality and spatialQuality.qualityOfHorizontalMeasurement
 
 			if qualityOfPosition and qualityOfPosition ~=1 and qualityOfPosition ~= 10 and qualityOfPosition ~= 11 then
@@ -73,7 +73,7 @@ function DEPCNT03(feature, featurePortrayal, contextParameters)
 			featurePortrayal:AddInstructions('LineInstruction:;ClearGeometry')
 		end
 
-		Debug.StopPerformance('Lua Code - DEPCNT03 GenerateCurves')
+		--Debug.StopPerformance('Lua Code - DEPCNT03 GenerateCurves')
 	end
 
 	local function GenerateLabels()
@@ -95,5 +95,5 @@ function DEPCNT03(feature, featurePortrayal, contextParameters)
 		featurePortrayal:AddInstructions('NullInstruction')
 	end
 
-	Debug.StopPerformance('Lua Code - DEPCNT03')
+	--Debug.StopPerformance('Lua Code - DEPCNT03')
 end

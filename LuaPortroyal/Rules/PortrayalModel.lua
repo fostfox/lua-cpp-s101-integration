@@ -19,14 +19,14 @@ function PortrayalModel.CreatePortrayalContext()
 		FeaturePortrayalItems = CreateFeaturePortrayalItemArray()
 	}
 
-	Debug.StopPerformance('Lua Code - Total')
+	--Debug.StopPerformance('Lua Code - Total')
 	local featureIDs = HostGetFeatureIDs()
-	Debug.StartPerformance('Lua Code - Total')
+	--Debug.StartPerformance('Lua Code - Total')
 
 	for _, featureID in ipairs(featureIDs) do
-		Debug.StopPerformance('Lua Code - Total')
+		--Debug.StopPerformance('Lua Code - Total')
 		local featureCode = HostFeatureGetCode(featureID)
-		Debug.StartPerformance('Lua Code - Total')
+		--Debug.StartPerformance('Lua Code - Total')
 		local feature = CreateFeature(featureID, featureCode)
 
 		portrayalContext.FeaturePortrayalItems:AddFeature(feature)
@@ -50,7 +50,7 @@ function PortrayalModel.CreatePortrayalContext()
 end
 
 function ObservedContextParametersAsString(featurePortrayalItem)
-	Debug.StartPerformance('Lua Code - ObservedContextParametersAsString')
+	--Debug.StartPerformance('Lua Code - ObservedContextParametersAsString')
 
 	local inUse = featurePortrayalItem.InUseContextParameters
 
@@ -72,7 +72,7 @@ function ObservedContextParametersAsString(featurePortrayalItem)
 
 	observedValues = table.concat(observedValues, ';')
 
-	Debug.StopPerformance('Lua Code - ObservedContextParametersAsString')
+	--Debug.StopPerformance('Lua Code - ObservedContextParametersAsString')
 
 	return observedValues
 end
@@ -102,7 +102,7 @@ function CreateContextParameters()
 			
 				contextParameters._observed[k] = true
 
-				--Debug.Trace('Portrayal paramter "' .. k .. '" observed.')
+				----Debug.Trace('Portrayal paramter "' .. k .. '" observed.')
 
 				return r;
 			end
@@ -118,14 +118,14 @@ function CreateContextParameters()
 			if type(v) == 'boolean' then
 				-- Cannot concatenate booleans
 				if v then
-					Debug.Trace('Setting portrayal paramter: ' .. k .. ' = true')
+					--Debug.Trace('Setting portrayal paramter: ' .. k .. ' = true')
 				else
-					Debug.Trace('Setting portrayal paramter: ' .. k .. ' = false')
+					--Debug.Trace('Setting portrayal paramter: ' .. k .. ' = false')
 				end
 			elseif type(v) ~= 'table' then
-				Debug.Trace('Setting portrayal paramter: ' .. k .. ' = ' .. v .. '')
+				--Debug.Trace('Setting portrayal paramter: ' .. k .. ' = ' .. v .. '')
 			elseif v.Type == 'ScaledDecimal' then
-				Debug.Trace('Setting portrayal paramter: ' .. k .. ' = ' .. v:ToNumber() .. '')
+				--Debug.Trace('Setting portrayal paramter: ' .. k .. ' = ' .. v:ToNumber() .. '')
 			end
 		end
 	}
@@ -141,7 +141,7 @@ function CreateFeaturePortrayalItemArray()
 	local featurePortrayalItemArray = { Type = 'array:FeaturePortrayalItem' }
 
 	function featurePortrayalItemArray:AddFeature(feature)
-		CheckType(feature, 'Feature')
+		--CheckType(feature, 'Feature')
 
 		local featurePortrayalItem = { Type = 'FeaturePortrayalItem', Feature = feature, ObservedContextParameters = {} }
 
@@ -163,7 +163,7 @@ function InstructionSpatialReference(spatialAssociation)
 end
 
 function CreateFeaturePortrayal(featureReference)
-	CheckType(featureReference, 'string')
+	--CheckType(featureReference, 'string')
 
 	local featurePortrayal =
 	{
@@ -174,14 +174,14 @@ function CreateFeaturePortrayal(featureReference)
 
 	function featurePortrayal:AddInstructions(instructions)
 		CheckSelf(self, featurePortrayal.Type)
-		CheckType(instructions, 'string')
+		--CheckType(instructions, 'string')
 
 		self.DrawingInstructions:Add(instructions)
 	end
 
 	function featurePortrayal:AddSpatialReference(spatialAssociation)
 		CheckSelf(self, featurePortrayal.Type)
-		CheckType(spatialAssociation, 'SpatialAssociation')
+		--CheckType(spatialAssociation, 'SpatialAssociation')
 
 		if spatialAssociation.Orientation.Name == 'Forward' then
 			self.DrawingInstructions:Add('SpatialReference:' .. spatialAssociation.SpatialID)
@@ -192,9 +192,9 @@ function CreateFeaturePortrayal(featureReference)
 
 	function featurePortrayal:SimpleLineStyle(lineType, width, colour)
 		CheckSelf(self, featurePortrayal.Type)
-		CheckType(lineType, 'string')
-		CheckType(width, 'number')
-		CheckType(colour, 'string')
+		--CheckType(lineType, 'string')
+		--CheckType(width, 'number')
+		--CheckType(colour, 'string')
 
 		if lineType == 'solid' then
 			self.DrawingInstructions:Add('LineStyle:,,' .. width .. ',' .. colour)

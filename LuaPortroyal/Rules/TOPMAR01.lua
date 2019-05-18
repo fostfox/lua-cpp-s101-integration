@@ -76,7 +76,7 @@ local rigidTopmarks =
 
 -- Main entry point for CSP.
 function TOPMAR01(feature, featurePortrayal, contextParameters, isFloating)
-	Debug.StartPerformance('Lua Code - TOPMAR01')
+	--Debug.StartPerformance('Lua Code - TOPMAR01')
 
 	if feature.topmark then
 		if isFloating then
@@ -88,5 +88,5 @@ function TOPMAR01(feature, featurePortrayal, contextParameters, isFloating)
 		featurePortrayal:AddInstructions('PointInstruction:' .. topmarkSymbol)
 	end
 
-	Debug.StopPerformance('Lua Code - TOPMAR01')
+	--Debug.StopPerformance('Lua Code - TOPMAR01')
 end

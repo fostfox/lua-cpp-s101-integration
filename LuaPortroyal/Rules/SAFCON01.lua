@@ -4,12 +4,12 @@ local sd99999 = CreateScaledDecimal(99999, 0)
 
 -- Main entry point for CSP.
 function SAFCON01(contextParameters, depthValue)
-	Debug.StartPerformance('Lua Code - SAFCON01')
+	--Debug.StartPerformance('Lua Code - SAFCON01')
 
 	local instructions = {}
 
 	if depthValue < scaledDecimalZero or depthValue > sd99999 then
-		Debug.StopPerformance('Lua Code - SAFCON01')
+		--Debug.StopPerformance('Lua Code - SAFCON01')
 		return {}
 	end
 
@@ -41,6 +41,6 @@ function SAFCON01(contextParameters, depthValue)
 	--]]
 	end
 
-	Debug.StopPerformance('Lua Code - SAFCON01')
+	--Debug.StopPerformance('Lua Code - SAFCON01')
 	return instructions
 end

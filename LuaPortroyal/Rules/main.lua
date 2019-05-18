@@ -6,7 +6,7 @@ require 'Default'
 -- Main entry point for portrayal
 function PortrayalMain(featureIDs)
 	--require("jit.p").start(options, output)
-	Debug.StartPerformance('Lua Code - Total')
+	--Debug.StartPerformance('Lua Code - Total')
 
 	if not portrayalContext then
 		error('Host must call PortrayalInitializeContextParameters() before calling portrayal_main()')
@@ -20,11 +20,11 @@ function PortrayalMain(featureIDs)
 	-- higher priority edges suppress lower priority edges.
 
 	function ProcessFeaturePortrayalItem(featurePortrayalItem)
-		Debug.StartPerformance('Lua Code - Dataset processing')
+		--Debug.StartPerformance('Lua Code - Dataset processing')
 
 		local feature = featurePortrayalItem.Feature
 
-		--Debug.Break()
+		----Debug.Break()
 
 		local featurePortrayal = featurePortrayalItem:NewFeaturePortrayal()
 
@@ -63,7 +63,7 @@ function PortrayalMain(featureIDs)
 				end
 			end
 
-			Debug.StartPerformance('Lua Code - Rules processing')
+			--Debug.StartPerformance('Lua Code - Rules processing')
 
 			local scaleMinimum = feature['!scaleMinimum']
 			local scaleMaximum = feature['!scaleMaximum']
@@ -83,11 +83,11 @@ function PortrayalMain(featureIDs)
 				error('No drawing instructions were emitted for feature ' .. feature.ID)
 			end
 
-			Debug.StopPerformance('Lua Code - Rules processing')
+			--Debug.StopPerformance('Lua Code - Rules processing')
 		end)
 
 		if not status then
-			Debug.Trace('Error: ' .. err .. '.  Default symbology for ' .. feature.Code .. ' ID=' .. feature.ID .. ' returned.')
+			--Debug.Trace('Error: ' .. err .. '.  Default symbology for ' .. feature.Code .. ' ID=' .. feature.ID .. ' returned.')
 
 			-- Clear any drawing instructions created up to this point.
 			featurePortrayal = featurePortrayalItem:NewFeaturePortrayal()
@@ -95,25 +95,25 @@ function PortrayalMain(featureIDs)
 			Default(feature, featurePortrayal, contextParameters)
 		end
 
-		Debug.StopPerformance('Lua Code - Dataset processing')
+		--Debug.StopPerformance('Lua Code - Dataset processing')
 
-		Debug.StartPerformance('Lua Code - HostPortrayalEmit preparation')
+		--Debug.StartPerformance('Lua Code - HostPortrayalEmit preparation')
 
 		featurePortrayalItem.ObservedContextParameters = contextParameters._observed
 		featurePortrayalItem.InUseContextParameters = contextParameters._asTable
 
-		--Debug.Break()
+		----Debug.Break()
 
 		local observed = ObservedContextParametersAsString(featurePortrayalItem)
 
 		local drawingInstructions = table.concat(featurePortrayal.DrawingInstructions, ';')
 
-		Debug.StopPerformance('Lua Code - HostPortrayalEmit preparation')
+		--Debug.StopPerformance('Lua Code - HostPortrayalEmit preparation')
 
 		return HostPortrayalEmit(featurePortrayal.FeatureReference, drawingInstructions, observed)
 	end
 
-	--Debug.Break()
+	----Debug.Break()
 
 	if featureIDs then
 		for _,  featureID in ipairs(featureIDs) do
@@ -129,7 +129,7 @@ function PortrayalMain(featureIDs)
 		end
 	end
 
-	Debug.StopPerformance('Lua Code - Total')
+	--Debug.StopPerformance('Lua Code - Total')
 	--require("jit.p").stop()
 	return true
 end

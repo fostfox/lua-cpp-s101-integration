@@ -2,7 +2,7 @@
 
 -- Main entry point for CSP.
 function RESCSP03(feature, featurePortrayal, contextParameters)
-	Debug.StartPerformance('Lua Code - RESCSP03')
+	--Debug.StartPerformance('Lua Code - RESCSP03')
 
 	local restriction = feature.restriction
 
@@ -46,5 +46,5 @@ function RESCSP03(feature, featurePortrayal, contextParameters)
 		featurePortrayal:AddInstructions('PointInstruction:RSRDEP51')
 	end
 
-	Debug.StopPerformance('Lua Code - RESCSP03')
+	--Debug.StopPerformance('Lua Code - RESCSP03')
 end

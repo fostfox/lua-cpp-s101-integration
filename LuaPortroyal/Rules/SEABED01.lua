@@ -2,7 +2,7 @@
 
 -- Main entry point for CSP.
 function SEABED01(feature, featurePortrayal, contextParameters, depthRangeMinimumValue, depthRangeMaximumValue)
-	Debug.StartPerformance('Lua Code - SEABED01')
+	--Debug.StartPerformance('Lua Code - SEABED01')
 
 	local Colour = 'DEPIT'
 	local Shallow = true
@@ -36,7 +36,7 @@ function SEABED01(feature, featurePortrayal, contextParameters, depthRangeMinimu
 		end
 	end
 
-	--Debug.Trace('SEABED01: Colour = ' .. Colour .. ' SAFETY_CONTOUR = ' .. contextParameters.SAFETY_CONTOUR .. ' depthRangeMinimumValue = ' .. depthRangeMinimumValue .. ' depthRangeMaximumValue = ' .. depthRangeMaximumValue)
+	----Debug.Trace('SEABED01: Colour = ' .. Colour .. ' SAFETY_CONTOUR = ' .. contextParameters.SAFETY_CONTOUR .. ' depthRangeMinimumValue = ' .. depthRangeMinimumValue .. ' depthRangeMaximumValue = ' .. depthRangeMaximumValue)
 
 	featurePortrayal:AddInstructions('ColorFill:' .. Colour)
 
@@ -44,5 +44,5 @@ function SEABED01(feature, featurePortrayal, contextParameters, depthRangeMinimu
 		featurePortrayal:AddInstructions('AreaFillReference:DIAMOND1')
 	end
 
-	Debug.StopPerformance('Lua Code - SEABED01')
+	--Debug.StopPerformance('Lua Code - SEABED01')
 end

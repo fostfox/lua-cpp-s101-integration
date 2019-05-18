@@ -7,7 +7,7 @@ require 'UDWHAZ05'
 
 -- Main entry point for CSP.
 function WRECKS05(feature, featurePortrayal, contextParameters)
-	Debug.StartPerformance('Lua Code - WRECKS05')
+	--Debug.StartPerformance('Lua Code - WRECKS05')
 
 	local DEPTH_VALUE = feature.valueOfSounding or feature.defaultClearanceDepth
 
@@ -145,5 +145,5 @@ function WRECKS05(feature, featurePortrayal, contextParameters)
 		end
 	end
 
-	Debug.StopPerformance('Lua Code - WRECKS05')
+	--Debug.StopPerformance('Lua Code - WRECKS05')
 end

@@ -5,23 +5,23 @@ require 'QUAPNT02'
 
 -- Main entry point for CSP.
 function SLCONS04(feature, featurePortrayal, contextParameters)
-	Debug.StartPerformance('Lua Code - SLCONS04')
+	--Debug.StartPerformance('Lua Code - SLCONS04')
 
 	if feature.PrimitiveType == PrimitiveType.Point then
-		Debug.StopPerformance('Lua Code - SLCONS04')
+		--Debug.StopPerformance('Lua Code - SLCONS04')
 		local symbol = QUAPNT02(feature, featurePortrayal, contextParameters)
-		Debug.StartPerformance('Lua Code - SLCONS04')
+		--Debug.StartPerformance('Lua Code - SLCONS04')
 
 		if symbol then
-			--Debug.Break()
+			----Debug.Break()
 			featurePortrayal:AddInstructions('ViewingGroup:31011;PointInstruction:' .. symbol)
 		end
 	else
-		Debug.StopPerformance('Lua Code - SLCONS04')
-		Debug.StartPerformance('Lua Code - SLCONS04 GetFlattenedSpatialAssociations')
+		--Debug.StopPerformance('Lua Code - SLCONS04')
+		--Debug.StartPerformance('Lua Code - SLCONS04 GetFlattenedSpatialAssociations')
 		for curveAssociation in feature:GetFlattenedSpatialAssociations() do
-			Debug.StopPerformance('Lua Code - SLCONS04 GetFlattenedSpatialAssociations')
-			Debug.StartPerformance('Lua Code - SLCONS04')
+			--Debug.StopPerformance('Lua Code - SLCONS04 GetFlattenedSpatialAssociations')
+			--Debug.StartPerformance('Lua Code - SLCONS04')
 			featurePortrayal:AddSpatialReference(curveAssociation)
 
 			local spatialQuality = curveAssociation:GetInformationAssociation(unpack(sqParams))
@@ -53,5 +53,5 @@ function SLCONS04(feature, featurePortrayal, contextParameters)
 		end
 	end
 
-	Debug.StopPerformance('Lua Code - SLCONS04')
+	--Debug.StopPerformance('Lua Code - SLCONS04')
 end

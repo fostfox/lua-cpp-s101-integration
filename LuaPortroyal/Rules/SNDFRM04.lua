@@ -2,9 +2,9 @@
 
 -- Main entry point for CSP.
 function SNDFRM04(feature, featurePortrayal, contextParameters, soundingPoint, depthValue)
-	Debug.StartPerformance('Lua Code - SNDFRM04')
+	--Debug.StartPerformance('Lua Code - SNDFRM04')
 
-	CheckType(depthValue, 'ScaledDecimal')
+	--CheckType(depthValue, 'ScaledDecimal')
 
 	local symbols = {}
 
@@ -81,7 +81,7 @@ function SNDFRM04(feature, featurePortrayal, contextParameters, soundingPoint, d
 		addSymbol(symbolPrefix..'4'..string.sub(depth, 5, 5))
 	end
 
-	Debug.StopPerformance('Lua Code - SNDFRM04')
+	--Debug.StopPerformance('Lua Code - SNDFRM04')
 
 	return symbols
 end

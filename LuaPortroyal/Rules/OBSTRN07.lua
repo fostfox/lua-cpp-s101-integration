@@ -7,7 +7,7 @@ require 'SNDFRM04'
 
 -- Main entry point for CSP.
 function OBSTRN07(feature, featurePortrayal, contextParameters)
-	Debug.StartPerformance('Lua Code - OBSTRN07')
+	--Debug.StartPerformance('Lua Code - OBSTRN07')
 
 	local DEPTH_VALUE = feature.valueOfSounding or feature.defaultClearanceDepth
 
@@ -185,5 +185,5 @@ function OBSTRN07(feature, featurePortrayal, contextParameters)
 		end
 	end
 
-	Debug.StopPerformance('Lua Code - OBSTRN07')
+	--Debug.StopPerformance('Lua Code - OBSTRN07')
 end

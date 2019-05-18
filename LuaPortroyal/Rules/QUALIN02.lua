@@ -2,7 +2,7 @@
 
 -- Main entry point for CSP.
 function QUALIN02(feature, featurePortrayal, contextParameters)
-	Debug.StartPerformance('Lua Code - QUALIN02')
+	--Debug.StartPerformance('Lua Code - QUALIN02')
 
 	for curveAssociation in feature:GetFlattenedSpatialAssociations() do
 		featurePortrayal:AddSpatialReference(curveAssociation)
@@ -29,5 +29,5 @@ function QUALIN02(feature, featurePortrayal, contextParameters)
 		featurePortrayal:AddInstructions('ClearGeometry')
 	end
 
-	Debug.StopPerformance('Lua Code - QUALIN02')
+	--Debug.StopPerformance('Lua Code - QUALIN02')
 end
