@@ -29,7 +29,7 @@ public:
     ~FeatureMapXMLBuilder();
 
 
-    FeatureMapController build(bool onlyFullFeatures = false);
+    std::shared_ptr<FeatureMapController> build(bool onlyFullFeatures = false);
     const std::list<Feature>& parse2();
     const std::map<int, std::shared_ptr<GM_Object> >& parseSpatials();
     bool isStartElementAndAllowed(std::string tag);

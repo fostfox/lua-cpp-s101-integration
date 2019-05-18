@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
 namespace std {
 //class string;
@@ -28,9 +29,8 @@ class LuaHostFunc {
 private:
     sol::state& m_lua;
 
-    const FeatureMapController& m_mapObjCtrl;
+    std::shared_ptr<FeatureMapController> m_mapObjCtrl;
     const FeatureCatalogueController& m_dictObjCtrl;
-    const ContexParametrController & m_contParamCtrl;
     DrawingInstructionsController& m_drawInstrCtrl;
 
     bool m_isActionState;
@@ -39,12 +39,12 @@ private:
 public:
     LuaHostFunc(sol::state &lua
             , const FeatureCatalogueController &dictObjCtrl
-            , const FeatureMapController &mapObjCtrl
-            , const ContexParametrController &contParamController
             , DrawingInstructionsController &drawInstrCtrl
             );
     ~LuaHostFunc();
     bool doPortrayal();
+
+    void PortrayalInitialize(const ContexParametrController &contParamController, std::shared_ptr<FeatureMapController> mapObjCtrl);
 
     void loadFunctions();
 

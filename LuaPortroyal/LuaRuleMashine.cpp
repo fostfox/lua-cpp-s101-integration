@@ -14,12 +14,8 @@
 LuaRuleMashine::LuaRuleMashine(
         const QString &fileNameEntryPoint
         , const FeatureCatalogueController & dictObjController
-        , const FeatureMapController & mapObjController
-        , const ContexParametrController &contParamController
         )
     :m_dictObjCtrl(dictObjController)
-    ,m_mapObjCtrl(mapObjController)
-    ,m_contParamCtrl(contParamController)
 {
 
     m_lua = new sol::state();
@@ -40,18 +36,18 @@ LuaRuleMashine::LuaRuleMashine(
     //luaJIT_setmode(m_lua->lua_state(), 0, LUAJIT_MODE_ON | LUAJIT_MODE_DEBUG);
 
     m_lua->script_file(fileNameEntryPoint.toStdString());
-    //luaJIT_setmode(m_lua->lua_state(), 0, LUAJIT_MODE_ON | LUAJIT_MODE_DEBUG);
-   // m_lua->script_file("debug/lua/temp.lua");
-    //m_lua->script_file("debug/lua/S100Scripting.lua");
-    //m_lua->script_file("debug/lua/temp.lua");
-    //m_lua->script_file("debug/lua/PortrayalAPI.lua");
-    m_luaHostFunc = new LuaHostFunc(*m_lua, m_dictObjCtrl, m_mapObjCtrl, m_contParamCtrl, m_drawController);
+    m_luaHostFunc = new LuaHostFunc(*m_lua, m_dictObjCtrl, m_drawController);
 }
 
 bool LuaRuleMashine::doPortrayal()
 {
     bool isSuccess = m_luaHostFunc->doPortrayal();
     return isSuccess;
+}
+
+void LuaRuleMashine::PortrayalInitialize(const ContexParametrController &contParamController, std::shared_ptr<FeatureMapController> mapObjCtrl)
+{
+    m_luaHostFunc->PortrayalInitialize(contParamController, mapObjCtrl);
 }
 
 const DrawingInstructionsController &LuaRuleMashine::drawController() const

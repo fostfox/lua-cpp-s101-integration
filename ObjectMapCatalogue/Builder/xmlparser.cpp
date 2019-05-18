@@ -33,7 +33,7 @@ FeatureMapXMLBuilder::~FeatureMapXMLBuilder()
     delete m_xmlSpatial;
 }
 
-FeatureMapController FeatureMapXMLBuilder::build(bool onlyFullFeatures)
+std::shared_ptr<FeatureMapController> FeatureMapXMLBuilder::build(bool onlyFullFeatures)
 {
     auto spatials = parseSpatials();
 
@@ -52,9 +52,9 @@ FeatureMapController FeatureMapXMLBuilder::build(bool onlyFullFeatures)
         features.clear();
         features = tmpFeatures;
     }
-    FeatureMapController fFontroller;
-    fFontroller.setFeatures(features);
-    fFontroller.setSpatials(spatials);
+    std::shared_ptr<FeatureMapController> fFontroller = std::make_shared<FeatureMapController>();
+    fFontroller->setFeatures(features);
+    fFontroller->setSpatials(spatials);
     return fFontroller;
 }
 

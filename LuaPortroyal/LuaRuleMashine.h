@@ -1,6 +1,8 @@
+
 #pragma once
 
 #include "ObjectDrawCatalogue/drawing_instructions_controller.h"
+#include <memory>
 
 class FeatureMapController;
 class FeatureCatalogueController;
@@ -21,13 +23,13 @@ public:
     LuaRuleMashine(
             const QString& fileNameEntryPoint
             , const FeatureCatalogueController &dictObjController
-            , const FeatureMapController &mapObjController
-            , const ContexParametrController &contParamController
             );
 
 	~LuaRuleMashine();
 
     bool doPortrayal();
+
+    void PortrayalInitialize(const ContexParametrController &contParamController, std::shared_ptr<FeatureMapController> mapObjCtrl);
 
     const DrawingInstructionsController &drawController() const;
 
@@ -39,11 +41,8 @@ public:
     //static void initializeObjectController();
 
 
-
 private:
     const FeatureCatalogueController & m_dictObjCtrl;
-    const FeatureMapController & m_mapObjCtrl;
-    const ContexParametrController & m_contParamCtrl;
     DrawingInstructionsController m_drawController;
 
     LuaHostFunc* m_luaHostFunc;

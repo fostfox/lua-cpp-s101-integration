@@ -30,6 +30,7 @@ int main()
     dictFile.close();
 
     ContexParametrController contextParamCtrl(contextparams::PARAMS);
+    LuaRuleMashine luaPortoyal(filenames::LUA_MAIN, dictController);
 
     //--------
     QDir directory(filenames::MAP_SET);
@@ -39,10 +40,10 @@ int main()
         QFile mapFile(filenames::MAP_SET + fileNames[i]);
         if (!isExistsEndOpen(errorStream, mapFile, QIODevice::ReadOnly)) { return -1; }
         FeatureMapXMLBuilder mapBuilder(&mapFile);
-        FeatureMapController mapController;
+        std::shared_ptr<FeatureMapController> mapController;
         try {
             mapController = mapBuilder.build(true);
-            std::cout << fileNames[i].toStdString() << " " << mapController.getFeaturesIDs().size() << std::endl;
+            std::cout << fileNames[i].toStdString() << " " << mapController->getFeaturesIDs().size() << std::endl;
         }
         catch (const QString& mapName){
             std::cerr << "MODULE: FeatureMapController" << std::endl << mapName.toStdString();
@@ -56,9 +57,9 @@ int main()
         }
         mapFile.close();
 
-        LuaRuleMashine luaPortoyal(filenames::LUA_MAIN, dictController, mapController, contextParamCtrl);
         bool status;
         try {
+            luaPortoyal.PortrayalInitialize(contextParamCtrl, mapController);
             status = luaPortoyal.doPortrayal();
         }
         catch (const std::exception& e) {
@@ -73,7 +74,7 @@ int main()
         if (!isOpen(errorStream, instractionFile, QIODevice::WriteOnly | QIODevice::Text)) { return -1; }
         try {
             auto drawInstCtrl = luaPortoyal.drawController();
-            writeDrawInst(instractionFile, drawInstCtrl, dictController, mapController);
+            writeDrawInst(instractionFile, drawInstCtrl, dictController, *mapController.get());
         }
         catch (const std::exception& e) {
             std::cerr << "MODULE: Drawing." << std::endl;

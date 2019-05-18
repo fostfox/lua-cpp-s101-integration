@@ -28,30 +28,28 @@ using std::vector;
 LuaHostFunc::LuaHostFunc(
         sol::state& lua
         ,const FeatureCatalogueController &dictObjCtrl
-        ,const FeatureMapController &mapObjCtrl
-        ,const ContexParametrController &contParamController
         ,DrawingInstructionsController &drawInstrCtrl)
     :m_lua(lua)
-    ,m_mapObjCtrl(mapObjCtrl)
     ,m_dictObjCtrl(dictObjCtrl)
-    ,m_contParamCtrl(contParamController)
     ,m_drawInstrCtrl(drawInstrCtrl)
     ,m_isActionState(true)
 {
     loadFunctions();
 
-    PortrayalInitializeContextParameters(m_lua, contParamController);
-
-
     //m_lua["TypeSystemChecks"]("true");
-
 }
 
 bool LuaHostFunc::doPortrayal()
 {
-    auto featuresIDs = m_mapObjCtrl.getFeaturesIDs();
+    auto featuresIDs = m_mapObjCtrl->getFeaturesIDs();
     bool isSuccess = PortrayalMain(m_lua, featuresIDs);
     return isSuccess;
+}
+
+void LuaHostFunc::PortrayalInitialize(const ContexParametrController &contParamController, std::shared_ptr<FeatureMapController> mapObjCtrl)
+{
+    m_mapObjCtrl = mapObjCtrl;
+    PortrayalInitializeContextParameters(m_lua, contParamController);
 }
 
 LuaHostFunc::~LuaHostFunc()
@@ -176,7 +174,7 @@ bool LuaHostFunc::HostPortrayalEmit(const std::string &featureID, const std::str
 const sol::table LuaHostFunc::HostGetFeatureIDs()
 {
     //PROFILING_TIME2("HostGetFeatureIDs")
-    const auto &luaFeaturesIds = helpLuaTable(m_lua, m_mapObjCtrl.getFeaturesIDs());
+    const auto &luaFeaturesIds = helpLuaTable(m_lua, m_mapObjCtrl->getFeaturesIDs());
     return luaFeaturesIds;
 }
 
@@ -196,7 +194,7 @@ const std::string LuaHostFunc::HostFeatureGetCode(const std::string &featureID)
     //PROFILING_TIME2("HostFeatureGetCode")
     const auto& featCtrl = m_dictObjCtrl.featureTypeCtrl();
 
-    string featureCode = m_mapObjCtrl.getCodeById(stoi(featureID));
+    string featureCode = m_mapObjCtrl->getCodeById(stoi(featureID));
     if (!featCtrl.hasInMap(featureCode)){ ///TODO:
 //            // Попробуем найти среди alias'ов
 //            for (const auto& feature : featCtrl.types()){
@@ -258,10 +256,10 @@ const sol::table LuaHostFunc::HostFeatureGetSimpleAttribute(const std::string &f
     //PROFILING_TIME2("HostFeatureGetSimpleAttribute")
 
     sol::table simpleAtrValues;
-    bool isSetSimpleAttrOnMap = m_mapObjCtrl.hasSimpleAttribute(stoi(featureID), path, attributeCode);
+    bool isSetSimpleAttrOnMap = m_mapObjCtrl->hasSimpleAttribute(stoi(featureID), path, attributeCode);
 
     if (isSetSimpleAttrOnMap){
-        auto atribute = m_mapObjCtrl.getSimpleAttribute(stoi(featureID), path, attributeCode);
+        auto atribute = m_mapObjCtrl->getSimpleAttribute(stoi(featureID), path, attributeCode);
         simpleAtrValues = helpLuaTable(m_lua, atribute.value());
     } else {
         simpleAtrValues = m_lua.create_table();
@@ -292,7 +290,7 @@ int LuaHostFunc::HostFeatureGetComplexAttributeCount(const std::string &featureI
 {
     //PROFILING_TIME2("HostFeatureGetComplexAttributeCount")
     int featureCACount = static_cast<int>(
-                m_mapObjCtrl.getComplexAttributeSize(stoi(featureID), path, attributeCode)
+                m_mapObjCtrl->getComplexAttributeSize(stoi(featureID), path, attributeCode)
                 );
     return featureCACount;
 }
@@ -316,8 +314,8 @@ const sol::table LuaHostFunc::HostFeatureGetSpatialAssociations(const std::strin
 
     auto luaFSpatialAssociations = m_lua.create_table();
 
-    if (m_mapObjCtrl.hasSpatialAssotiation(stoi(featureID))) {
-        Fe2spRef featureSpatioalAss = m_mapObjCtrl.getFeatureById(stoi(featureID)).fe2spRef();
+    if (m_mapObjCtrl->hasSpatialAssotiation(stoi(featureID))) {
+        Fe2spRef featureSpatioalAss = m_mapObjCtrl->getFeatureById(stoi(featureID)).fe2spRef();
         auto luaFSAss = luaCreateSpatialAssociation(m_lua, featureSpatioalAss);
         luaFSpatialAssociations.add(luaFSAss);
     }
@@ -396,11 +394,11 @@ const sol::table LuaHostFunc::HostGetSpatial(const std::string &spatialID)
 {
     //PROFILING_TIME2("HostGetSpatial")
 
-    if (!m_mapObjCtrl.hasSpatialObject(stoi(spatialID))){
+    if (!m_mapObjCtrl->hasSpatialObject(stoi(spatialID))){
         qFatal(("Ihe spatilalID=" + spatialID + " not on the map").c_str());
         return sol::nil;
     }
-    auto spatialP = m_mapObjCtrl.spatialObjectByRefId(stoi(spatialID));
+    auto spatialP = m_mapObjCtrl->spatialObjectByRefId(stoi(spatialID));
 
     sol::object luaSpatial;
     switch (spatialP->getType()) {
