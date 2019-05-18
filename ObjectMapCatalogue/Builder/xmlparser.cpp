@@ -43,8 +43,8 @@ FeatureMapController FeatureMapXMLBuilder::build(bool onlyFullFeatures)
 
     auto features = parse2();
     if (onlyFullFeatures) {
-        std::vector<Feature> tmpFeatures;
-        for (auto f : features){
+        std::list<Feature> tmpFeatures;
+        for (const auto &f : features){
             if (f.fe2spRef().refId() != -1){
                 tmpFeatures.push_back(f);
             }
@@ -59,7 +59,7 @@ FeatureMapController FeatureMapXMLBuilder::build(bool onlyFullFeatures)
 }
 
 
-std::vector<Feature> FeatureMapXMLBuilder::parse2()
+const std::list<Feature> &FeatureMapXMLBuilder::parse2()
 {
     std::string typeOfAttrs;
 

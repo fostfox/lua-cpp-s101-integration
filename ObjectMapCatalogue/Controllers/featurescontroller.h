@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <list>
 #include <string>
 #include "../Entries/feature.h"
 #include <map>
@@ -12,9 +13,9 @@ class FeatureMapController
 {
 public:
     FeatureMapController();
-    void setFeatures(std::vector<Feature> fs);
+    void setFeatures(const std::list<Feature>& fs);
 
-    std::vector<std::string> getFeaturesIDs() const;
+    const std::vector<std::string> &getFeaturesIDs() const;
     const std::string& getCodeById(int id) const;
     const Attribute& getSimpleAttribute(int id, const std::string &path, const std::string &attributeCode) const;
     const Feature& getFeatureById(int id) const;
@@ -30,7 +31,8 @@ public:
     std::shared_ptr<GM_Object> spatialObjectByRefId(int refId) const;
 
 private:
-    std::vector<Feature> fs_;
+    std::vector<std::string> fsIDs_;
+    std::list<Feature> fs_;
     std::map<int, Feature> id_to_f_;
     std::map<int, Fe2spRef> refId_to_Fe2SpRef;
     std::map<int, std::shared_ptr<GM_Object>> spId_to_SpatialObject;

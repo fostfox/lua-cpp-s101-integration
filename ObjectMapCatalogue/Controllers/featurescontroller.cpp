@@ -31,13 +31,17 @@ FeatureMapController::FeatureMapController()
 
 }
 
-void FeatureMapController::setFeatures(std::vector<Feature> fs)
+void FeatureMapController::setFeatures(const std::list<Feature> &fs)
 {
     fs_ = fs;
     for (auto f : fs){
         id_to_f_.insert(std::make_pair(f.id(), f));
         if (f.fe2spRef().refId() != -1)
             refId_to_Fe2SpRef.insert(std::make_pair(f.fe2spRef().refId(), f.fe2spRef()));
+    }
+    fsIDs_.reserve(fs_.size());
+    for (const auto &f : fs_){
+        fsIDs_.push_back(std::to_string(f.id()));
     }
 }
 
@@ -56,14 +60,9 @@ std::shared_ptr<GM_Object> FeatureMapController::spatialObjectByRefId(int refId)
     return spId_to_SpatialObject.at(refId);
 }
 
-std::vector<std::string> FeatureMapController::getFeaturesIDs() const
+const std::vector<std::string>& FeatureMapController::getFeaturesIDs() const
 {
-    std::vector<std::string> ids;
-    ids.reserve(fs_.size());
-    for (const auto &f : fs_){
-        ids.push_back(std::to_string(f.id()));
-    }
-    return ids;
+    return fsIDs_;
 }
 
 const std::string &FeatureMapController::getCodeById(int id) const

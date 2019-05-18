@@ -41,6 +41,7 @@ int main()
         FeatureMapController mapController;
         try {
             mapController = mapBuilder.build(true);
+            std::cout << fileNames[i].toStdString() << " " << mapController.getFeaturesIDs().size() << std::endl;
         }
         catch (QString mapName){
             std::cerr << mapName.toStdString();

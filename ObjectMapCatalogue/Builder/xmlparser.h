@@ -30,7 +30,7 @@ public:
 
 
     FeatureMapController build(bool onlyFullFeatures = false);
-    std::vector<Feature> parse2();
+    const std::list<Feature>& parse2();
     const std::map<int, std::shared_ptr<GM_Object> >& parseSpatials();
     bool isStartElementAndAllowed(std::string tag);
 
@@ -46,7 +46,7 @@ private:
     QXmlStreamReader* m_xmlSpatial;
     QFile* m_inputFile;
     std::vector<Attribute> m_atr;
-    std::vector<Feature> features;
+    std::list<Feature> features;
 
 private:
     std::vector<std::string> getListAttrByString(std::string strVal);
