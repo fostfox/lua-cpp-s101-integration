@@ -1,5 +1,6 @@
 #include "help_init.h"
 #include <iostream>
+#include <exception>
 
 int main()
 {
@@ -33,7 +34,7 @@ int main()
     //--------
     QDir directory(filenames::MAP_SET);
     QStringList fileNames = directory.entryList();
-    
+
     for (int i = 2; i < fileNames.size(); ++i){
         QFile mapFile(filenames::MAP_SET + fileNames[i]);
         if (!isExistsEndOpen(errorStream, mapFile, QIODevice::ReadOnly)) { return -1; }
@@ -43,25 +44,44 @@ int main()
             mapController = mapBuilder.build(true);
             std::cout << fileNames[i].toStdString() << " " << mapController.getFeaturesIDs().size() << std::endl;
         }
-        catch (QString mapName){
-            std::cerr << mapName.toStdString();
+        catch (const QString& mapName){
+            std::cerr << "MODULE: FeatureMapController" << std::endl << mapName.toStdString();
             outElapsedTimes << mapName << ";" << "error";
             elapsedTimesFile.close();
         }
+        catch (const std::exception& e){
+            std::cerr << "MODULE: FeatureMapController" << std::endl;
+            std::cerr << e.what();
+            elapsedTimesFile.close();
+        }
         mapFile.close();
-        
+
         LuaRuleMashine luaPortoyal(filenames::LUA_MAIN, dictController, mapController, contextParamCtrl);
-        auto status = luaPortoyal.doPortrayal();
+        bool status;
+        try {
+            status = luaPortoyal.doPortrayal();
+        }
+        catch (const std::exception& e) {
+            std::cerr << "MODULE: LuaRuleMashine. status = " << status << std::endl;
+            std::cerr << e.what();
+            elapsedTimesFile.close();
+        }
         //auto msg = std::string(" \n\n--- DO PORTRAYAL STATUS: --- ") + (status ? "true" : "false");
         //qDebug(msg.c_str());
 
         QFile instractionFile(fileNames[i] + "-OUTPUT.txt");
         if (!isOpen(errorStream, instractionFile, QIODevice::WriteOnly | QIODevice::Text)) { return -1; }
-
-        auto drawInstCtrl = luaPortoyal.drawController();
-        writeDrawInst(instractionFile, drawInstCtrl, dictController, mapController);
+        try {
+            auto drawInstCtrl = luaPortoyal.drawController();
+            writeDrawInst(instractionFile, drawInstCtrl, dictController, mapController);
+        }
+        catch (const std::exception& e) {
+            std::cerr << "MODULE: Drawing." << std::endl;
+            std::cerr << e.what();
+            elapsedTimesFile.close();
+        }
         instractionFile.close();
-        
+
         Profiler::instance().dumpLogMultiMap(outElapsedTimes, fileNames[i]);
         Profiler::instance().clear();
     }
