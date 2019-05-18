@@ -48,6 +48,11 @@ int main()
             outElapsedTimes << mapName << ";" << "error";
             elapsedTimesFile.close();
         }
+        catch (const std::exception& e){
+            std::cerr << "MODULE: FeatureMapController" << std::endl;
+            std::cerr << e.what();
+            elapsedTimesFile.close();
+        }
         mapFile.close();
 
         LuaRuleMashine luaPortoyal(filenames::LUA_MAIN, dictController, mapController, contextParamCtrl);
@@ -58,6 +63,7 @@ int main()
         catch (const std::exception& e) {
             std::cerr << "MODULE: LuaRuleMashine. status = " << status << std::endl;
             std::cerr << e.what();
+            elapsedTimesFile.close();
         }
         //auto msg = std::string(" \n\n--- DO PORTRAYAL STATUS: --- ") + (status ? "true" : "false");
         //qDebug(msg.c_str());
@@ -71,6 +77,7 @@ int main()
         catch (const std::exception& e) {
             std::cerr << "MODULE: Drawing." << std::endl;
             std::cerr << e.what();
+            elapsedTimesFile.close();
         }
         instractionFile.close();
 
