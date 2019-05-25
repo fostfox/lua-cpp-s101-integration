@@ -143,7 +143,6 @@ SOURCES += \
     ObjectMapCatalogue/Entries/feature.cpp \
     ObjectMapCatalogue/Entries/information.cpp \
     ObjectMapCatalogue/contextparameter.cpp \
-    ObjectDrawCatalogue/drawing_instructions_controller.cpp \
     Geometry/gm_point.cpp \
     Geometry/gm_multipoint.cpp \
     Geometry/gm_curvesegment.cpp \
@@ -151,8 +150,18 @@ SOURCES += \
     Geometry/gm_compositecurve.cpp \
     Geometry/gm_surface.cpp \
     Geometry/gm_object.cpp \
+    ObjectDrawCatalogue/Controller\drawing_instructions_controller.cpp \
+    ObjectDrawCatalogue/Builder/drawinstructionparser.cpp \
+    ObjectDrawCatalogue/def_encoding.cpp \
     profiler.cpp \
-    main.cpp
+    main.cpp \
+    ObjectDrawCatalogue/Packages/drawinginstruction_package.cpp \
+    ObjectDrawCatalogue/Packages/text_package.cpp \
+    ObjectDrawCatalogue/Packages/graphicbase_package.cpp \
+    ObjectDrawCatalogue/Packages/linestyles_package.cpp \
+    ObjectDrawCatalogue/Packages/text_package.cpp \
+    ObjectDrawCatalogue/Packages/symbol_package.cpp \
+    ObjectDrawCatalogue/Packages/areafills_package.cpp
 
 
 HEADERS += \
@@ -186,7 +195,6 @@ HEADERS += \
     ObjectMapCatalogue/Entries/feature.h \
     ObjectMapCatalogue/Entries/information.h \
     ObjectMapCatalogue/contextparameter.h \
-    ObjectDrawCatalogue/drawing_instructions_controller.h \
     Geometry/gm_curve.h \
     Geometry/gm_point.h \
     Geometry/gm_multipoint.h \
@@ -194,6 +202,16 @@ HEADERS += \
     Geometry/gm_compositecurve.h \
     Geometry/gm_surface.h \
     Geometry/gm_object.h \
+    ObjectDrawCatalogue/Packages/symbol_package.h \
+    ObjectDrawCatalogue/Packages/graphicbase_package.h \
+    ObjectDrawCatalogue/Packages/linestyles_package.h \
+    ObjectDrawCatalogue/Packages/areafills_package.h \
+    ObjectDrawCatalogue/Packages/text_package.h \
+    ObjectDrawCatalogue/Packages/drawinginstruction_package.h \
+    ObjectDrawCatalogue/Controller/drawing_instructions_controller.h \
+    ObjectDrawCatalogue/Builder/drawinstructionparser.h \
+    ObjectDrawCatalogue/def_encoding.h \
     profiler.h \
     help_init.h \
-    config.h
+    config.h \
+    ObjectDrawCatalogue/Builder/drawinstructionparser_init.h
