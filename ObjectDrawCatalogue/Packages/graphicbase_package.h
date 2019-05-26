@@ -1,10 +1,8 @@
-#ifndef GRAPHICBASE_PACKAGE_H
-#define GRAPHICBASE_PACKAGE_H
+#pragma once
 
-#include <QString>
 #include <QMap>
 
-namespace GraphicBase {
+namespace graphic_base {
 
 enum class CRSType{
     GEOGRAPHIC_CRS,
@@ -12,21 +10,16 @@ enum class CRSType{
     LOCAL_CRS,
     LINE_CRS,
 };
-
-const static QMap<QString, CRSType> toCRSTypeMap = {
-    { "GeographicCRS", CRSType::GEOGRAPHIC_CRS },
-    { "PortrayalCRS", CRSType::PORTRAYAL_CRS },
-    { "LocalCRS", CRSType::LOCAL_CRS },
-    { "LineCRS", CRSType::LINE_CRS },
-};
-
 CRSType toCRSType(const QString &type);
 
 
 class Point
 {
 public:
-    Point();
+    Point(double x, double y);
+    double x() const;
+    double y() const;
+
 private:
     double m_x;
     double m_y;
@@ -36,6 +29,9 @@ class Vector
 {
 public:
     Vector(double x, double y);
+    double x() const;
+    double y() const;
+
 private:
     double m_x;
     double m_y;
@@ -44,7 +40,10 @@ private:
 class Color
 {
 public:
-    Color(QString token, double transparency);
+    Color(const QString &token, double transparency);
+    QString token() const;
+    double transparency() const;
+
 private:
     QString m_token;
     double m_transparency;
@@ -54,10 +53,12 @@ class Pen
 {
 public:
     Pen(double width, Color color);
+    double width() const;
+    Color color() const;
+
 private:
     double m_width;
     Color m_color;
 };
 
-}
-#endif // GRAPHICBASE_PACKAGE_H
+};

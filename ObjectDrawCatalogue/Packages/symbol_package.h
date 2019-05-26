@@ -1,30 +1,20 @@
-#ifndef SYMBOL_PACKAGE_H
-#define SYMBOL_PACKAGE_H
+#pragma once
 
 #include "graphicbase_package.h"
-#include <QString>
 #include <optional>
 
-namespace Symbol {
+namespace symbol {
 
 enum class LinePlacementMode
 {
     RELATIVE,
     ABSOLUTE
 };
-const static QMap<QString, LinePlacementMode> toLinePlacementModeMap = {
-    { "Relative", LinePlacementMode::RELATIVE },
-    { "Absolute", LinePlacementMode::ABSOLUTE },
-};
 LinePlacementMode toLinePlacementMode(const QString &type);
 
 enum class AreaPlacementMode {
     VISIBLE_PARTS,
     GEOGRAPHIC
-};
-const static QMap<QString, AreaPlacementMode> toAreaPlacementModeMap = {
-    { "VisibleParts", AreaPlacementMode::VISIBLE_PARTS },
-    { "Geographic", AreaPlacementMode::GEOGRAPHIC },
 };
 AreaPlacementMode toAreaPlacementMode(const QString &type);
 
@@ -33,24 +23,30 @@ class LineSymbolPlacement
 {
 public:
     LineSymbolPlacement(double offset, LinePlacementMode placementMode);
+    double offset() const;
+    LinePlacementMode placementMode() const;
 
 private:
     double m_offset;
     LinePlacementMode m_placementMode;
 };
 
+
 class AreaSymbolPlacement
 {
 public:
-    AreaSymbolPlacement(AreaPlacementMode m_placementMode);
-    AreaPlacementMode placementMode;
+    AreaSymbolPlacement(AreaPlacementMode placementMode);
+    AreaPlacementMode getPlacementMode() const;
+
+private:
+    AreaPlacementMode m_placementMode;
 };
 
 
 class Symbol
 {
 public:
-    Symbol(QString reference, double m_rotation, GraphicBase::CRSType m_rotationCRS, GraphicBase::Vector m_offset);
+    Symbol(QString reference, double rotation, graphic_base::CRSType rotationCRS, graphic_base::Vector offset);
 
     std::optional<LineSymbolPlacement> linePlacement() const;
     void setLinePlacement(const LineSymbolPlacement &linePlacement);
@@ -61,11 +57,10 @@ public:
 private:
     QString m_reference;
     double m_rotation;
-    GraphicBase::CRSType m_rotationCRS;
-    GraphicBase::Vector m_offset;
+    graphic_base::CRSType m_rotationCRS;
+    graphic_base::Vector m_offset;
     std::optional<LineSymbolPlacement> m_linePlacement;
     std::optional<AreaSymbolPlacement> m_areaPlacement;
 };
 
-}
-#endif // SYMBOL_PACKAGE_H
+};

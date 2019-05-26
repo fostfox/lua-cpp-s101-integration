@@ -30,7 +30,10 @@ void DrawInstrs::parse(const QString &drawInstr)
     for (const auto & element : elements){
         auto tmp = element.split(colon);
         auto commanad = tmp.at(firstElem);
-        auto params = tmp.at(secondElem).split(comma);
+        auto params = QStringList();
+        if (tmp.size() > secondElem){
+            params = tmp.at(secondElem).split(comma);
+        }
 
         this->addInstr(DrawInstr(commanad, params));
     }

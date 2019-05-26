@@ -1,14 +1,16 @@
-#ifndef DEF_ENCODING_H
-#define DEF_ENCODING_H
+#pragma once
 
 #include <QStringList>
 #include <QVector>
 
 
 namespace def_encode {
+class DrawInstr;
+class DrawInstrs;
+}
 
 
-class DrawInstr
+class def_encode::DrawInstr
 {
 public:
     DrawInstr() = default;
@@ -20,7 +22,7 @@ private:
     QStringList m_parametrList;
 };
 
-class DrawInstrs {
+class def_encode::DrawInstrs {
 public:
     DrawInstrs() = default;
     DrawInstrs(const QString &defDrawInstrs);
@@ -31,8 +33,3 @@ private:
 private:
     QVector<DrawInstr> m_drawInstrs;
 };
-
-
-
-} // namespace def_encode
-#endif // DEF_ENCODING_H

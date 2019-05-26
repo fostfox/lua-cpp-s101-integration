@@ -1,16 +1,8 @@
-#ifndef DRAWINGINSTRUCTION_PACKAGE_H
-#define DRAWINGINSTRUCTION_PACKAGE_H
-
 #pragma once
 
-#include "symbol_package.h"
+#include "text_package.h"
 #include "linestyles_package.h"
 #include "areafills_package.h"
-#include "text_package.h"
-
-#include <QMap>
-#include <QVector>
-#include <optional>
 
 
 namespace drawing_instruction {
@@ -37,7 +29,11 @@ private:
 class SpatialReference
 {
 public:
-    SpatialReference();
+    SpatialReference() = default;
+    SpatialReference(const QString ref, bool forward);
+    const QString& reference() const;
+    bool forward() const;
+
 private:
     QString m_reference;
     bool m_forward;
@@ -50,8 +46,10 @@ private:
 class DrawingInstruction
 {
 public:
+    DrawingInstruction() = default;
     DrawingInstruction(const QString &viewingGroup, const QString &displayPlane, const int &drawingPriority, const FeatureReference &m_featureReference);
-    virtual ~DrawingInstruction();
+    virtual ~DrawingInstruction() = default
+            ;
 
     const QString& viewingGroup() const;
     const QString& displayPlane() const;
@@ -64,7 +62,9 @@ public:
     void setScaleMaximum(int scaleMaximum);
 
     QVector<SpatialReference> spatialReferences() const;
+    void setSpatialReferences(const QVector<SpatialReference> &spatialReferences);
     void addSpatialReferences(const SpatialReference &spatialReferences);
+
 
 private:
     QString m_viewingGroup;
@@ -88,9 +88,11 @@ class PointInstruction : public DrawingInstruction
 {
 public:
     PointInstruction(const QString &viewingGroup, const QString &displayPlane, int drawingPriority, const FeatureReference &m_featureReference
-                     , const Symbol::Symbol &symbol);
+                     , const symbol::Symbol &symbol);
+    symbol::Symbol symbol() const;
+
 private:
-    Symbol::Symbol m_symbol;
+    symbol::Symbol m_symbol;
 };
 
 
@@ -98,9 +100,11 @@ class LineInstruction : public DrawingInstruction
 {
 public:
     LineInstruction(const QString &viewingGroup, const QString &displayPlane, int drawingPriority, const FeatureReference &m_featureReference
-                    , const LineStyles::AbstractLineStyle* lineStyle);
+                    , const line_styles::AbstractLineStyle *lineStyle);
+    const line_styles::AbstractLineStyle *lineStyle() const;
+
 private:
-    LineStyles::AbstractLineStyle* m_lineStyle;
+    const line_styles::AbstractLineStyle* m_lineStyle;
 };
 
 
@@ -108,9 +112,11 @@ class AreaInstruction : public DrawingInstruction
 {
 public:
     AreaInstruction(const QString &viewingGroup, const QString &displayPlane, int drawingPriority, const FeatureReference &m_featureReference
-                    , const AreaFills::AbstractAreaFill* areaFill);
+                    , const area_fills::AbstractAreaFill* areaFill);
+    const area_fills::AbstractAreaFill *areaFill() const;
+
 private:
-    AreaFills::AbstractAreaFill* m_areaFill;
+    const area_fills::AbstractAreaFill* m_areaFill;
 };
 
 
@@ -118,9 +124,11 @@ class TextInstruction : public DrawingInstruction
 {
 public:
     TextInstruction(const QString &viewingGroup, const QString &displayPlane, int drawingPriority, const FeatureReference &m_featureReference
-                    , const Text::Text* text);
+                    , const text_package::Text* text);
+    const text_package::Text *text() const;
+
 private:
-    Text::Text* m_text;
+    const text_package::Text* m_text;
 };
 
 
@@ -137,4 +145,3 @@ private:
 
 
 } // namespace drawing_instruction
-#endif // DRAWINGINSTRUCTION_PACKAGE_H

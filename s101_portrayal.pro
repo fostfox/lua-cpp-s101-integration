@@ -156,7 +156,6 @@ SOURCES += \
     profiler.cpp \
     main.cpp \
     ObjectDrawCatalogue/Packages/drawinginstruction_package.cpp \
-    ObjectDrawCatalogue/Packages/text_package.cpp \
     ObjectDrawCatalogue/Packages/graphicbase_package.cpp \
     ObjectDrawCatalogue/Packages/linestyles_package.cpp \
     ObjectDrawCatalogue/Packages/text_package.cpp \
@@ -209,9 +208,9 @@ HEADERS += \
     ObjectDrawCatalogue/Packages/text_package.h \
     ObjectDrawCatalogue/Packages/drawinginstruction_package.h \
     ObjectDrawCatalogue/Controller/drawing_instructions_controller.h \
-    ObjectDrawCatalogue/Builder/drawinstructionparser.h \
     ObjectDrawCatalogue/def_encoding.h \
     profiler.h \
     help_init.h \
     config.h \
-    ObjectDrawCatalogue/Builder/drawinstructionparser_init.h
+    ObjectDrawCatalogue/Builder/drawinstructionparser.h \
+    ObjectDrawCatalogue/Builder/drawinstructionparser_init.hpp

@@ -1,25 +1,17 @@
-#ifndef LINESTYLES_PACKAGE_H
-#define LINESTYLES_PACKAGE_H
+#pragma once
 
 #include "graphicbase_package.h"
 
 #include <optional>
 #include <QVector>
-#include <QString>
-#include <QMap>
 
 
-namespace LineStyles {
+namespace line_styles {
 
 enum class JoinStyle {
     BEVEL,
     MITER,
     ROUND
-};
-const static QMap<QString, JoinStyle> toJoinStyleMap = {
-    { "Bevel", JoinStyle::BEVEL },
-    { "Miter", JoinStyle::MITER },
-    { "Round", JoinStyle::ROUND },
 };
 JoinStyle toJoinStyle(const QString &type);
 
@@ -28,17 +20,16 @@ enum class CapStyle {
     SQUARE,
     ROUND
 };
-const static QMap<QString, CapStyle> toCapStyleMap = {
-    { "Butt", CapStyle::BUTT },
-    { "Square", CapStyle::SQUARE },
-    { "Round", CapStyle::ROUND },
-};
 CapStyle toCapStyle(const QString & type);
 
 class Dash
 {
 public:
+    Dash() = default;
     Dash(double start, double length);
+    double start() const;
+    double length() const;
+
 private:
     double m_start;
     double m_length;
@@ -53,7 +44,7 @@ private:
     QString m_reference;
     double m_rotation;
     double m_scaleFactor;
-    GraphicBase::CRSType m_crsType;
+    graphic_base::CRSType m_crsType;
     double m_position;
 };
 
@@ -61,18 +52,39 @@ private:
 class AbstractLineStyle
 {
 public:
-    AbstractLineStyle();
-    virtual ~AbstractLineStyle();
+    AbstractLineStyle() = default;
+    virtual ~AbstractLineStyle() = default;
+};
+
+
+class LineStyleReference : public AbstractLineStyle
+{
+public:
+    LineStyleReference(const QString& styleRef);
+    QString styleRef() const;
+
+private:
+    QString m_styleRef;
 };
 
 
 class LineStyle : public AbstractLineStyle
 {
 public:
-    LineStyle(double offset, CapStyle capStyle, JoinStyle joinStyle, GraphicBase::Pen pen);
+    LineStyle(double offset, CapStyle capStyle, JoinStyle joinStyle, const graphic_base::Pen& pen);
 
     QVector<Dash> dash() const;
     void addDash(const Dash &dash);
+
+    std::optional<double> intervalLength() const;
+    void setIntervalLength(double intervalLength);
+
+    double offset() const;
+    CapStyle capStyle() const;
+    JoinStyle joinStyle() const;
+    const graphic_base::Pen& pen() const;
+    const QVector<LineSymbol>& symbols() const;
+
 
 private:
     double m_offset;
@@ -80,12 +92,11 @@ private:
     JoinStyle m_joinStyle;
     std::optional<double> m_intervalLength;
     QVector<Dash> m_dash;
-    GraphicBase::Pen m_pen;
+    graphic_base::Pen m_pen;
     QVector<LineSymbol> m_symbols;
 };
-};
 
 
-}
 
-#endif // LINESTYLES_PACKAGE_H
+
+}// namespace LineStyles

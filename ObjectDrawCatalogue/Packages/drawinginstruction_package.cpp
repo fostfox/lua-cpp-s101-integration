@@ -23,7 +23,7 @@ std::optional<int> DrawingInstruction::scaleMinimum() const
 
 void DrawingInstruction::setScaleMinimum(int scaleMinimum)
 {
-    m_scaleMinimum = scaleMinimum;
+    m_scaleMinimum = std::make_optional(scaleMinimum);
 }
 
 std::optional<int> DrawingInstruction::scaleMaximum() const
@@ -33,7 +33,7 @@ std::optional<int> DrawingInstruction::scaleMaximum() const
 
 void DrawingInstruction::setScaleMaximum(int scaleMaximum)
 {
-    m_scaleMaximum = scaleMaximum;
+    m_scaleMaximum = std::make_optional(scaleMaximum);
 }
 
 QVector<SpatialReference> DrawingInstruction::spatialReferences() const
@@ -44,6 +44,11 @@ QVector<SpatialReference> DrawingInstruction::spatialReferences() const
 void DrawingInstruction::addSpatialReferences(const SpatialReference &spatialReferences)
 {
     m_spatialReferences.push_back(spatialReferences);
+}
+
+void DrawingInstruction::setSpatialReferences(const QVector<SpatialReference> &spatialReferences)
+{
+    m_spatialReferences = spatialReferences;
 }
 
 const QString& DrawingInstruction::displayPlane() const
@@ -70,5 +75,66 @@ const QString &FeatureReference::reference() const
 NullInstruction::NullInstruction(const QString &viewingGroup, const QString &displayPlane, int drawingPriority, const FeatureReference &m_featureReference)
     :DrawingInstruction (viewingGroup, displayPlane, drawingPriority, m_featureReference)
 {
+}
 
+PointInstruction::PointInstruction(const QString &viewingGroup, const QString &displayPlane, int drawingPriority, const FeatureReference &m_featureReference, const symbol::Symbol &symbol)
+    :DrawingInstruction (viewingGroup, displayPlane, drawingPriority, m_featureReference)
+    ,m_symbol(symbol)
+{
+}
+
+symbol::Symbol PointInstruction::symbol() const
+{
+    return m_symbol;
+}
+
+LineInstruction::LineInstruction(const QString &viewingGroup, const QString &displayPlane, int drawingPriority, const FeatureReference &m_featureReference, const line_styles::AbstractLineStyle *lineStyle)
+    :DrawingInstruction (viewingGroup, displayPlane, drawingPriority, m_featureReference)
+    ,m_lineStyle(lineStyle)
+{
+}
+
+const line_styles::AbstractLineStyle *LineInstruction::lineStyle() const
+{
+    return m_lineStyle;
+}
+
+AreaInstruction::AreaInstruction(const QString &viewingGroup, const QString &displayPlane, int drawingPriority, const FeatureReference &m_featureReference, const area_fills::AbstractAreaFill *areaFill)
+    :DrawingInstruction (viewingGroup, displayPlane, drawingPriority, m_featureReference)
+    ,m_areaFill(areaFill)
+{
+
+}
+
+const area_fills::AbstractAreaFill *AreaInstruction::areaFill() const
+{
+    return m_areaFill;
+}
+
+TextInstruction::TextInstruction(const QString &viewingGroup, const QString &displayPlane, int drawingPriority, const FeatureReference &m_featureReference, const text_package::Text *text)
+    :DrawingInstruction (viewingGroup, displayPlane, drawingPriority, m_featureReference)
+    ,m_text(text)
+{
+
+}
+
+const text_package::Text *TextInstruction::text() const
+{
+    return m_text;
+}
+
+SpatialReference::SpatialReference(const QString ref, bool forward)
+    :m_reference(ref), m_forward(forward)
+{
+
+}
+
+const QString &SpatialReference::reference() const
+{
+    return m_reference;
+}
+
+bool SpatialReference::forward() const
+{
+    return m_forward;
 }

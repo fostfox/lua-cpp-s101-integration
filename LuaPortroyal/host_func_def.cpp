@@ -12,7 +12,7 @@
 
 #include "ObjectDictCatalogue/Controllers/featurecataloguecontroller.h"
 #include "ObjectMapCatalogue/Controllers/featurescontroller.h"
-#include "ObjectDrawCatalogue/drawing_instructions_controller.h"
+#include "ObjectDrawCatalogue/Controller/drawing_instructions_controller.h"
 
 #include "profiler.h"
 
@@ -99,9 +99,9 @@ void LuaHostFunc::loadFunctions()
     {
         PROFILING_TIME2("HostPortrayalEmit")
         qDebug("call HostPortrayalEmit");
-        m_drawInstrCtrl.setDrawInstr(stoi(featureID),
-                                      DrawingInstructions (drawingInstructions)
-                                      );
+        m_drawInstrCtrl.setDrawInstr(QString::fromStdString(featureID), QString::fromStdString(drawingInstructions),
+                                     m_mapObjCtrl.getFeatureById(featureID).fe2spRef().refType());
+
         return m_isActionState;
     });
 

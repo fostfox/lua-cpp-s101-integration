@@ -1,21 +1,14 @@
-#ifndef AREAFILLS_PACKAGE_H
-#define AREAFILLS_PACKAGE_H
+#pragma once
 
-#include "graphicbase_package.h"
 #include "symbol_package.h"
 
 
-namespace AreaFills {
+namespace area_fills {
 
 enum class AreaCRSType {
     GLOBAL,
     LOCAL_GEOMETRY,
     GLOBAL_GEOMETRY
-};
-const static QMap<QString, AreaCRSType> toAreaCRSTypeMap = {
-    { "Global", AreaCRSType::GLOBAL },
-    { "LocalGeometry", AreaCRSType::LOCAL_GEOMETRY },
-    { "GlobalGeometry", AreaCRSType::GLOBAL_GEOMETRY },
 };
 AreaCRSType toAreaCRSType(const QString &type);
 
@@ -23,15 +16,17 @@ AreaCRSType toAreaCRSType(const QString &type);
 class AbstractAreaFill
 {
 public:
-    AbstractAreaFill();
-    virtual ~AbstractAreaFill();
+    AbstractAreaFill() = default;
+    virtual ~AbstractAreaFill() = default;
 };
 
 
 class AreaFillReference : public AbstractAreaFill
 {
 public:
-    AreaFillReference(QString m_reference);
+    AreaFillReference(const QString &reference);
+    const QString &reference() const;
+
 private:
     QString m_reference;
 };
@@ -40,21 +35,26 @@ private:
 class ColorFill : public AbstractAreaFill
 {
 public:
-    ColorFill(GraphicBase::Color color);
+    ColorFill(graphic_base::Color color);
+    const graphic_base::Color &color() const;
+
 private:
-    GraphicBase::Color m_color;
+    graphic_base::Color m_color;
 };
 
 
 class SymbolFill : public AbstractAreaFill
 {
 public:
-    SymbolFill();
+    SymbolFill(const symbol::Symbol &symbol, const graphic_base::Vector &v1, const graphic_base::Vector &v2);
+    const symbol::Symbol& symbol() const;
+    const graphic_base::Vector& v1() const;
+    const graphic_base::Vector& v2() const;
+
 private:
-    Symbol::Symbol m_symbol;
-    GraphicBase::Vector m_v1;
-    GraphicBase::Vector m_v2;
+    symbol::Symbol m_symbol;
+    graphic_base::Vector m_v1;
+    graphic_base::Vector m_v2;
 };
 
 }
-#endif // AREAFILLS_PACKAGE_H

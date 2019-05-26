@@ -10,7 +10,8 @@
 #include "ObjectDictCatalogue/Builder/xmlbuilder.h"
 #include "ObjectMapCatalogue/Builder/xmlparser.h"
 #include "ObjectMapCatalogue/contextparameter.h"
-#include "ObjectDrawCatalogue/drawing_instructions_controller.h"
+#include "ObjectDrawCatalogue/Builder/drawinstructionparser.h"
+#include "ObjectDrawCatalogue/Controller/drawing_instructions_controller.h"
 #include "LuaPortroyal/LuaRuleMashine.h"
 
 
@@ -103,9 +104,18 @@ bool writeDrawInst(QFile & portayalFile, const DrawingInstructionsController& dr
     QTextStream out(&portayalFile);
     for (const auto& featureID : fmCtrl.getFeaturesIDs()){
         std::string featureCode = fmCtrl.getFeatureById(featureID).classAlias();
-        std::string drawInstr = drawCtrl.drawInstr(stoi(featureID)).drawingInstruction();
-        out << "Feature : [" << QString::fromStdString(featureID) << "] " << QString::fromStdString(featureCode)
-                 << "\n " << QString::fromStdString(drawInstr)
-                 << "\n---------------------------------------\n";
+        //std::string drawInstr = drawCtrl.drawInstr(stoi(featureID)).drawingInstruction();
+
+
+        //--------------------------
+        //DrawInstructionParser drawParser;
+        //auto t = drawParser.build(featureID, def_encode::DrawInstrs())
+
+        //--------------------------
+
+//        out << "Feature : [" << QString::fromStdString(featureID) << "] " << QString::fromStdString(featureCode)
+//                 << "\n " << QString::fromStdString(drawInstr)
+//                 << "\n---------------------------------------\n";
     }
+    return true;
 }
