@@ -160,7 +160,12 @@ SOURCES += \
     ObjectDrawCatalogue/Packages/linestyles_package.cpp \
     ObjectDrawCatalogue/Packages/text_package.cpp \
     ObjectDrawCatalogue/Packages/symbol_package.cpp \
-    ObjectDrawCatalogue/Packages/areafills_package.cpp
+    ObjectDrawCatalogue/Packages/areafills_package.cpp \
+    ObjectSymbolsCatalogue/Builder/portrayalcataloguebuilder.cpp \
+    ObjectSymbolsCatalogue/Entities/symbol.cpp \
+    ObjectSymbolsCatalogue/Entities/color.cpp \
+    ObjectSymbolsCatalogue/Controller/portrayalcataloguecontroller.cpp \
+    ObjectSymbolsCatalogue/Controller/controllers.cpp
 
 
 HEADERS += \
@@ -213,4 +218,10 @@ HEADERS += \
     help_init.h \
     config.h \
     ObjectDrawCatalogue/Builder/drawinstructionparser.h \
-    ObjectDrawCatalogue/Builder/drawinstructionparser_init.hpp
+    ObjectDrawCatalogue/Builder/drawinstructionparser_init.hpp \
+    ObjectSymbolsCatalogue/Entities/symbol.h \
+    ObjectSymbolsCatalogue/Builder/portrayalcataloguebuilder.h \
+    ObjectSymbolsCatalogue/Entities/symbol.h \
+    ObjectSymbolsCatalogue/Entities/color.h \
+    ObjectSymbolsCatalogue/Controller/portrayalcataloguecontroller.h \
+    ObjectSymbolsCatalogue/Entities/guard.h

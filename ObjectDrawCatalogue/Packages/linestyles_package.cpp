@@ -47,6 +47,11 @@ const QVector<line_styles::LineSymbol> &line_styles::LineStyle::symbols() const
     return m_symbols;
 }
 
+void line_styles::LineStyle::addSymbol(const line_styles::LineSymbol &symbol)
+{
+    m_symbols.push_back(symbol);
+}
+
 void line_styles::LineStyle::setIntervalLength(double intervalLength)
 {
     m_intervalLength = intervalLength;
@@ -101,4 +106,35 @@ QString line_styles::LineStyleReference::styleRef() const
 line_styles::LineStyleReference::LineStyleReference(const QString &styleRef)
     :m_styleRef(styleRef)
 {
+}
+
+line_styles::LineSymbol::LineSymbol(const QString &reference, double rotation, double scaleFactor, graphic_base::CRSType crsType, double position)
+    :m_reference(reference), m_rotation(rotation), m_scaleFactor(scaleFactor), m_crsType(crsType), m_position(position)
+{
+
+}
+
+double LineSymbol::position() const
+{
+    return m_position;
+}
+
+graphic_base::CRSType LineSymbol::crsType() const
+{
+    return m_crsType;
+}
+
+double LineSymbol::scaleFactor() const
+{
+    return m_scaleFactor;
+}
+
+double LineSymbol::rotation() const
+{
+    return m_rotation;
+}
+
+QString LineSymbol::reference() const
+{
+    return m_reference;
 }

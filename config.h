@@ -14,6 +14,12 @@ const static QString LUA_MAIN     = "lua/main.lua";
 const static QString PORTRAYAL    = dateTime + "-OUTPUT.txt";
 const static QString PROFILE      = dateTime + "-elapsed_time.txt";
 const static QString LOG          = dateTime + "-log.txt";
+    namespace catalogues {
+    const static QString COLORS      = "XMLData/PC_PACK/ColorProfiles";
+    const static QString AREA_FILLS  = "XMLData/PC_PACK/AreaFills";
+    const static QString LINE_STILES = "XMLData/PC_PACK/LineStyles";
+    const static QString SYMBOLS     = "XMLData/PC_PACK/Symbols";
+    } // namespace catalogues
 } // namespace filenames
 
 

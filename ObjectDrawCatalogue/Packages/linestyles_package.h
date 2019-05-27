@@ -39,7 +39,17 @@ private:
 class LineSymbol
 {
 public:
-    LineSymbol();
+    LineSymbol(const QString& reference
+               , double rotation
+               , double scaleFactor
+               , graphic_base::CRSType crsType
+               , double position);
+    QString reference() const;
+    double rotation() const;
+    double scaleFactor() const;
+    graphic_base::CRSType crsType() const;
+    double position() const;
+
 private:
     QString m_reference;
     double m_rotation;
@@ -76,6 +86,9 @@ public:
     QVector<Dash> dash() const;
     void addDash(const Dash &dash);
 
+    const QVector<LineSymbol>& symbols() const;
+    void addSymbol(const LineSymbol& symbol);
+
     std::optional<double> intervalLength() const;
     void setIntervalLength(double intervalLength);
 
@@ -83,7 +96,6 @@ public:
     CapStyle capStyle() const;
     JoinStyle joinStyle() const;
     const graphic_base::Pen& pen() const;
-    const QVector<LineSymbol>& symbols() const;
 
 
 private:
