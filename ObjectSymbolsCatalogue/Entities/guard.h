@@ -6,56 +6,53 @@
 #include "../Entities/color.h"
 #include "../Entities/symbol.h"
 #include "../../ObjectDrawCatalogue/Packages/linestyles_package.h"
-
-namespace pcatalogue {
-class SymbolProfile;
-class ColorProfile;
-}
-namespace line_styles {
-class LineStyle;
-class LineSymbol;
-}
-namespace area_fills {
-class SymbolFill;
-class AreaCRSType;
-}
-namespace graphic_base {
-class Vector;
-}
+#include "../../ObjectDrawCatalogue/Packages/areafills_package.h"
+//namespace pcatalogue {
+//class SymbolProfile;
+//class ColorProfile;
+//}
+//namespace line_styles {
+//class LineStyle;
+//class LineSymbol;
+//}
+//namespace area_fills {
+//class SymbolFill;
+//class AreaCRSType;
+//}
+//namespace graphic_base {
+//class Vector;
+//}
 
 
 class SymbolProfileBulder {
 public:
+    SymbolProfileBulder();
     bool isReady() const;
-    pcatalogue::SymbolProfile symbol() const;
+    pcatalogue::SymbolProfile build() const;
     void setPath(const QString &path);
 private:
     std::optional<QString> m_path;
 };
 
 
-class ColorProfileBulder {
+class ColorPaletteBulder{
 public:
-    bool isReady() const;
-    pcatalogue::SymbolProfile symbol() const;
-    void setR(int r);
-    void setG(int g);
-    void setB(int b);
-private:
-    std::optional<int> m_r;
-    std::optional<int> m_g;
-    std::optional<int> m_b;
+    ColorPaletteBulder();
+    void startNewPalette(const QString &name);
+    void addColorProfile(const QString& token, const graphic_base::Color& color);
 };
 
 
 class LineStyleBulder {
 public:
+    LineStyleBulder();
     bool isReady() const;
-    pcatalogue::SymbolProfile symbol() const;
-    void setRefId(int r);
-    void setIntervalLength(int g);
-    void setWidth(int b);
-    void setColor( );
+    line_styles::LineStyle build() const;
+
+    void setRefId(const QString & refId);
+    void setIntervalLength(double g);
+    void setWidth(double b);
+    void setColor(const QString &ref);
     void addLineSymbol(const QString &symbolRef, double pos);
     void addDash(double start, double lenght);
 private:
@@ -68,11 +65,21 @@ private:
 };
 
 
-class SymbolFillBulder
-{
+class SymbolFillBulder {
+public:
+    SymbolFillBulder();
+    bool isReady() const;
+    area_fills::SymbolFill build() const;
+    void setRefIf(const QString &ref);
+    void setV1(const graphic_base::Vector& v);
+    void setV2(const graphic_base::Vector& v);
+    void setAreaCRSType(const QString& type);
+    void setSymbolRef(const QString &ref);
+
 private:
-    QString refId;
-    graphic_base::Vector v1;
-    graphic_base::Vector v2;
-    QString AreaCRSType;
+    QString m_refId;
+    graphic_base::Vector m_v1;
+    graphic_base::Vector m_v2;
+    QString m_areaCRSType;
+    QString symbolRef;
 };

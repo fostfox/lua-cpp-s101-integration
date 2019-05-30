@@ -165,7 +165,9 @@ SOURCES += \
     ObjectSymbolsCatalogue/Entities/symbol.cpp \
     ObjectSymbolsCatalogue/Entities/color.cpp \
     ObjectSymbolsCatalogue/Controller/portrayalcataloguecontroller.cpp \
-    ObjectSymbolsCatalogue/Controller/controllers.cpp
+    ObjectSymbolsCatalogue/Controller/controllers.cpp \
+    ObjectSymbolsCatalogue/Builder/builder.cpp \
+    drawengine.cpp
 
 
 HEADERS += \
@@ -224,4 +226,9 @@ HEADERS += \
     ObjectSymbolsCatalogue/Entities/symbol.h \
     ObjectSymbolsCatalogue/Entities/color.h \
     ObjectSymbolsCatalogue/Controller/portrayalcataloguecontroller.h \
-    ObjectSymbolsCatalogue/Entities/guard.h
+    ObjectSymbolsCatalogue/Entities/guard.h \
+    ObjectSymbolsCatalogue/Builder/builder.h \
+    ObjectSymbolsCatalogue/Builder/builder_init.h \
+    drawengine.h
+
+DISTFILES +=

@@ -1,11 +1,12 @@
-#ifndef DRAWENGINE_H
-#define DRAWENGINE_H
+#pragma once
 
+#include <memory>
 
 class DrawEngine
 {
 public:
     DrawEngine();
-};
 
-#endif // DRAWENGINE_H
+private:
+    std::unique_ptr<
+};

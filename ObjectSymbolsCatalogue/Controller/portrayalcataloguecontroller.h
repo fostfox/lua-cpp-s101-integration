@@ -1,11 +1,23 @@
 #pragma once
 
-
-
-
+#include <QMap>
 
 class PortrayalCatalogueBuilder;
-
+namespace pcatalogue {
+class SymbolProfile;
+class ColorProfile;
+}
+namespace line_styles {
+class LineStyle;
+class LineSymbol;
+}
+namespace area_fills {
+class SymbolFill;
+class AreaCRSType;
+}
+namespace graphic_base {
+class Vector;
+}
 
 
 class PortrayalCatalogueController
@@ -20,24 +32,10 @@ public:
 
 protected:
     friend PortrayalCatalogueBuilder;
-    void addSymbolProfile(const QString &refId
-                          , const pcatalogue::SymbolProfile& symbol
-                          );
-    void addColorProfile(const QString &refId
-                         , const pcatalogue::ColorProfile& color
-                         );
-    void addLineStyle(const QString &refId
-                      , double intervalLength
-                      , double width
-                      , QString color
-                      , QVector<std::pair<QString, double>> refSymbolAndPos
-                      , QVector<std::pair<double, double>> dashStartLenght
-                      );
-    void addSymbolFill(const QString &refId
-                       , const graphic_base::Vector& v1
-                       , const graphic_base::Vector& v2
-                       , const QString &AreaCRSType
-                       );
+    void addSymbolProfile(const QString &refId, const pcatalogue::SymbolProfile& symbol);
+    void addColorProfile(const QString &refId, const pcatalogue::ColorProfile& color);
+    void addLineStyle(const QString &refId, const line_styles::LineStyle &lineStyle);
+    void addSymbolFill(const QString &refId, const area_fills::SymbolFill &symbolFill);
 
 private:
     using refid_t = QString;
