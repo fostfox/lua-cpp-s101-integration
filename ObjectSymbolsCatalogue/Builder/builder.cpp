@@ -34,19 +34,19 @@ PortrayalCatalogueController PortrayalCatalogueBuilder::build(QFile *path)
             switch (fc_tags::main[tag]) {
                 case fc_tags::COLORS_PROFILE : {
                     auto cp = buildColorProfile(fileName);
-                    pcCtrl.addColorProfile(cp);
+                    pcCtrl.addColorProfile(ref, cp);
                 } break;
                 case fc_tags::SYMBOL : {
                     auto sp = buildSymbolProfile(fileName, ref);
-                    pcCtrl.addSymbolProfile(sp);
+                    pcCtrl.addSymbolProfile(ref, sp);
                 } break;
                 case fc_tags::LINE_STYLE : {
                     auto ls = buildLineStyle(fileName, ref);
-                    pcCtrl.addLineStyle(ls);
+                    pcCtrl.addLineStyle(ref, ls);
                 } break;
                 case fc_tags::AREA_FILL : {
                     auto af = buildSymbolFill(fileName, ref);
-                    pcCtrl.addSymbolFill(af);
+                    pcCtrl.addSymbolFill(ref, af);
                 } break;
             }
         } else {
@@ -57,14 +57,16 @@ PortrayalCatalogueController PortrayalCatalogueBuilder::build(QFile *path)
         qWarning(QString("Some error: %1").arg(reader.errorString()).toLocal8Bit().data());
     }
 
+    return pcCtrl;
 }
 
 QString readFileName(QXmlStreamReader &reader)
 {
-    while (reader.atEnd()){
+    while (!reader.atEnd()){
         if (reader.name().toString() == "fileName") {
             return reader.readElementText();
         }
+        reader.readNextStartElement();
     }
     qWarning("fileName tag is not found");
     return QString();
@@ -73,11 +75,14 @@ QString readFileName(QXmlStreamReader &reader)
 QXmlStreamReader createReader(const QString &path, const QString &fileName)
 {
     auto fullPath = QDir(path).filePath(fileName);
-    QFile file(fullPath);
+    auto file = new QFile(fullPath);
     if (!QFile::exists(path)){
+        qCritical("Filed to exisis file");
+    }
+    if (!file->open(QIODevice::ReadOnly)){
         qCritical("Filed to open file");
     }
-    return QXmlStreamReader(&file);
+    return QXmlStreamReader(file);
 }
 
 pcatalogue::SymbolProfile buildSymbolProfile(const QString &fileName, const QString &refId)
@@ -98,7 +103,6 @@ pcatalogue::ColorPalette buildColorProfile(const QString &fileName)
     while (!reader.atEnd()){
         auto tag = reader.name().toString();
         if (isAllowed(reader, fc_tags::colorProfiles, tag)){
-            auto fileName = readFileName(reader);
             switch (fc_tags::colorProfiles[tag]) {
                 case fc_tags::ColorProfiles::PALETTE : {
                     auto name = reader.attributes().value("name").toString();
@@ -110,14 +114,13 @@ pcatalogue::ColorPalette buildColorProfile(const QString &fileName)
                     builder.addColorProfile(token, color);
                 } break;
             }
-        } else {
-            reader.readNextStartElement();
         }
+        reader.readNextStartElement();
     }
     if (reader.error()){
         qWarning(QString("Some error: %1").arg(reader.errorString()).toLocal8Bit().data());
     }
-
+    return builder.build();
 }
 
 line_styles::LineStyle buildLineStyle(const QString &fileName, const QString &refId)
@@ -131,36 +134,38 @@ line_styles::LineStyle buildLineStyle(const QString &fileName, const QString &re
         auto tag = reader.name().toString();
         if (isAllowed(reader, fc_tags::lineStyle, tag)){
             switch (fc_tags::lineStyle[tag]) {
-                case fc_tags::LineStyle::INTERVAL_LENGTH : {
-                    auto il = reader.readElementText().toDouble();
-                    builder.setIntervalLength(il);
-                } break;
-                case fc_tags::LineStyle::PEN : {
-                    auto width = reader.attributes().value("width").toDouble();
-                    builder.setWidth(width);
-                    reader.readNextStartElement();
-                    auto colorRef = reader.readElementText();
-                    builder.setColor(colorRef);
-                } break;
-                case fc_tags::LineStyle::DASH : {
-                    reader.readNextStartElement();
-                    auto start = reader.readElementText().toDouble();
-                    reader.readNextStartElement();
-                    auto length = reader.readElementText().toDouble();
-                    builder.addDash(start, length);
-                } break;
-                case fc_tags::LineStyle::SYMBOL : {
-                    auto reference = reader.attributes().value("reference").toString();
-                    reader.readNextStartElement();
-                    auto position = reader.readElementText().toDouble();
-                    builder.addLineSymbol(reference, position);
-                } break;
+            case fc_tags::LineStyle::INTERVAL_LENGTH : {
+                auto il = reader.readElementText().toDouble();
+                builder.setIntervalLength(il);
+            } break;
+            case fc_tags::LineStyle::PEN : {
+                auto width = reader.attributes().value("width").toDouble();
+                builder.setWidth(width);
+                reader.readNextStartElement();
+                auto colorRef = reader.readElementText();
+                builder.setColor(colorRef);
+            } break;
+            case fc_tags::LineStyle::DASH : {
+                reader.readNextStartElement();
+                auto start = reader.readElementText().toDouble();
+                reader.readNextStartElement();
+                auto length = reader.readElementText().toDouble();
+                builder.addDash(start, length);
+            } break;
+            case fc_tags::LineStyle::SYMBOL : {
+                auto reference = reader.attributes().value("reference").toString();
+                reader.readNextStartElement();
+                auto position = reader.readElementText().toDouble();
+                builder.addLineSymbol(reference, position);
+            } break;
             }
-            reader.readNextStartElement();
-        } else {
-            if (builder.isReady())
-                return builder.build();
         }
+        reader.readNextStartElement();
+    }
+    if (builder.isReady()) {
+        return builder.build();
+    } else {
+        qFatal(("not completly building, fileName=" + fileName).toLocal8Bit());
     }
 }
 
@@ -192,36 +197,50 @@ area_fills::SymbolFill buildSymbolFill( const QString &fileName, const QString& 
                     builder.setV2(v2);
                 } break;
             }
-            reader.readNextStartElement();
-        } else {
-            if (builder.isReady()){
-                return builder.build();
-            }
         }
+        reader.readNextStartElement();
+    }
+    if (builder.isReady()) {
+        return builder.build();
+    } else {
+        qFatal("not completly building");
     }
 }
 
 graphic_base::Vector buildVector(QXmlStreamReader &reader)
 {
+    double x(0), y(0);
     while (!reader.atEnd()) {
         auto tag = reader.name();
         if (tag == "v1" || tag == "v2"){
-            auto v1 = reader.readElementText().toDouble();
-            auto v2 = reader.readElementText().toDouble();
-            return { v1, v2 };
+            reader.readNextStartElement();
+            x = reader.readElementText().toDouble();
+            reader.readNextStartElement();
+            y = reader.readElementText().toDouble();
+            return graphic_base::Vector(x, y);
         }
+        reader.readNextStartElement();
     }
+
 }
 
 pcatalogue::ColorProfile buildColor(QXmlStreamReader &reader)
 {
+    ColorProfileBulder builder;
     while (!reader.atEnd()) {
         auto tag = reader.name();
         if (tag == "srgb"){
+            reader.readNextStartElement();
             auto red = reader.readElementText().toInt();
+            reader.readNextStartElement();
             auto green = reader.readElementText().toInt();
+            reader.readNextStartElement();
             auto blue = reader.readElementText().toInt();
-            return { red, green, blue };
+            builder.setR(red);
+            builder.setG(green);
+            builder.setB(blue);
+            return builder.build();
         }
+        reader.readNextStartElement();
     }
 }

@@ -2,7 +2,7 @@
 
 #include "symbol_package.h"
 #include <QVector>
-
+#include <QFont>
 
 namespace text_package {
 
@@ -67,6 +67,9 @@ class FontCharacteristics : public Font
 {
 public:
     FontCharacteristics(bool serifs, FontWeight weight, FontSlant slant, FontProportion proportion);
+    FontWeight weight() const;
+    QFont::Weight weightQt() const;
+
 private:
     bool m_serifs;
     FontWeight m_weight;
@@ -86,7 +89,15 @@ private:
 class TextElement
 {
 public:
+    TextElement() = default;
     TextElement(QString text_package, double bodySize, double verticalOffset, Font* font, graphic_base::Color foreground);
+    QString text() const;
+
+    double bodySize() const;
+    const graphic_base::Color& foregroundColor() const;
+
+    Font *font() const;
+
 private:
     QString m_text;
     double m_bodySize;
@@ -102,6 +113,9 @@ class Text
 {
 public:
     Text(HorizontalAlignment ha, VerticalAlignment va,  const QVector<TextElement>& elements);
+    virtual ~Text() = default;
+    QVector<TextElement> elements() const;
+
 private:
     HorizontalAlignment m_horizontalAlignment;
     VerticalAlignment m_verticalAlignment;
@@ -117,6 +131,8 @@ public:
 
     std::optional<symbol::AreaSymbolPlacement> areaPlacement() const;
     void setAreaPlacement(const symbol::AreaSymbolPlacement &areaPlacement);
+
+    double rotation() const;
 
 private:
     std::optional<graphic_base::Vector> m_offset;

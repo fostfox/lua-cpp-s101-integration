@@ -8,12 +8,18 @@
 static const auto dateTime = QString::number(QDateTime::currentSecsSinceEpoch());
 namespace filenames {
 const static QString MAP_SET      = "XMLData/MAP_SET/";
-const static QString MAP          = "XMLData/dataset_map.xml";
+//const static QString MAP          = "XMLData/dataset_map.xml";
+const static QString MAP          = "XMLData/MAP_SET/101CA00276311.usf.xml";
+//const static QString MAP          = "XMLData/MAP_SET/101CA00276312.usf.xml";
+//const static QString MAP          = "XMLData/MAP_SET/101CA00273097.usf.xml";
+//const static QString MAP          = "XMLData/101CA00573247.usf.xml";
 const static QString DICT         = "XMLData/S-101FC_1.0.0_20190409.xml";
 const static QString LUA_MAIN     = "lua/main.lua";
 const static QString PORTRAYAL    = dateTime + "-OUTPUT.txt";
 const static QString PROFILE      = dateTime + "-elapsed_time.txt";
 const static QString LOG          = dateTime + "-log.txt";
+
+const static QString IMG_MAP     = "mapimg.png";
 
 const static QString PORTRAYAL_CATALOGUE = "XMLData/PC_PACK/portrayal_catalogue.xml";
 
@@ -25,6 +31,10 @@ const static QString PORTRAYAL_CATALOGUE = "XMLData/PC_PACK/portrayal_catalogue.
     } // namespace catalogues
 } // namespace filenames
 
+namespace map_params {
+const double WEIGHT = 1280;
+const double HEIGHT = 1024;
+}
 
 namespace contextparams {
 using namespace contextparamstype;

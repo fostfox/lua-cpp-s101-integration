@@ -39,6 +39,7 @@ private:
 class LineSymbol
 {
 public:
+    LineSymbol() = default;
     LineSymbol(const QString& reference
                , double rotation
                , double scaleFactor
@@ -81,6 +82,7 @@ private:
 class LineStyle : public AbstractLineStyle
 {
 public:
+    LineStyle() = default;
     LineStyle(double offset, CapStyle capStyle, JoinStyle joinStyle, const graphic_base::Pen& pen);
 
     QVector<Dash> dash() const;
@@ -94,7 +96,9 @@ public:
 
     double offset() const;
     CapStyle capStyle() const;
+    Qt::PenCapStyle capStyleQt() const;
     JoinStyle joinStyle() const;
+    Qt::PenJoinStyle joinStyleQt() const;
     const graphic_base::Pen& pen() const;
 
 

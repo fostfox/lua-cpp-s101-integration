@@ -1,13 +1,20 @@
 #pragma once
 
 #include <QString>
+#include <QGraphicsSvgItem>
+#include <QPixmap>
 
 namespace pcatalogue {
-class SymbolProfile;
-}
-
-class pcatalogue::SymbolProfile
+class SymbolProfile
 {
 public:
+    SymbolProfile() = default;
     SymbolProfile(const QString& path);
+    QGraphicsSvgItem* svgItem() const;
+    const QPixmap &pixmap() const;
+
+private:
+    QGraphicsSvgItem* m_svgItem;
+    QPixmap m_pixmap;
 };
+}

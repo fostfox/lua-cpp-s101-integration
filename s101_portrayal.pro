@@ -1,11 +1,12 @@
 ###############################################################################
 # Build and Compile Settings
 
-QT -= gui
+QT += gui svg xml
 
-CONFIG += c++17 console
+CONFIG += c++17 gui
 CONFIG -= app_bundle
 DEFINES += QT_DEPRECATED_WARNINGS
+contains(QT_CONFIG, opengl): QT += opengl
 
 DEFINES  += DEBUG_OUT_ENABLE
 DEFINES  += DEBUG_TO_LOG_FILE
@@ -161,13 +162,12 @@ SOURCES += \
     ObjectDrawCatalogue/Packages/text_package.cpp \
     ObjectDrawCatalogue/Packages/symbol_package.cpp \
     ObjectDrawCatalogue/Packages/areafills_package.cpp \
-    ObjectSymbolsCatalogue/Builder/portrayalcataloguebuilder.cpp \
     ObjectSymbolsCatalogue/Entities/symbol.cpp \
     ObjectSymbolsCatalogue/Entities/color.cpp \
     ObjectSymbolsCatalogue/Controller/portrayalcataloguecontroller.cpp \
-    ObjectSymbolsCatalogue/Controller/controllers.cpp \
     ObjectSymbolsCatalogue/Builder/builder.cpp \
-    drawengine.cpp
+    drawengine.cpp \
+    ObjectSymbolsCatalogue/Entities/guard.cpp
 
 
 HEADERS += \
@@ -222,7 +222,6 @@ HEADERS += \
     ObjectDrawCatalogue/Builder/drawinstructionparser.h \
     ObjectDrawCatalogue/Builder/drawinstructionparser_init.hpp \
     ObjectSymbolsCatalogue/Entities/symbol.h \
-    ObjectSymbolsCatalogue/Builder/portrayalcataloguebuilder.h \
     ObjectSymbolsCatalogue/Entities/symbol.h \
     ObjectSymbolsCatalogue/Entities/color.h \
     ObjectSymbolsCatalogue/Controller/portrayalcataloguecontroller.h \

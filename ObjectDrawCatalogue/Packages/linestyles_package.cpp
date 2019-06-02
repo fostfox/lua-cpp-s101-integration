@@ -72,9 +72,33 @@ line_styles::JoinStyle line_styles::LineStyle::joinStyle() const
     return m_joinStyle;
 }
 
+Qt::PenJoinStyle line_styles::LineStyle::joinStyleQt() const
+{
+    switch (m_joinStyle) {
+    case JoinStyle::BEVEL:
+        return Qt::PenJoinStyle::BevelJoin;
+    case JoinStyle::MITER:
+        return Qt::PenJoinStyle::MiterJoin;
+    case JoinStyle::ROUND:
+        return Qt::PenJoinStyle::RoundJoin;
+    }
+}
+
 line_styles::CapStyle line_styles::LineStyle::capStyle() const
 {
     return m_capStyle;
+}
+
+Qt::PenCapStyle line_styles::LineStyle::capStyleQt() const
+{
+    switch (m_capStyle) {
+    case CapStyle::BUTT:
+        return Qt::PenCapStyle::FlatCap;
+    case CapStyle::ROUND:
+        return Qt::PenCapStyle::RoundCap;
+    case CapStyle::SQUARE:
+        return Qt::PenCapStyle::SquareCap;
+    }
 }
 
 double line_styles::LineStyle::offset() const
@@ -114,27 +138,27 @@ line_styles::LineSymbol::LineSymbol(const QString &reference, double rotation, d
 
 }
 
-double LineSymbol::position() const
+double line_styles::LineSymbol::position() const
 {
     return m_position;
 }
 
-graphic_base::CRSType LineSymbol::crsType() const
+graphic_base::CRSType line_styles::LineSymbol::crsType() const
 {
     return m_crsType;
 }
 
-double LineSymbol::scaleFactor() const
+double line_styles::LineSymbol::scaleFactor() const
 {
     return m_scaleFactor;
 }
 
-double LineSymbol::rotation() const
+double line_styles::LineSymbol::rotation() const
 {
     return m_rotation;
 }
 
-QString LineSymbol::reference() const
+QString line_styles::LineSymbol::reference() const
 {
     return m_reference;
 }

@@ -46,7 +46,19 @@ private:
     std::vector<Attribute> m_atr;
     std::vector<Feature> features;
 
+    std::pair<double, double> m_latInterval = {
+        std::numeric_limits<double>::max(),
+        - std::numeric_limits<double>::max()
+    };
+    std::pair<double, double> m_lonInterval = {
+        std::numeric_limits<double>::max(),
+        - std::numeric_limits<double>::max()
+    };
+
+
 private:
+    void updateLatLon(double lat, double lon);
+
     std::vector<std::string> getListAttrByString(std::string strVal);
     std::map<std::string, GM_Object *> m_SpId_to_SpatialObject;
 };

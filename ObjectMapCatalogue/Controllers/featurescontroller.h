@@ -5,6 +5,7 @@
 #include <map>
 #include <Geometry/gm_object.h>
 
+
 std::vector<std::pair<std::string, std::string> > getAttributeNames(std::string path);
 class FeatureMapController
 {
@@ -27,10 +28,19 @@ public:
     bool hasSpatialObject(std::string spatialId) const;
     GM_Object* spatialObjectByRefId(std::string refId) const;
 
+    std::pair<double, double> getLatInterval() const;
+    void setLatInterval(const std::pair<double, double> &latInterval);
+
+    std::pair<double, double> getLonInterval() const;
+    void setLonInterval(const std::pair<double, double> &lonInterval);
+
 private:
     std::vector<Feature> fs_;
     std::map<std::string, Feature> id_to_f_;
     std::map<std::string, Fe2spRef> refId_to_Fe2SpRef;
     std::map<std::string, GM_Object *> spId_to_SpatialObject;
+
+    std::pair<double, double> m_latInterval;
+    std::pair<double, double> m_lonInterval;
 };
 

@@ -19,6 +19,7 @@ public:
     DrawingInstructionsController() = default;
     void setDrawInstr(const QString &featureId, const QString& defEncodeDrawInstr, int geometryType);
     vDrawingInstruction drawInstr(const QString &featureId) const;
+    const QMap<QString, vDrawingInstruction> &drawInstr() const;
 
 
 private:

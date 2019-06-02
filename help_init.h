@@ -13,6 +13,9 @@
 #include "ObjectDrawCatalogue/Builder/drawinstructionparser.h"
 #include "ObjectDrawCatalogue/Controller/drawing_instructions_controller.h"
 #include "LuaPortroyal/LuaRuleMashine.h"
+#include "ObjectSymbolsCatalogue/Builder/builder.h"
+
+#include "drawengine.h"
 
 
 char* getLine(const uint N, char D){

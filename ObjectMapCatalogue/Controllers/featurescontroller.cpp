@@ -1,6 +1,7 @@
 #include <QString>
 #include "featurescontroller.h"
 
+#include <limits>
 
 std::vector<std::pair<std::string, std::string> > getAttributeNames(std::string path){
     std::string s = path;
@@ -54,6 +55,26 @@ bool FeatureMapController::hasSpatialObject(std::string spatialId) const
 GM_Object *FeatureMapController::spatialObjectByRefId(std::string refId) const
 {
     return spId_to_SpatialObject.at(refId);
+}
+
+std::pair<double, double> FeatureMapController::getLonInterval() const
+{
+    return m_lonInterval;
+}
+
+void FeatureMapController::setLonInterval(const std::pair<double, double> &lonInterval)
+{
+    m_lonInterval = lonInterval;
+}
+
+std::pair<double, double> FeatureMapController::getLatInterval() const
+{
+    return m_latInterval;
+}
+
+void FeatureMapController::setLatInterval(const std::pair<double, double> &latInterval)
+{
+    m_latInterval = latInterval;
 }
 
 std::vector<std::string> FeatureMapController::getFeaturesIDs() const

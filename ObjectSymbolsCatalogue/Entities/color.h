@@ -1,23 +1,31 @@
 #pragma once
 
-#include <QString>
+#include <QColor>
+#include <QMap>
+
 
 namespace pcatalogue {
-class ColorProfile;
-class ColorPalette;
+class ColorProfile
+{
+public:
+    ColorProfile() = default;
+    ColorProfile(int r, int g, int b, double transparency);
+    const QColor& color() const;
+
+private:
+    QColor m_color;
+    double m_transparency;
+};
+
+
+class ColorPalette
+{
+public:
+    ColorPalette() = default;
+    void addColorProfile(const QString& paletteName, const QString& colorToken, const ColorProfile& color);
+    ColorProfile colorProfile(const QString& paletteName, const QString& colorToken) const;
+
+private:
+    QMap<QString, QMap<QString, ColorProfile>> m_palette;
+};
 }
-
-
-class pcatalogue::ColorProfile
-{
-public:
-    ColorProfile(int r, int g, int b);
-};
-
-
-class pcatalogue::ColorPalette
-{
-public:
-    ColorPalette();
-    void addColorProfile(const QString& paletteName, const ColorProfile& color);
-};

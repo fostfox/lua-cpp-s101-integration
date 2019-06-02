@@ -33,7 +33,13 @@ void DrawingInstructionsController::setDrawInstr(const QString& featureId, const
 DrawingInstructionsController::vDrawingInstruction DrawingInstructionsController::drawInstr(const QString& featureId) const
 {
     if(!m_drawInstr.contains(featureId)){
-        qFatal(QString("in 'm_drawInstr' has no drawing instructions for featureId:'%1'").arg(featureId).toUtf8());
+        qCritical(QString("in 'm_drawInstr' has no drawing instructions for featureId:'%1'").arg(featureId).toUtf8());
+        return {};
     }
     return m_drawInstr.value(featureId);
+}
+
+const QMap<QString, DrawingInstructionsController::vDrawingInstruction>& DrawingInstructionsController::drawInstr() const
+{
+    return m_drawInstr;
 }

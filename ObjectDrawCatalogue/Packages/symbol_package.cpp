@@ -51,6 +51,16 @@ void symbol::Symbol::setAreaPlacement(const symbol::AreaSymbolPlacement &areaPla
     m_areaPlacement = std::make_optional(areaPlacement);
 }
 
+const QString& symbol::Symbol::reference() const
+{
+    return m_reference;
+}
+
+double symbol::Symbol::rotation() const
+{
+    return m_rotation;
+}
+
 symbol::LineSymbolPlacement::LineSymbolPlacement(double offset, symbol::LinePlacementMode placementMode)
     :m_offset(offset), m_placementMode(placementMode)
 {

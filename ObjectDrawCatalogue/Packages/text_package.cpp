@@ -1,11 +1,18 @@
 #include "text_package.h"
 
+#include <QFont>
+
 text_package::Text::Text(HorizontalAlignment ha, VerticalAlignment va, const QVector<TextElement> &elements)
     :m_horizontalAlignment(ha)
     ,m_verticalAlignment(va)
     ,m_elements(elements)
 {
 
+}
+
+QVector<text_package::TextElement> text_package::Text::elements() const
+{
+    return m_elements;
 }
 
 text_package::TextPoint::TextPoint(HorizontalAlignment ha, VerticalAlignment va, const QVector<TextElement> &elements, double rotation)
@@ -23,6 +30,11 @@ std::optional<symbol::AreaSymbolPlacement> text_package::TextPoint::areaPlacemen
 void text_package::TextPoint::setAreaPlacement(const symbol::AreaSymbolPlacement &areaPlacement)
 {
     m_areaPlacement = std::make_optional(areaPlacement);
+}
+
+double text_package::TextPoint::rotation() const
+{
+    return m_rotation;
 }
 
 text_package::TextLine::TextLine(HorizontalAlignment ha, VerticalAlignment va, const QVector<TextElement> &elements, double startOffset, symbol::LinePlacementMode placementMode)
@@ -103,8 +115,43 @@ text_package::FontCharacteristics::FontCharacteristics(bool serifs, text_package
 
 }
 
+QFont::Weight text_package::FontCharacteristics::weightQt() const
+{
+    switch (m_weight) {
+    case FontWeight::LIGHT: return QFont::Light;
+    case FontWeight::MEDIUM: return QFont::Medium;
+    case FontWeight::BOLD: return QFont::Bold;
+    }
+
+}
+
+text_package::FontWeight text_package::FontCharacteristics::weight() const
+{
+    return m_weight;
+}
+
 text_package::TextElement::TextElement(QString text, double bodySize, double verticalOffset, text_package::Font *font, graphic_base::Color foreground)
     :m_text(text), m_bodySize(bodySize), m_verticalOffset(verticalOffset), m_font(font), m_foreground(foreground)
 {
 
+}
+
+QString text_package::TextElement::text() const
+{
+    return m_text;
+}
+
+double text_package::TextElement::bodySize() const
+{
+    return m_bodySize;
+}
+
+const graphic_base::Color& text_package::TextElement::foregroundColor() const
+{
+    return m_foreground;
+}
+
+text_package::Font *text_package::TextElement::font() const
+{
+    return m_font;
 }

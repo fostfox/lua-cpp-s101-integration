@@ -40,6 +40,7 @@ private:
 class Color
 {
 public:
+    Color() = default;
     Color(const QString &token, double transparency);
     QString token() const;
     double transparency() const;
@@ -52,6 +53,7 @@ private:
 class Pen
 {
 public:
+    Pen() = default;
     Pen(double width, Color color);
     double width() const;
     Color color() const;

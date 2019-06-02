@@ -26,7 +26,7 @@
 
 class SymbolProfileBulder {
 public:
-    SymbolProfileBulder();
+    SymbolProfileBulder() = default;
     bool isReady() const;
     pcatalogue::SymbolProfile build() const;
     void setPath(const QString &path);
@@ -34,18 +34,37 @@ private:
     std::optional<QString> m_path;
 };
 
+class ColorProfileBulder{
+public:
+    ColorProfileBulder() = default;
+    pcatalogue::ColorProfile build() const;
+
+    void setR(int r);
+    void setG(int g);
+    void setB(int b);
+
+private:
+    std::optional<int> m_r;
+    std::optional<int> m_g;
+    std::optional<int> m_b;
+};
 
 class ColorPaletteBulder{
 public:
-    ColorPaletteBulder();
+    ColorPaletteBulder() = default;
+    pcatalogue::ColorPalette build() const;
+
     void startNewPalette(const QString &name);
-    void addColorProfile(const QString& token, const graphic_base::Color& color);
+    void addColorProfile(const QString &colorToken, const pcatalogue::ColorProfile &color);
+private:
+    QString m_currentPalette;
+    pcatalogue::ColorPalette m_cp;
 };
 
 
 class LineStyleBulder {
 public:
-    LineStyleBulder();
+    LineStyleBulder() = default;
     bool isReady() const;
     line_styles::LineStyle build() const;
 
@@ -60,14 +79,14 @@ private:
     std::optional<double> m_intervalLength;
     std::optional<double> m_width;
     std::optional<QString> m_color;
-    QVector<line_styles::LineSymbol> refSymbolAndPos;
-    QVector<line_styles::Dash> dashStartLenght;
+    QVector<std::pair<QString, double>> m_refSymbolAndPos;
+    QVector<std::pair<double, double>> m_dashStartLenght;
 };
 
 
 class SymbolFillBulder {
 public:
-    SymbolFillBulder();
+    SymbolFillBulder() = default;
     bool isReady() const;
     area_fills::SymbolFill build() const;
     void setRefIf(const QString &ref);
@@ -77,9 +96,9 @@ public:
     void setSymbolRef(const QString &ref);
 
 private:
-    QString m_refId;
-    graphic_base::Vector m_v1;
-    graphic_base::Vector m_v2;
-    QString m_areaCRSType;
-    QString symbolRef;
+    std::optional<QString> m_refId;
+    std::optional<graphic_base::Vector> m_v1;
+    std::optional<graphic_base::Vector> m_v2;
+    std::optional<QString> m_areaCRSType;
+    std::optional<QString> m_symbolRef;
 };

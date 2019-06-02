@@ -26,6 +26,7 @@ FeatureMapXMLBuilder::FeatureMapXMLBuilder(QFile * const inputFile)
     m_inputFile = inputFile;
     m_xmlReader = new QXmlStreamReader(inputFile);
     m_xmlSpatial = new QXmlStreamReader(inputFile);
+
 }
 
 FeatureMapController FeatureMapXMLBuilder::build(bool onlyFullFeatures)
@@ -50,6 +51,10 @@ FeatureMapController FeatureMapXMLBuilder::build(bool onlyFullFeatures)
     FeatureMapController fFontroller;
     fFontroller.setFeatures(features);
     fFontroller.setSpatials(spatials);
+
+    fFontroller.setLatInterval(m_latInterval);
+    fFontroller.setLonInterval(m_lonInterval);
+
     return fFontroller;
 }
 
@@ -408,8 +413,10 @@ GM_Object *FeatureMapXMLBuilder::buildIsolatedPoint()
     std::string lat = m_xmlSpatial->readElementText().toStdString();
     readNext2(m_xmlSpatial);
     std::string lon = m_xmlSpatial->readElementText().toStdString();
-    m_SpId_to_SpatialObject[index] = new GM_Point(lat, lon);
-    return new GM_Point(lat, lon);
+    updateLatLon(std::stod(lat), std::stod(lon));
+
+    m_SpId_to_SpatialObject[index] = new GM_Point(lon, lat);
+    return new GM_Point(lon, lat);
 }
 
 GM_Object *FeatureMapXMLBuilder::buildSurface()
@@ -489,7 +496,10 @@ GM_Object *FeatureMapXMLBuilder::buildEdge()
             std::string lat = m_xmlSpatial->readElementText().toStdString();
             readNext2(m_xmlSpatial);
             std::string lon = m_xmlSpatial->readElementText().toStdString();
-            GM_Point p(lat, lon);
+
+            updateLatLon(std::stod(lat), std::stod(lon));
+
+            GM_Point p(lon, lat);
             seg.addControlPoint(p);
         }
         readNext1(m_xmlSpatial);
@@ -523,6 +533,22 @@ Fe2spRef FeatureMapXMLBuilder::buildFe2Sp()
 Fe2spRef FeatureMapXMLBuilder::buildExteriorRing()
 {
     return Fe2spRef();
+}
+
+void FeatureMapXMLBuilder::updateLatLon(double lat, double lon)
+{
+    if (lat < m_latInterval.first){
+        m_latInterval.first = lat;
+    }
+    if (lat > m_latInterval.second){
+        m_latInterval.second = lat;
+    }
+    if (lon < m_lonInterval.first){
+        m_lonInterval.first = lon;
+    }
+    if (lon > m_lonInterval.second){
+        m_lonInterval.second = lon;
+    }
 }
 
 //GM_Object *FeatureMapXMLBuilder::buildIsolatedPoint()

@@ -54,6 +54,10 @@ public:
     std::optional<AreaSymbolPlacement> areaPlacement() const;
     void setAreaPlacement(const AreaSymbolPlacement &areaPlacement);
 
+    const QString& reference() const;
+
+    double rotation() const;
+
 private:
     QString m_reference;
     double m_rotation;

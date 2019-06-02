@@ -19,7 +19,7 @@ enum Main {
     AREA_FILL,
 };
 const static QMap<QString, Main> main =  {
-    { "colorsProfile", COLORS_PROFILE },
+    { "colorProfile", COLORS_PROFILE },
     { "symbol", SYMBOL },
     { "lineStyle", LINE_STYLE },
     { "areaFill", AREA_FILL },
@@ -34,7 +34,7 @@ enum class LineStyle {
 const static QMap<QString, LineStyle> lineStyle = {
     { "intervalLength", LineStyle::INTERVAL_LENGTH },
     { "pen", LineStyle::PEN },
-    { "dash ", LineStyle::DASH },
+    { "dash", LineStyle::DASH },
     { "symbol", LineStyle::SYMBOL},
 };
 
@@ -47,7 +47,7 @@ enum class AreaFills {
 const static QMap<QString, AreaFills> areaFills = {
     { "areaCRS", AreaFills::AREA_CRS},
     { "symbol", AreaFills::SYMBOL },
-    { "v1 ", AreaFills::V1 },
+    { "v1", AreaFills::V1 },
     { "v2", AreaFills::V2 },
 };
 
