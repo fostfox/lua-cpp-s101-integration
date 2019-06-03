@@ -2,6 +2,7 @@
 # Build and Compile Settings
 
 QT += gui svg xml
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17 gui
 CONFIG -= app_bundle
@@ -167,7 +168,9 @@ SOURCES += \
     ObjectSymbolsCatalogue/Controller/portrayalcataloguecontroller.cpp \
     ObjectSymbolsCatalogue/Builder/builder.cpp \
     drawengine.cpp \
-    ObjectSymbolsCatalogue/Entities/guard.cpp
+    ObjectSymbolsCatalogue/Entities/guard.cpp \
+    Forms/mainwindow.cpp \
+    Forms/contextparam.cpp
 
 
 HEADERS += \
@@ -228,6 +231,12 @@ HEADERS += \
     ObjectSymbolsCatalogue/Entities/guard.h \
     ObjectSymbolsCatalogue/Builder/builder.h \
     ObjectSymbolsCatalogue/Builder/builder_init.h \
-    drawengine.h
+    drawengine.h \
+    Forms/contextparam.h \
+    Forms/mainwindow.h
 
 DISTFILES +=
+
+FORMS += \
+    Forms/contextparam.ui \
+    Forms/mainwindow.ui

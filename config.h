@@ -32,8 +32,8 @@ const static QString PORTRAYAL_CATALOGUE = "XMLData/PC_PACK/portrayal_catalogue.
 } // namespace filenames
 
 namespace map_params {
-const double WEIGHT = 1280;
-const double HEIGHT = 1024;
+const double WEIGHT = 1920;
+const double HEIGHT = 1080;
 }
 
 namespace contextparams {

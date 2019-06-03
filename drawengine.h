@@ -17,17 +17,17 @@ class Fe2spRef;
 class DrawEngine
 {
 public:
-    DrawEngine(FeatureMapController*
-               , DrawingInstructionsController*
-               , PortrayalCatalogueController*);
+    DrawEngine(const FeatureMapController&
+               , const DrawingInstructionsController&
+               , const PortrayalCatalogueController&);
 
     void draw(double dpi);
     const QImage& img() const;
 
 private:
-    FeatureMapController* m_mapCtrl;
-    DrawingInstructionsController* m_drawCtrl;
-    PortrayalCatalogueController* m_symbolCtrl;
+    const FeatureMapController& m_mapCtrl;
+    const DrawingInstructionsController& m_drawCtrl;
+    const PortrayalCatalogueController& m_symbolCtrl;
 
     QImage m_img;
 

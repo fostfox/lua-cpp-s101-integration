@@ -24,17 +24,17 @@
 #endif
 
 
-DrawEngine::DrawEngine(FeatureMapController *mc,
-        DrawingInstructionsController *dc,
-        PortrayalCatalogueController *pc)
+DrawEngine::DrawEngine(const FeatureMapController &mc,
+        const DrawingInstructionsController &dc,
+        const PortrayalCatalogueController &pc)
     :m_img(QImage(map_params::WEIGHT
                  , map_params::HEIGHT
                  , QImage::Format_RGB16)
            )
+    ,m_mapCtrl(mc)
+    ,m_drawCtrl(dc)
+    ,m_symbolCtrl(pc)
 {
-    m_mapCtrl = mc;
-    m_drawCtrl = dc;
-    m_symbolCtrl = pc;
 }
 
 void DrawEngine::draw(double dpi)
@@ -43,7 +43,7 @@ void DrawEngine::draw(double dpi)
 
     using pair = std::pair<QString, DrawingInstructionsController::vDrawingInstruction>;
 
-    auto m = m_drawCtrl->drawInstr().toStdMap();
+    auto m = m_drawCtrl.drawInstr().toStdMap();
     std::vector<pair> v;
     std::copy(m.begin(), m.end(), std::back_inserter<std::vector<pair>>(v));
     std::sort(v.begin(), v.end(), [](pair& l, pair& r){
@@ -57,8 +57,8 @@ void DrawEngine::draw(double dpi)
         const auto & featureId = p.first.toStdString();
         const auto &drawnstr = p.second;
 
-        const auto &fe2spRef = m_mapCtrl->getFeatureById(featureId).fe2spRef();
-        auto gm = m_mapCtrl->spatialObjectByRefId(std::to_string(fe2spRef.refId()));
+        const auto &fe2spRef = m_mapCtrl.getFeatureById(featureId).fe2spRef();
+        auto gm = m_mapCtrl.spatialObjectByRefId(std::to_string(fe2spRef.refId()));
 
         switch (fe2spRef.refType()) {
         case 110: drawPoint(fe2spRef, static_cast<GM_Point*>(gm), drawnstr); break;
@@ -98,8 +98,8 @@ void DrawEngine::drawPoint(const Fe2spRef &, GM_Point* ref, const DrawEngine::vD
         auto pi = std::dynamic_pointer_cast<drawing_instruction::PointInstruction>(di);
         if (pi){
             auto ref = pi->symbol().reference();
-            auto svg = m_symbolCtrl->symbolProfile(ref).svgItem();
-            auto pixmap = m_symbolCtrl->symbolProfile(ref).pixmap();
+            auto svg = m_symbolCtrl.symbolProfile(ref).svgItem();
+            auto pixmap = m_symbolCtrl.symbolProfile(ref).pixmap();
 
         }
         auto ti = std::dynamic_pointer_cast<drawing_instruction::TextInstruction>(di);
@@ -111,7 +111,7 @@ void DrawEngine::drawPoint(const Fe2spRef &, GM_Point* ref, const DrawEngine::vD
                     auto colorRef = elem.foregroundColor().token();
                     QColor color = colorRef.isEmpty()
                             ? QColor(Qt::black)
-                            : m_symbolCtrl->colorPalette("1").colorProfile("Day", colorRef).color();
+                            : m_symbolCtrl.colorPalette("1").colorProfile("Day", colorRef).color();
                     painter.setPen(QPen(color));
                     QFont font;
                     font.setFamily("Times");
@@ -161,7 +161,7 @@ void DrawEngine::drawCurve(const Fe2spRef &fe2spRef, GM_Curve* ref, const DrawEn
             auto lineStyle = dynamic_cast<const line_styles::LineStyle*>(li->lineStyle());
             if (lineStyle) {
                 const auto &colorRef = lineStyle->pen().color();
-                auto color = m_symbolCtrl->colorPalette("1").colorProfile("Day", colorRef.token()).color();
+                auto color = m_symbolCtrl.colorPalette("1").colorProfile("Day", colorRef.token()).color();
                 color.setAlphaF(1 - colorRef.transparency());
                 QPen p(QBrush(color), lineStyle->pen().width()*m_dpi);
                 p.setCapStyle(lineStyle->capStyleQt());
@@ -170,10 +170,10 @@ void DrawEngine::drawCurve(const Fe2spRef &fe2spRef, GM_Curve* ref, const DrawEn
             }
             auto lineStylRef = dynamic_cast<const line_styles::LineStyleReference*>(li->lineStyle());
             if (lineStylRef) {
-                auto lineStyle = m_symbolCtrl->lineStyle(lineStylRef->styleRef());
+                auto lineStyle = m_symbolCtrl.lineStyle(lineStylRef->styleRef());
 
                 const auto &colorRef = lineStyle.pen().color();
-                auto color = m_symbolCtrl->colorPalette("1").colorProfile("Day", colorRef.token()).color();
+                auto color = m_symbolCtrl.colorPalette("1").colorProfile("Day", colorRef.token()).color();
                 color.setAlphaF(1 - colorRef.transparency());
                 QPen p(QBrush(color), lineStyle.pen().width()*m_dpi);
                 p.setCapStyle(lineStyle.capStyleQt());
@@ -196,7 +196,7 @@ void DrawEngine::drawCompositeCurve(const Fe2spRef &fe2spRef, GM_CompositeCurve*
 {
     for (const auto curveAss : ref->curveAssociations()){
         auto refId = std::to_string(curveAss.refId());
-        auto gm = m_mapCtrl->spatialObjectByRefId(refId);
+        auto gm = m_mapCtrl.spatialObjectByRefId(refId);
 
         switch (gm->getType()) {
         case GM_Object::CURVE:
@@ -212,7 +212,7 @@ void DrawEngine::drawCompositeCurve(const Fe2spRef &fe2spRef, GM_CompositeCurve*
 void DrawEngine::drawSurface(const Fe2spRef & fe2spRef, GM_Surface* ref, const DrawEngine::vDrawingInstruction &drawInstr)
 {
     auto refId = std::to_string(ref->exteriorRing().refId());
-    auto gm = m_mapCtrl->spatialObjectByRefId(refId);
+    auto gm = m_mapCtrl.spatialObjectByRefId(refId);
 
     QVector<QPointF> points;
     switch (gm->getType()) {
@@ -240,7 +240,7 @@ void DrawEngine::drawSurface(const Fe2spRef & fe2spRef, GM_Surface* ref, const D
             auto colorFill = dynamic_cast<const area_fills::ColorFill*>(ai->areaFill());
             if (colorFill) {
                 const auto &colorRef = colorFill->color();
-                auto color = m_symbolCtrl->colorPalette("1").colorProfile("Day", colorRef.token()).color();
+                auto color = m_symbolCtrl.colorPalette("1").colorProfile("Day", colorRef.token()).color();
                 color.setAlphaF(1 - colorRef.transparency());
                 painter.setBrush(QBrush(color));
 
@@ -303,7 +303,7 @@ QVector<QPointF> DrawEngine::getAreaPoints(const Fe2spRef &fe2spRef, GM_Composit
     QVector<QPointF> points;
     for (const auto curveAss : ref->curveAssociations()){
         auto refId = std::to_string(curveAss.refId());
-        auto gm = m_mapCtrl->spatialObjectByRefId(refId);
+        auto gm = m_mapCtrl.spatialObjectByRefId(refId);
 
         switch (gm->getType()) {
         case GM_Object::CURVE: {
@@ -324,10 +324,10 @@ QPointF DrawEngine::transform(const GM_Point &point)
     //const double SHIFT_LAT = 90;
     //const double SHIFT_LON = 180;
 
-    const static double lat_min = m_mapCtrl->getLatInterval().first;
-    const static double lat_max = m_mapCtrl->getLatInterval().second;
-    const static double lon_min = m_mapCtrl->getLonInterval().first;
-    const static double lon_max = m_mapCtrl->getLonInterval().second;
+    const static double lat_min = m_mapCtrl.getLatInterval().first;
+    const static double lat_max = m_mapCtrl.getLatInterval().second;
+    const static double lon_min = m_mapCtrl.getLonInterval().first;
+    const static double lon_max = m_mapCtrl.getLonInterval().second;
 
     const static double lat_length = lat_max - lat_min;
     const static double lon_length = lon_max - lon_min;
