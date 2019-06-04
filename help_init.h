@@ -107,18 +107,11 @@ bool writeDrawInst(QFile & portayalFile, const DrawingInstructionsController& dr
     QTextStream out(&portayalFile);
     for (const auto& featureID : fmCtrl.getFeaturesIDs()){
         std::string featureCode = fmCtrl.getFeatureById(featureID).classAlias();
-        //std::string drawInstr = drawCtrl.drawInstr(stoi(featureID)).drawingInstruction();
+        auto drawInstr = drawCtrl.drawInstrStr()[QString::fromStdString(featureID)];
 
-
-        //--------------------------
-        //DrawInstructionParser drawParser;
-        //auto t = drawParser.build(featureID, def_encode::DrawInstrs())
-
-        //--------------------------
-
-//        out << "Feature : [" << QString::fromStdString(featureID) << "] " << QString::fromStdString(featureCode)
-//                 << "\n " << QString::fromStdString(drawInstr)
-//                 << "\n---------------------------------------\n";
+        out << "Feature : [" << QString::fromStdString(featureID) << "] " << QString::fromStdString(featureCode)
+                 << "\n " << drawInstr
+                 << "\n---------------------------------------\n";
     }
     return true;
 }

@@ -5,6 +5,8 @@
 #include <QVariant>
 #include "ObjectMapCatalogue/contextparameter.h"
 
+static const double MM_PER_INCH = 25.4;
+
 static const auto dateTime = QString::number(QDateTime::currentSecsSinceEpoch());
 namespace filenames {
 const static QString MAP_SET      = "XMLData/MAP_SET/";
@@ -32,8 +34,8 @@ const static QString PORTRAYAL_CATALOGUE = "XMLData/PC_PACK/portrayal_catalogue.
 } // namespace filenames
 
 namespace map_params {
-const double WEIGHT = 1920;
-const double HEIGHT = 1080;
+const double WEIGHT = 1920*0.6;
+const double HEIGHT = 1080*0.6;
 }
 
 namespace contextparams {
