@@ -5,6 +5,7 @@
 #include "Forms/contextparam.h"
 
 #include <QFileDialog>
+#include <iostream>
 
 static QTextStream errorStream(stderr);
 
@@ -98,6 +99,28 @@ bool MainWindow::drawMap()
         return false;
     }
 
+
+
+    double y_min = m_mapController->getLatInterval().first;
+    double y_max = m_mapController->getLatInterval().second;
+    double x_min = m_mapController->getLonInterval().first;
+    double x_max = m_mapController->getLonInterval().second;
+
+    double x_d = x_max - x_min;
+    double y_d = y_max - y_min;
+
+    double h, w;
+    if (x_d >= y_d){
+        double coef = x_d / y_d;
+        h = ui->mapView->width() / coef - 5;
+        w = ui->mapView->width() - 5;
+    }
+    else {
+        double coef = y_d / x_d;
+        h = ui->mapView->height() - 5;
+        w = ui->mapView->height() / coef - 5;
+    }
+
     DrawEngine drawEngine(
                 *m_mapController,
                 *m_drawInstCtrl,
@@ -107,7 +130,9 @@ bool MainWindow::drawMap()
     if (ui->mapView->scene()){
         ui->mapView->scene()->deleteLater();
     }
+
     auto scene = new QGraphicsScene();
+//    scene->setSceneRect(0, 0, w, h);
     //ui->mapView->fitInView(QRectF(QPointF(0,0),QSize(1920,1080)));
     //scene->setSceneRect(QRectF(QPointF(0,0),ui->mapView->size()));
     ui->mapView->setScene(scene);
@@ -115,6 +140,7 @@ bool MainWindow::drawMap()
 
     QPolygonF points;
     double dpim = ui->mapView->physicalDpiX() / MM_PER_INCH;
+    drawEngine.setHeightWidth(h, w);
     drawEngine.draw(dpim, scene);
 
     const auto& img = drawEngine.img();
@@ -124,12 +150,14 @@ bool MainWindow::drawMap()
 
 void MainWindow::on_saveAsPngAction_triggered()
 {
-
+    auto fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "Map", tr("Maps (*.png)"));
+    QPixmap pixMap = ui->mapView->grab();
+    pixMap.save(fileName);
 }
 
 void MainWindow::on_exitAction_triggered()
 {
-
+    close();
 }
 
 void MainWindow::on_actionContext_Parametrs_triggered()
@@ -145,4 +173,18 @@ void MainWindow::updateContextParams()
     m_contextParamCtrl.reset(m_paramUi->params());
     //drawMap();
     doPortrayal();
+}
+
+void MainWindow::wheelEvent(QWheelEvent *event)
+{
+    const double scaleFactor = 1.15;
+    if(event->delta() > 0)
+    {
+        ui->mapView->scale(scaleFactor, scaleFactor);
+    }
+    else
+    {
+        ui->mapView->scale(1.0 / scaleFactor, 1.0 / scaleFactor);
+    }
+
 }

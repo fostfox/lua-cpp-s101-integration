@@ -36,6 +36,11 @@ DrawEngine::DrawEngine(const FeatureMapController &mc
 {
 }
 
+void DrawEngine::setHeightWidth(double h, double w){
+    height = h;
+    width = w;
+}
+
 void DrawEngine::draw(double dpim, QGraphicsScene *scene)
 {
     m_dpi = dpim;
@@ -365,8 +370,8 @@ QPointF DrawEngine::transform(const GM_Point &point)
     const static double lat_length = lat_max - lat_min;
     const static double lon_length = lon_max - lon_min;
 
-    const static double ky =  map_params::HEIGHT / lat_length;
-    const static double kx =  map_params::WEIGHT / lon_length;
+    const static double ky =  height / lat_length;
+    const static double kx =  width / lon_length;
     //const static double ky =  m_scene->height() / lat_length;
     //const static double kx =  m_scene->width() / lon_length;
 
@@ -376,6 +381,6 @@ QPointF DrawEngine::transform(const GM_Point &point)
     double y1 = (y - lat_min) * ky;
     double x1 = (x - lon_min) * kx;
 
-    return QPointF(x1, map_params::HEIGHT - y1);
+    return QPointF(x1, height - y1);
 }
 

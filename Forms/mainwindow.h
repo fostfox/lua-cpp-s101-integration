@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QShowEvent>
 
 #include <memory>
 
@@ -25,6 +26,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     bool init();
+    void wheelEvent(QWheelEvent* event);
 
 private slots:
     void on_loadMapAction_triggered();

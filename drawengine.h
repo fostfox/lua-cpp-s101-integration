@@ -32,6 +32,7 @@ public:
                ,QObject* parent = nullptr);
 
     void draw(double dpim, QGraphicsScene* scene);
+    void setHeightWidth(double h, double w);
     const QImage& img() const;
 
 private:
@@ -58,4 +59,6 @@ private:
 
     double m_dpi;
     QGraphicsScene* m_scene;
+
+    double height, width;
 };
