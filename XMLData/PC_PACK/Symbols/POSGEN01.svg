@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="SVGStyle.css" type="text/css"?><svg xmlns="http://www.w3.org/2000/svg" version="1.2" baseProfile="tiny" xml:space="preserve" style="shape-rendering:geometricPrecision; fill-rule:evenodd;" width="4.32mm" height="4.32mm" viewBox="-2.16 -2.16 4.32 4.32">
-  <title>POSGEN01</title>
-  <desc>position of a point feature</desc>
-  <metadata>
-    <iho:S100SVG xmlns:iho="http://www.iho.int/SVGMetadata">
-      <iho:Description iho:publisher="IHB" iho:creationDate="2014-06-09" iho:source="S52Preslib4.0" iho:format="S100SVG" iho:version="0.1"/>
-    </iho:S100SVG>
-  </metadata>
-  <rect class="symbolBox layout" fill="none" x="-2" y="-2" height="4" width="4"/>
-  <rect class="svgBox layout" fill="none" x="-2" y="-2" height="4" width="4"/>
-  <circle class="f0 sLANDF" style="stroke-width: 0.32;" cx="0" cy="0" r="2"/>
-  <circle class="fLANDF" cx="0" cy="0" r="0.5"/>
-  <circle class="pivotPoint layout" fill="none" cx="0" cy="0" r="1"/>
   <defs>
-    <style type="text/css"><![CDATA[
-      .svg {
-        background-color: #93AEBB;
-        color: #E38039;
+		<style type="text/css"><![CDATA[
+			.svg {
+	      background-color: #93AEBB;
+	      color: #E38039;
       }
       .layout {display:none}  /* used to control visibility of symbolBox, svgBox, pivotPoint (none or inline) */
       .symbolBox {stroke:black;stroke-width:0.32;}  /* show the cover of the symbol graphics */
@@ -158,6 +146,18 @@
       .fMARMG {fill:#C64DA6}
       .sMARWH {stroke:#717F77}
       .fMARWH {fill:#717F77}
-    ]]></style>
+		]]></style>
   </defs>
+  <title>POSGEN01</title>
+  <desc>position of a point feature</desc>
+  <metadata>
+    <iho:S100SVG xmlns:iho="http://www.iho.int/SVGMetadata">
+      <iho:Description iho:publisher="IHB" iho:creationDate="2014-06-09" iho:source="S52Preslib4.0" iho:format="S100SVG" iho:version="0.1"/>
+    </iho:S100SVG>
+  </metadata>
+  <rect class="symbolBox layout" fill="none" x="-2" y="-2" height="4" width="4"/>
+  <rect class="svgBox layout" fill="none" x="-2" y="-2" height="4" width="4"/>
+  <circle class="f0 sLANDF" style="stroke-width: 0.32;" cx="0" cy="0" r="2"/>
+  <circle class="fLANDF" cx="0" cy="0" r="0.5"/>
+  <circle class="pivotPoint layout" fill="none" cx="0" cy="0" r="1"/>
 </svg>
