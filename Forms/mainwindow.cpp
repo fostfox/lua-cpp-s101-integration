@@ -74,7 +74,6 @@ bool MainWindow::doPortrayal()
         return false;
     }
 
-
     LuaRuleMashine luaPortoyal(filenames::LUA_MAIN, *m_dictController, *m_mapController, *m_contextParamCtrl);
 
     auto status = luaPortoyal.doPortrayal();
@@ -82,18 +81,45 @@ bool MainWindow::doPortrayal()
     qDebug(msg.c_str());
     if (!status) return false;
 
-    auto drawInstCtrl = luaPortoyal.drawController();
+    m_drawInstCtrl = std::make_unique<DrawingInstructionsController>(luaPortoyal.drawController());
+
+    QFile portayalFile(filenames::PORTRAYAL);
+    if (!isOpen(errorStream,portayalFile, QIODevice::WriteOnly | QIODevice::Text)) { return -1; }
+    writeDrawInst(portayalFile, *m_drawInstCtrl, *m_dictController, *m_mapController);
+
+    auto drawStatus = drawMap();
+
+    return drawStatus;
+}
+
+bool MainWindow::drawMap()
+{
+    if (!m_mapController || !m_drawInstCtrl || !m_symbolCtrl) {
+        return false;
+    }
 
     DrawEngine drawEngine(
                 *m_mapController,
-                drawInstCtrl,
+                *m_drawInstCtrl,
                 *m_symbolCtrl
                 );
-    drawEngine.draw(100);
+
+    if (ui->mapView->scene()){
+        ui->mapView->scene()->deleteLater();
+    }
+    auto scene = new QGraphicsScene();
+    //ui->mapView->fitInView(QRectF(QPointF(0,0),QSize(1920,1080)));
+    //scene->setSceneRect(QRectF(QPointF(0,0),ui->mapView->size()));
+    ui->mapView->setScene(scene);
+    ui->mapView->setRenderHint(QPainter::Antialiasing);
+
+    QPolygonF points;
+    double dpim = ui->mapView->physicalDpiX() / MM_PER_INCH;
+    drawEngine.draw(dpim, scene);
+
     const auto& img = drawEngine.img();
     img.save(filenames::IMG_MAP);
 
-    return true;
 }
 
 void MainWindow::on_saveAsPngAction_triggered()
@@ -117,4 +143,6 @@ void MainWindow::updateContextParams()
 {
     if (!m_paramUi || !m_isMapLoad) return;
     m_contextParamCtrl.reset(m_paramUi->params());
+    //drawMap();
+    doPortrayal();
 }

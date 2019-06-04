@@ -54,7 +54,7 @@ struct VisibilityDefault {
 struct TransformDefault {
     double xOffsetMM = 0;
     double yOffsetMM = 0;
-    symbol::LinePlacementMode linePlacementMode = symbol::LinePlacementMode::RELATIVE;
+    symbol::LinePlacementMode linePlacementMode = symbol::LinePlacementMode::RELATIVE_MODE;
     double offset = 0.5;
     symbol::AreaPlacementMode areaPlacementMode = symbol::AreaPlacementMode::VISIBLE_PARTS;
     area_fills::AreaCRSType areaCRSType = area_fills::AreaCRSType::GLOBAL_GEOMETRY;

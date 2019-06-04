@@ -116,6 +116,9 @@ public:
     virtual ~Text() = default;
     QVector<TextElement> elements() const;
 
+    HorizontalAlignment horizontalAlignment() const;
+    VerticalAlignment verticalAlignment() const;
+
 private:
     HorizontalAlignment m_horizontalAlignment;
     VerticalAlignment m_verticalAlignment;
@@ -133,6 +136,10 @@ public:
     void setAreaPlacement(const symbol::AreaSymbolPlacement &areaPlacement);
 
     double rotation() const;
+
+    bool hasOffset();
+    const graphic_base::Vector& offset() const;
+    void setOffset(const std::optional<graphic_base::Vector> &offset);
 
 private:
     std::optional<graphic_base::Vector> m_offset;

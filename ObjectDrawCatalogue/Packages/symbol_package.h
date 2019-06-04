@@ -7,8 +7,8 @@ namespace symbol {
 
 enum class LinePlacementMode
 {
-    RELATIVE,
-    ABSOLUTE
+    RELATIVE_MODE = 1,
+    ABSOLUTE_MODE = 2
 };
 LinePlacementMode toLinePlacementMode(const QString &type);
 

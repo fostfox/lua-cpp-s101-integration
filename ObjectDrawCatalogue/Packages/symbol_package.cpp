@@ -4,8 +4,8 @@
 symbol::LinePlacementMode symbol::toLinePlacementMode(const QString &type)
 {
     const static QMap<QString, LinePlacementMode> toLinePlacementModeMap = {
-        { "Relative", LinePlacementMode::RELATIVE },
-        { "Absolute", LinePlacementMode::ABSOLUTE },
+        { "Relative", LinePlacementMode::RELATIVE_MODE },
+        { "Absolute", LinePlacementMode::ABSOLUTE_MODE },
     };
     if (!toLinePlacementModeMap.contains(type)){
         qFatal("has no LinePlacementMode type in map");

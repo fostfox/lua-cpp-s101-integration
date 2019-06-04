@@ -344,12 +344,14 @@ std::shared_ptr<drawing_instruction::TextInstruction> DrawInstructionParser::pro
                     );
     } break;
     case POINT: {
-        text_p = new TextPoint(
+        TextPoint *tmp = new TextPoint(
                     m_state.textStyle.horizontalAlignment,
                     m_state.textStyle.verticalAlignment,
                     { textElem },
                     m_state.transform.rotation
                     );
+        tmp->setOffset(graphic_base::Vector(m_state.transform.xOffsetMM, m_state.transform.yOffsetMM));
+        text_p = tmp;
     } break;
     case AREA: {
         TextPoint *tmp = new TextPoint(

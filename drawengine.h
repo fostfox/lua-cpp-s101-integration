@@ -11,17 +11,27 @@ class GM_Curve;
 class GM_Point;
 class GM_Surface;
 namespace drawing_instruction { class DrawingInstruction; }
+namespace line_styles { class Dash; }
+namespace symbol { class LineSymbolPlacement; }
 class QPointF;
 class Fe2spRef;
+class QGraphicsScene;
 
-class DrawEngine
+#include <QObject>
+
+
+class DrawEngine : public QObject
 {
-public:
-    DrawEngine(const FeatureMapController&
-               , const DrawingInstructionsController&
-               , const PortrayalCatalogueController&);
+    Q_OBJECT
 
-    void draw(double dpi);
+public:
+    DrawEngine(
+               const FeatureMapController&
+               , const DrawingInstructionsController&
+               , const PortrayalCatalogueController&
+               ,QObject* parent = nullptr);
+
+    void draw(double dpim, QGraphicsScene* scene);
     const QImage& img() const;
 
 private:
@@ -42,7 +52,10 @@ private:
 
     QVector<QPointF> getAreaPoints(const Fe2spRef &, GM_Curve * ref);
     QVector<QPointF> getAreaPoints(const Fe2spRef &, GM_CompositeCurve * ref);
+    QPointF getPoint(const QVector<QPointF>& points, const symbol::LineSymbolPlacement& linePlacement);
+
     QPointF transform(const GM_Point& );
 
     double m_dpi;
+    QGraphicsScene* m_scene;
 };

@@ -60,4 +60,6 @@ void ContextParam::on_buttonBox_accepted()
         { NATIONAL_LANGUAGE, ui->nationalLanguageValue->currentText() },
     };
     m_controller = new ContexParametrController(params);
+    close();
+    emit updateParams();
 }

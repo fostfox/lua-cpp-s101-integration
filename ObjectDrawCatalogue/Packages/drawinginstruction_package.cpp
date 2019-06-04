@@ -46,6 +46,11 @@ void DrawingInstruction::addSpatialReferences(const SpatialReference &spatialRef
     m_spatialReferences.push_back(spatialReferences);
 }
 
+const FeatureReference &DrawingInstruction::featureReference() const
+{
+    return m_featureReference;
+}
+
 void DrawingInstruction::setSpatialReferences(const QVector<SpatialReference> &spatialReferences)
 {
     m_spatialReferences = spatialReferences;

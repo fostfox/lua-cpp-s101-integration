@@ -10,6 +10,8 @@ class FeatureMapController;
 class ContexParametrController;
 class PortrayalCatalogueController;
 class ContextParam;
+class DrawingInstructionsController;
+
 
 namespace Ui {
 class MainWindow;
@@ -35,6 +37,7 @@ private slots:
 private:
     bool loadMapXml(const QString &mapFileName);
     bool doPortrayal();
+    bool drawMap();
 
 private:
     Ui::MainWindow *ui;
@@ -46,6 +49,7 @@ private:
     std::unique_ptr<FeatureMapController> m_mapController;
     std::unique_ptr<ContexParametrController> m_contextParamCtrl;
     std::unique_ptr<PortrayalCatalogueController> m_symbolCtrl;
+    std::unique_ptr<DrawingInstructionsController> m_drawInstCtrl;
 };
 
 #endif // MAINWINDOW_H

@@ -28,6 +28,7 @@ void DrawingInstructionsController::setDrawInstr(const QString& featureId, const
     }
 
     m_drawInstr[featureId] = instuctParser.build(featureId, def_encode::DrawInstrs(defEncodeDrawInstr), gt);
+    m_drawInstrStr[featureId] = defEncodeDrawInstr;
 }
 
 DrawingInstructionsController::vDrawingInstruction DrawingInstructionsController::drawInstr(const QString& featureId) const
@@ -42,4 +43,9 @@ DrawingInstructionsController::vDrawingInstruction DrawingInstructionsController
 const QMap<QString, DrawingInstructionsController::vDrawingInstruction>& DrawingInstructionsController::drawInstr() const
 {
     return m_drawInstr;
+}
+
+const QMap<QString, QString>& DrawingInstructionsController::drawInstrStr() const
+{
+    return m_drawInstrStr;
 }

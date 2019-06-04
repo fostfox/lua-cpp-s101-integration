@@ -65,6 +65,8 @@ public:
     void setSpatialReferences(const QVector<SpatialReference> &spatialReferences);
     void addSpatialReferences(const SpatialReference &spatialReferences);
 
+    const FeatureReference& featureReference() const;
+
 
 private:
     QString m_viewingGroup;

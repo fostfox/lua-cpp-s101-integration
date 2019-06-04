@@ -22,6 +22,9 @@ public:
     const QMap<QString, vDrawingInstruction> &drawInstr() const;
 
 
+    const QMap<QString, QString> &drawInstrStr() const;
+
 private:
     QMap<QString, vDrawingInstruction> m_drawInstr;
+    QMap<QString, QString> m_drawInstrStr;
 };

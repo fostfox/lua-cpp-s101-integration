@@ -15,6 +15,16 @@ QVector<text_package::TextElement> text_package::Text::elements() const
     return m_elements;
 }
 
+text_package::VerticalAlignment text_package::Text::verticalAlignment() const
+{
+    return m_verticalAlignment;
+}
+
+text_package::HorizontalAlignment text_package::Text::horizontalAlignment() const
+{
+    return m_horizontalAlignment;
+}
+
 text_package::TextPoint::TextPoint(HorizontalAlignment ha, VerticalAlignment va, const QVector<TextElement> &elements, double rotation)
     :Text(ha, va, elements)
     ,m_rotation(rotation)
@@ -35,6 +45,21 @@ void text_package::TextPoint::setAreaPlacement(const symbol::AreaSymbolPlacement
 double text_package::TextPoint::rotation() const
 {
     return m_rotation;
+}
+
+bool text_package::TextPoint::hasOffset()
+{
+    return m_offset.has_value();
+}
+
+const graphic_base::Vector &text_package::TextPoint::offset() const
+{
+    return m_offset.value();
+}
+
+void text_package::TextPoint::setOffset(const std::optional<graphic_base::Vector> &offset)
+{
+    m_offset = offset;
 }
 
 text_package::TextLine::TextLine(HorizontalAlignment ha, VerticalAlignment va, const QVector<TextElement> &elements, double startOffset, symbol::LinePlacementMode placementMode)
