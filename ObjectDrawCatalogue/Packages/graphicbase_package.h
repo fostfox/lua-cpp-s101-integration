@@ -5,10 +5,10 @@
 namespace graphic_base {
 
 enum class CRSType{
-    GEOGRAPHIC_CRS,
-    PORTRAYAL_CRS,
-    LOCAL_CRS,
-    LINE_CRS,
+    GEOGRAPHIC_CRS = 1,
+    PORTRAYAL_CRS = 2,
+    LOCAL_CRS = 3,
+    LINE_CRS = 4,
 };
 CRSType toCRSType(const QString &type);
 
@@ -28,6 +28,7 @@ private:
 class Vector
 {
 public:
+    Vector() = default;
     Vector(double x, double y);
     double x() const;
     double y() const;

@@ -153,6 +153,10 @@ class TextLine : public Text
 public:
     TextLine(HorizontalAlignment ha, VerticalAlignment va,  const QVector<TextElement>& elements
              , double startOffset, symbol::LinePlacementMode placementMode);
+
+    symbol::LinePlacementMode placementMode() const;
+    double startOffset() const;
+
 private:
     double m_startOffset;
     std::optional<double> m_endOffset;

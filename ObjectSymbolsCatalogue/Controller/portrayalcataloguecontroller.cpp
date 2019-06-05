@@ -27,6 +27,14 @@ line_styles::LineStyle PortrayalCatalogueController::lineStyle(const QString &re
     return m_lineStyleMap.value(refId);
 }
 
+area_fills::SymbolFill PortrayalCatalogueController::symbolFill(const QString &refId) const
+{
+    if (!m_symbolFillMap.contains(refId)){
+        qFatal(("Where is no refId="+refId+"in map").toLocal8Bit());
+    }
+    return m_symbolFillMap.value(refId);
+}
+
 void PortrayalCatalogueController::addSymbolProfile(const QString &refId, const pcatalogue::SymbolProfile &symbol)
 {
     m_symbolProfileMap.insert(refId, symbol);

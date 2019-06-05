@@ -10,11 +10,11 @@ class SymbolProfile
 public:
     SymbolProfile() = default;
     SymbolProfile(const QString& path);
-    QGraphicsSvgItem* svgItem() const;
+    //QGraphicsSvgItem* svgItem() const;
     const QPixmap &pixmap() const;
 
 private:
-    QGraphicsSvgItem* m_svgItem;
+    //QGraphicsSvgItem* m_svgItem;
     QPixmap m_pixmap;
 };
 }

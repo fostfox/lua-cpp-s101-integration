@@ -53,12 +53,14 @@ private:
 
     QVector<QPointF> getAreaPoints(const Fe2spRef &, GM_Curve * ref);
     QVector<QPointF> getAreaPoints(const Fe2spRef &, GM_CompositeCurve * ref);
-    QPointF getPoint(const QVector<QPointF>& points, const symbol::LineSymbolPlacement& linePlacement);
+    QPointF getPoint(const QVector<QPointF>& points, int linePlacementMode, double offset, double &rotation);
 
+    double rotationQt(double rotation, int rotationCRSType, double lineRotation = 0);
     QPointF transform(const GM_Point& );
 
     double m_dpi;
     QGraphicsScene* m_scene;
 
+    double m_trueNorthDirection = 90;
     double height, width;
 };

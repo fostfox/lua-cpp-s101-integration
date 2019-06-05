@@ -46,17 +46,20 @@ private:
 class Symbol
 {
 public:
+    Symbol() = default;
     Symbol(QString reference, double rotation, graphic_base::CRSType rotationCRS, graphic_base::Vector offset);
 
-    std::optional<LineSymbolPlacement> linePlacement() const;
+    bool hasLinePlacement() const;
+    const LineSymbolPlacement& linePlacement() const;
     void setLinePlacement(const LineSymbolPlacement &linePlacement);
 
     std::optional<AreaSymbolPlacement> areaPlacement() const;
     void setAreaPlacement(const AreaSymbolPlacement &areaPlacement);
 
     const QString& reference() const;
-
     double rotation() const;
+    const graphic_base::Vector& offset() const;
+    graphic_base::CRSType rotationCRS() const;
 
 private:
     QString m_reference;

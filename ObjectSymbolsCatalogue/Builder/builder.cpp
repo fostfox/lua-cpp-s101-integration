@@ -87,7 +87,8 @@ QXmlStreamReader createReader(const QString &path, const QString &fileName)
 
 pcatalogue::SymbolProfile buildSymbolProfile(const QString &fileName, const QString &refId)
 {
-    auto fullPath = QDir(filenames::catalogues::SYMBOLS).filePath(fileName);
+    auto newFileName = fileName.split(".").first() + ".png";
+    auto fullPath = QDir(filenames::catalogues::SYMBOLS).filePath(newFileName);
 
     SymbolProfileBulder builder;
     builder.setPath(fullPath);

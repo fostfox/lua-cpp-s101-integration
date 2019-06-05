@@ -33,6 +33,12 @@ const graphic_base::Color& area_fills::ColorFill::color() const
     return m_color;
 }
 
+area_fills::SymbolFill::SymbolFill()
+    :AbstractAreaFill ()
+{
+
+}
+
 area_fills::SymbolFill::SymbolFill(const symbol::Symbol& symbol, const graphic_base::Vector& v1, const graphic_base::Vector& v2)
     :m_symbol(symbol), m_v1(v1), m_v2(v2)
 {

@@ -28,6 +28,7 @@ public:
     bool init();
     void wheelEvent(QWheelEvent* event);
 
+
 private slots:
     void on_loadMapAction_triggered();
     void on_saveAsPngAction_triggered();

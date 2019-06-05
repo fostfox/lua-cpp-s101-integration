@@ -80,7 +80,7 @@ bool SymbolFillBulder::isReady() const
 
 area_fills::SymbolFill SymbolFillBulder::build() const
 {
-    symbol::Symbol symbol(m_refId.value()
+    symbol::Symbol symbol(m_symbolRef.value()
                           ,DEFAULT_TRANSFORM.rotation
                           ,DEFAULT_TRANSFORM.rotationCRS
                           ,graphic_base::Vector(DEFAULT_TRANSFORM.xOffsetMM, DEFAULT_TRANSFORM.yOffsetMM)

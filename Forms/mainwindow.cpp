@@ -99,8 +99,6 @@ bool MainWindow::drawMap()
         return false;
     }
 
-
-
     double y_min = m_mapController->getLatInterval().first;
     double y_max = m_mapController->getLatInterval().second;
     double x_min = m_mapController->getLonInterval().first;
@@ -114,8 +112,7 @@ bool MainWindow::drawMap()
         double coef = x_d / y_d;
         h = ui->mapView->width() / coef - 5;
         w = ui->mapView->width() - 5;
-    }
-    else {
+    } else {
         double coef = y_d / x_d;
         h = ui->mapView->height() - 5;
         w = ui->mapView->height() / coef - 5;
@@ -127,9 +124,6 @@ bool MainWindow::drawMap()
                 *m_symbolCtrl
                 );
 
-    if (ui->mapView->scene()){
-        ui->mapView->scene()->deleteLater();
-    }
 
     auto scene = new QGraphicsScene();
 //    scene->setSceneRect(0, 0, w, h);
@@ -137,6 +131,8 @@ bool MainWindow::drawMap()
     //scene->setSceneRect(QRectF(QPointF(0,0),ui->mapView->size()));
     ui->mapView->setScene(scene);
     ui->mapView->setRenderHint(QPainter::Antialiasing);
+    ui->mapView->setDragMode(QGraphicsView::ScrollHandDrag);
+    ui->mapView->setFocus();
 
     QPolygonF points;
     double dpim = ui->mapView->physicalDpiX() / MM_PER_INCH;
@@ -177,7 +173,7 @@ void MainWindow::updateContextParams()
 
 void MainWindow::wheelEvent(QWheelEvent *event)
 {
-    const double scaleFactor = 1.15;
+    const double scaleFactor = 1.005;
     if(event->delta() > 0)
     {
         ui->mapView->scale(scaleFactor, scaleFactor);
@@ -186,5 +182,4 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     {
         ui->mapView->scale(1.0 / scaleFactor, 1.0 / scaleFactor);
     }
-
 }

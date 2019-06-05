@@ -70,6 +70,16 @@ text_package::TextLine::TextLine(HorizontalAlignment ha, VerticalAlignment va, c
 
 }
 
+double text_package::TextLine::startOffset() const
+{
+    return m_startOffset;
+}
+
+symbol::LinePlacementMode text_package::TextLine::placementMode() const
+{
+    return m_placementMode;
+}
+
 text_package::VerticalAlignment text_package::toVerticalAlignment(const QString &type)
 {
     const static QMap<QString, VerticalAlignment> toVerticalAlignmentMap = {

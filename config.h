@@ -29,7 +29,9 @@ const static QString PORTRAYAL_CATALOGUE = "XMLData/PC_PACK/portrayal_catalogue.
     const static QString COLORS      = "XMLData/PC_PACK/ColorProfiles";
     const static QString AREA_FILLS  = "XMLData/PC_PACK/AreaFills";
     const static QString LINE_STILES = "XMLData/PC_PACK/LineStyles";
-    const static QString SYMBOLS     = "XMLData/PC_PACK/Symbols";
+    //const static QString SYMBOLS     = "XMLData/PC_PACK/Symbols";
+    const static QString SYMBOLS     = "XMLData/PC_PACK/SymbolsPNG";
+    //const static QString SYMBOLS_PNG = "XMLData/PC_PACK/SymbolsPNG";
     } // namespace catalogues
 } // namespace filenames
 

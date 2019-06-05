@@ -31,9 +31,14 @@ symbol::Symbol::Symbol(QString reference, double rotation, graphic_base::CRSType
 
 }
 
-std::optional<symbol::LineSymbolPlacement> symbol::Symbol::linePlacement() const
+bool symbol::Symbol::hasLinePlacement() const
 {
-    return m_linePlacement;
+    return m_linePlacement.has_value();
+}
+
+const symbol::LineSymbolPlacement &symbol::Symbol::linePlacement() const
+{
+    return m_linePlacement.value();
 }
 
 void symbol::Symbol::setLinePlacement(const symbol::LineSymbolPlacement &linePlacement)
@@ -59,6 +64,16 @@ const QString& symbol::Symbol::reference() const
 double symbol::Symbol::rotation() const
 {
     return m_rotation;
+}
+
+const graphic_base::Vector& symbol::Symbol::offset() const
+{
+    return m_offset;
+}
+
+graphic_base::CRSType symbol::Symbol::rotationCRS() const
+{
+    return m_rotationCRS;
 }
 
 symbol::LineSymbolPlacement::LineSymbolPlacement(double offset, symbol::LinePlacementMode placementMode)

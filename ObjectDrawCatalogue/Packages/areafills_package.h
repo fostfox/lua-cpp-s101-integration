@@ -46,6 +46,7 @@ private:
 class SymbolFill : public AbstractAreaFill
 {
 public:
+    SymbolFill();
     SymbolFill(const symbol::Symbol &symbol, const graphic_base::Vector &v1, const graphic_base::Vector &v2);
     const symbol::Symbol& symbol() const;
     const graphic_base::Vector& v1() const;
