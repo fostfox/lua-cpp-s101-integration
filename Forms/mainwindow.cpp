@@ -47,6 +47,9 @@ bool MainWindow::init()
 
 void MainWindow::on_loadMapAction_triggered()
 {
+//    delete ui->mapView;
+//    ui->mapView = new QGraphicsView();
+//    ui->mapView->setBaseSize(1000, 1000);
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home", tr("Maps (*.usf.xml)"));
     m_isMapLoad = loadMapXml(fileName);
     if (m_isMapLoad){
@@ -99,6 +102,18 @@ bool MainWindow::drawMap()
         return false;
     }
 
+    ui->mapView->resetTransform();
+    ui->mapView->resetMatrix();
+    ui->mapView->resetCachedContent();
+
+    delete ui->mapView->scene();
+    auto scene = new QGraphicsScene(this);
+
+    ui->mapView->setScene(scene);
+    ui->mapView->setRenderHint(QPainter::Antialiasing);
+    ui->mapView->setDragMode(QGraphicsView::ScrollHandDrag);
+    ui->mapView->setFocus();
+
     double y_min = m_mapController->getLatInterval().first;
     double y_max = m_mapController->getLatInterval().second;
     double x_min = m_mapController->getLonInterval().first;
@@ -125,17 +140,13 @@ bool MainWindow::drawMap()
                 );
 
 
-    auto scene = new QGraphicsScene();
 //    scene->setSceneRect(0, 0, w, h);
     //ui->mapView->fitInView(QRectF(QPointF(0,0),QSize(1920,1080)));
     //scene->setSceneRect(QRectF(QPointF(0,0),ui->mapView->size()));
-    ui->mapView->setScene(scene);
-    ui->mapView->setRenderHint(QPainter::Antialiasing);
-    ui->mapView->setDragMode(QGraphicsView::ScrollHandDrag);
-    ui->mapView->setFocus();
 
     QPolygonF points;
     double dpim = ui->mapView->physicalDpiX() / MM_PER_INCH;
+    //std::cout <<  h << " " << w << " " << dpim << std::endl;
     drawEngine.setHeightWidth(h, w);
     drawEngine.draw(dpim, scene);
 
@@ -171,14 +182,15 @@ void MainWindow::updateContextParams()
     doPortrayal();
 }
 
-void MainWindow::wheelEvent(QWheelEvent *event)
+void MainWindow::keyPressEvent(QKeyEvent *event)
 {
+    int key = event->key();
     const double scaleFactor = 1.005;
-    if(event->delta() > 0)
+    if (key == Qt::Key_Equal || key == Qt::Key_Plus)
     {
         ui->mapView->scale(scaleFactor, scaleFactor);
     }
-    else
+    if (key == Qt::Key_Minus)
     {
         ui->mapView->scale(1.0 / scaleFactor, 1.0 / scaleFactor);
     }

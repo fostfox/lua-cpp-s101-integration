@@ -80,9 +80,9 @@ void DrawEngine::draw(double dpim, QGraphicsScene *scene)
             }
 
             switch (fe2spRef.refType()) {
-            case 110: drawPoint(fe2spRef, static_cast<GM_Point*>(gm), drawnstr); break;
-            case 120: drawCurve(fe2spRef, static_cast<GM_Curve*>(gm), drawnstr); break;
-            case 125: drawCompositeCurve(fe2spRef, static_cast<GM_CompositeCurve*>(gm), drawnstr); break;
+            //case 110: drawPoint(fe2spRef, static_cast<GM_Point*>(gm), drawnstr); break;
+            //case 120: drawCurve(fe2spRef, static_cast<GM_Curve*>(gm), drawnstr); break;
+            //case 125: drawCompositeCurve(fe2spRef, static_cast<GM_CompositeCurve*>(gm), drawnstr); break;
             case 130: drawSurface(fe2spRef, static_cast<GM_Surface*>(gm), drawnstr); break;
             }
         }
@@ -349,11 +349,11 @@ void DrawEngine::drawSurface(const Fe2spRef & fe2spRef, GM_Surface* ref, const D
     QVector<QPointF> points;
     switch (gm->getType()) {
     case GM_Object::CURVE:
-        drawCurve(ref->exteriorRing(), static_cast<GM_Curve*>(gm), drawInstr);
+        //drawCurve(ref->exteriorRing(), static_cast<GM_Curve*>(gm), drawInstr);
         points = getAreaPoints(ref->exteriorRing(), static_cast<GM_Curve*>(gm));
         break;
     case GM_Object::COMPOSITE_CURVE:
-        drawCompositeCurve(ref->exteriorRing(), static_cast<GM_CompositeCurve*>(gm), drawInstr);
+        //drawCompositeCurve(ref->exteriorRing(), static_cast<GM_CompositeCurve*>(gm), drawInstr);
         points = getAreaPoints(ref->exteriorRing(), static_cast<GM_CompositeCurve*>(gm));
         break;
     }
