@@ -35,8 +35,8 @@ const static QMap<QString, StateCommand>  stateCommands = {
     { "Dash",               DASH } ,
     { "FontColor",         FONT_COLOR } ,
     { "FontSize",          FONT_SIZE } ,
-    { "TextAlign_Horizontal", TEXT_ALIGN_HORIZONTAL } ,
-    { "TextAlign_Vertical", TEXT_ALIGN_VERTICAL } ,
+    { "TextAlignHorizontal", TEXT_ALIGN_HORIZONTAL } ,
+    { "TextAlignVertical", TEXT_ALIGN_VERTICAL } ,
     { "SpatialReference",  SPATIAL_REFERENCE } ,
     { "ClearGeometry", CLEAR_GOOMETRY }
 };
