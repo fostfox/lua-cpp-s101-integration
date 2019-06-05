@@ -12,7 +12,7 @@ class ContexParametrController;
 class PortrayalCatalogueController;
 class ContextParam;
 class DrawingInstructionsController;
-
+class QGraphicsView;
 
 namespace Ui {
 class MainWindow;
@@ -26,7 +26,6 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     bool init();
-    void wheelEvent(QWheelEvent* event);
 
 
 private slots:
@@ -36,6 +35,7 @@ private slots:
     void on_actionContext_Parametrs_triggered();
 
     void updateContextParams();
+    void keyPressEvent(QKeyEvent *event);
 
 private:
     bool loadMapXml(const QString &mapFileName);
