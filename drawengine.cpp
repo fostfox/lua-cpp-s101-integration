@@ -80,9 +80,9 @@ void DrawEngine::draw(double dpim, QGraphicsScene *scene)
             }
 
             switch (fe2spRef.refType()) {
-            //case 110: drawPoint(fe2spRef, static_cast<GM_Point*>(gm), drawnstr); break;
-            //case 120: drawCurve(fe2spRef, static_cast<GM_Curve*>(gm), drawnstr); break;
-            //case 125: drawCompositeCurve(fe2spRef, static_cast<GM_CompositeCurve*>(gm), drawnstr); break;
+            case 110: drawPoint(fe2spRef, static_cast<GM_Point*>(gm), drawnstr); break;
+            case 120: drawCurve(fe2spRef, static_cast<GM_Curve*>(gm), drawnstr); break;
+            case 125: drawCompositeCurve(fe2spRef, static_cast<GM_CompositeCurve*>(gm), drawnstr); break;
             case 130: drawSurface(fe2spRef, static_cast<GM_Surface*>(gm), drawnstr); break;
             }
         }
@@ -97,14 +97,11 @@ void DrawEngine::drawPoint(const Fe2spRef &, GM_Point* ref, const DrawEngine::vD
 {
     QPointF p = transform(*ref);
     for (const auto di : drawInstr){
-        //QPainter painter(&m_img);
         auto pi = std::dynamic_pointer_cast<drawing_instruction::PointInstruction>(di);
         if (pi){
             auto ref = pi->symbol().reference();
             auto pixmap = m_symbolCtrl.symbolProfile(ref).pixmap();
-            //QGraphicsSvgItem* item = new QGraphicsSvgItem("XMLData/PC_PACK/Symbols/POSGEN03.svg");
             auto* item = new QGraphicsPixmapItem(pixmap);
-            //item->setScale(10);
             item->setFlag(QGraphicsItem :: ItemIgnoresTransformations);
             item->setZValue(di->drawingPriority());
             auto newP = p - QPointF(item->boundingRect().size().height(), item->boundingRect().size().width()) / 2.0;
@@ -132,7 +129,6 @@ void DrawEngine::drawPoint(const Fe2spRef &, GM_Point* ref, const DrawEngine::vD
                             : m_symbolCtrl.colorPalette("1").colorProfile("Day", colorRef).color();
                     item->setDefaultTextColor(color);
                     QFont font;
-                    //font.setFamily("Calibri");
                     font.setPointSize(elem.bodySize());
                     auto fontptr = dynamic_cast<text_package::FontCharacteristics*>(elem.font());
                     if (fontptr) {
@@ -180,13 +176,10 @@ void DrawEngine::drawPoint(const Fe2spRef &, GM_Point* ref, const DrawEngine::vD
             }
         }
     }
-
 }
 
 void DrawEngine::drawCurve(const Fe2spRef &fe2spRef, GM_Curve* ref, const DrawEngine::vDrawingInstruction &drawInstr)
 {
-    //if (drawInstr[0].get()->featureReference().reference() != "19") return;
-
     auto points = getAreaPoints(fe2spRef, ref);
     QPainterPath path;
     if (points.isEmpty()) return;
@@ -244,10 +237,8 @@ void DrawEngine::drawCurve(const Fe2spRef &fe2spRef, GM_Curve* ref, const DrawEn
 
                 auto ref = sybol.reference();
                 auto pixmap = m_symbolCtrl.symbolProfile(ref).pixmap();
-                //QGraphicsSvgItem* item = new QGraphicsSvgItem("XMLData/PC_PACK/Symbols/POSGEN03.svg");
                 auto* item = new QGraphicsPixmapItem(pixmap);
                 item->setFlag(QGraphicsItem :: ItemIgnoresTransformations);
-                //item->setScale(10);
                 item->setZValue(di->drawingPriority());
                 auto newP = point - QPointF(item->boundingRect().size().height(), item->boundingRect().size().width()) / 2.0;
                 item->setPos(newP);
@@ -274,7 +265,6 @@ void DrawEngine::drawCurve(const Fe2spRef &fe2spRef, GM_Curve* ref, const DrawEn
                             : m_symbolCtrl.colorPalette("1").colorProfile("Day", colorRef).color();
                     item->setDefaultTextColor(color);
                     QFont font;
-                    //font.setFamily("Calibri");
                     font.setPointSize(elem.bodySize());
                     auto fontptr = dynamic_cast<text_package::FontCharacteristics*>(elem.font());
                     if (fontptr) {
@@ -347,11 +337,11 @@ void DrawEngine::drawSurface(const Fe2spRef & fe2spRef, GM_Surface* ref, const D
     QVector<QPointF> points;
     switch (gm->getType()) {
     case GM_Object::CURVE:
-        //drawCurve(ref->exteriorRing(), static_cast<GM_Curve*>(gm), drawInstr);
+        drawCurve(ref->exteriorRing(), static_cast<GM_Curve*>(gm), drawInstr);
         points = getAreaPoints(ref->exteriorRing(), static_cast<GM_Curve*>(gm));
         break;
     case GM_Object::COMPOSITE_CURVE:
-        //drawCompositeCurve(ref->exteriorRing(), static_cast<GM_CompositeCurve*>(gm), drawInstr);
+        drawCompositeCurve(ref->exteriorRing(), static_cast<GM_CompositeCurve*>(gm), drawInstr);
         points = getAreaPoints(ref->exteriorRing(), static_cast<GM_CompositeCurve*>(gm));
         break;
     }
@@ -413,20 +403,12 @@ void DrawEngine::drawSurface(const Fe2spRef & fe2spRef, GM_Surface* ref, const D
 
 QVector<QPointF> DrawEngine::getAreaPoints(const Fe2spRef& fe2spRef, GM_Curve *ref)
 {
-    //QPointF prevPoint;
-
     QVector<QPointF> points;
     if (ref->segments().size() == 1){
         for (const auto &p : ref->segments()[0].controlPoints()) {
-                //if (fe2spRef.orientation() == 1){
-                    points.push_back(transform(p));
-                //} else {
-                    //points.push_front(transform(p));
-                //}
-            //prevPoint = transform(p);
+            points.push_back(transform(p));
         }
     }
-
     return points;
 }
 
