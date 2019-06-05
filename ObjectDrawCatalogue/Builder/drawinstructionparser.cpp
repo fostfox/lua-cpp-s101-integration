@@ -28,7 +28,7 @@ QVector<DrawInstructionParser::shared_instruction> DrawInstructionParser::build(
         } else if (isStateCommands(command)){
             processStateCommand(command, params);
         } else {
-            qCritical("Unsupported Command");
+            qCritical(QString("Unsupported Command=%1 (params=%2)").arg(command).arg(params.join(",")).toLocal8Bit());
         }
     }
     return std::move(m_drawIntrs); //m_drawIntrs need to be erased after build() returned
