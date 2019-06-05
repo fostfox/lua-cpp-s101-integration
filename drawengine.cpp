@@ -341,8 +341,6 @@ void DrawEngine::drawCompositeCurve(const Fe2spRef &fe2spRef, GM_CompositeCurve*
 
 void DrawEngine::drawSurface(const Fe2spRef & fe2spRef, GM_Surface* ref, const DrawEngine::vDrawingInstruction &drawInstr)
 {
-    //if (drawInstr[0].get()->featureReference().reference() != "15") return;
-
     auto refId = std::to_string(ref->exteriorRing().refId());
     auto gm = m_mapCtrl.spatialObjectByRefId(refId);
 
@@ -405,36 +403,31 @@ void DrawEngine::drawSurface(const Fe2spRef & fe2spRef, GM_Surface* ref, const D
                 item->setBrush(brush);
             }
         }
-        //if (poly.isClosed()){
-            item->setPolygon(points);
-            m_scene->addItem(item);
-        //} else {
+        item->setPolygon(points);
+        m_scene->addItem(item);
+        if (!poly.isClosed()){
             qCritical(QString("has not Closeded, refId=%1").arg(fe2spRef.refId()).toLocal8Bit());
-        //}
-
+        }
     }
-
-
-
 }
 
 QVector<QPointF> DrawEngine::getAreaPoints(const Fe2spRef& fe2spRef, GM_Curve *ref)
 {
-    QPointF prevPoint;
+    //QPointF prevPoint;
 
-    QList<QPointF> points;
+    QVector<QPointF> points;
     if (ref->segments().size() == 1){
         for (const auto &p : ref->segments()[0].controlPoints()) {
-                if (fe2spRef.orientation() == 1){
+                //if (fe2spRef.orientation() == 1){
                     points.push_back(transform(p));
-                } else {
-                    points.push_front(transform(p));
-                }
-            prevPoint = transform(p);
+                //} else {
+                    //points.push_front(transform(p));
+                //}
+            //prevPoint = transform(p);
         }
     }
 
-    return points.toVector();
+    return points;
 }
 
 QVector<QPointF> DrawEngine::getAreaPoints(const Fe2spRef &fe2spRef, GM_CompositeCurve *ref)
@@ -444,16 +437,19 @@ QVector<QPointF> DrawEngine::getAreaPoints(const Fe2spRef &fe2spRef, GM_Composit
         auto refId = std::to_string(curveAss.refId());
         auto gm = m_mapCtrl.spatialObjectByRefId(refId);
 
+        QVector<QPointF> p;
         switch (gm->getType()) {
         case GM_Object::CURVE: {
-            auto p = getAreaPoints(curveAss, static_cast<GM_Curve*>(gm));
-            points.append(p);
+            p = getAreaPoints(curveAss, static_cast<GM_Curve*>(gm));
         } break;
         case GM_Object::COMPOSITE_CURVE: {
-            auto p = getAreaPoints(curveAss, static_cast<GM_CompositeCurve*>(gm));
-            points.append(p);
+            p = getAreaPoints(curveAss, static_cast<GM_CompositeCurve*>(gm));
         } break;
         }
+        if (curveAss.orientation() == 2){
+            std::reverse(p.begin(), p.end());
+        }
+        points.append(p);
     }
     return points;
 }
@@ -514,5 +510,6 @@ QPointF DrawEngine::transform(const GM_Point &point)
     double x1 = (x - lon_min) * kx;
 
     return QPointF(x1, height - y1);
+    //return QPointF(std::stod(point.x()), std::stod(point.y()));
 }
 
