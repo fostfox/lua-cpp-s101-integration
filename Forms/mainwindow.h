@@ -12,7 +12,7 @@ class ContexParametrController;
 class PortrayalCatalogueController;
 class ContextParam;
 class DrawingInstructionsController;
-class QGraphicsView;
+class QGraphicsScene;
 
 namespace Ui {
 class MainWindow;
@@ -44,6 +44,8 @@ private:
 
 private:
     Ui::MainWindow *ui;
+    QGraphicsScene *m_scene;
+
     bool m_isMapLoad = false;
 
     std::unique_ptr<ContextParam> m_paramUi;
