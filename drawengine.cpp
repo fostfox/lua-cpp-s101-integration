@@ -19,6 +19,7 @@
 #include <QSvgRenderer>
 
 #include <QTextDocument>
+#include <iostream>
 
 #ifndef QT_NO_OPENGL
 #include <QGLWidget>
@@ -536,31 +537,4 @@ QPointF DrawEngine::transform(const GM_Point &point)
     const qreal y = latShift * mInNmi / m_scale / pixYmetr;
 
     return QPointF(xCenter + x, yCenter + y);
-
-
-    //const double SHIFT_LAT = 90;
-    //const double SHIFT_LON = 180;
-
-//    const static double lat_min = m_mapCtrl.getLatInterval().first;
-//    const static double lat_max = m_mapCtrl.getLatInterval().second;
-//    const static double lon_min = m_mapCtrl.getLonInterval().first;
-//    const static double lon_max = m_mapCtrl.getLonInterval().second;
-
-//    const static double lat_length = lat_max - lat_min;
-//    const static double lon_length = lon_max - lon_min;
-
-//    const static double ky =  height / lat_length;
-//    const static double kx =  width / lon_length;
-//    //const static double ky =  m_scene->height() / lat_length;
-//    //const static double kx =  m_scene->width() / lon_length;
-
-//    double y = std::stod(point.y());
-//    double x = std::stod(point.x());
-
-//    double y1 = (y - lat_min) * ky;
-//    double x1 = (x - lon_min) * kx;
-
-//    return QPointF(x1, height - y1);
-//    //return QPointF(std::stod(point.x()), std::stod(point.y()));
 }
-

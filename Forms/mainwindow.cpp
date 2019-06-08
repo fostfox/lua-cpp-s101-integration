@@ -106,24 +106,11 @@ bool MainWindow::drawMap()
 
     m_scene->clear();
 
-    //m_scene->setSceneRect(0, 0, ui->mapView->width(), ui->mapView->height());
+    delete ui->mapView->scene();
+    m_scene = new QGraphicsScene();
+    ui->mapView->setScene(m_scene);
 
-    //ui->mapView->setTransform(QTransform());
-    //ui->mapView->fitInView(m_scene->sceneRect(), Qt::KeepAspectRatio);
-
-    //ui->mapView->setTransform(QTransform());
-
-    //m_scene->setSceneRect(0,0,ui->mapView->width(), ui->mapView->height());
-
-//    ui->mapView->resetTransform();
-//    ui->mapView->resetMatrix();
-//    ui->mapView->resetCachedContent();
-
-    //ui->mapView->setSceneRect(0,0,ui->mapView->width(), ui->mapView->height());
-
-    //delete ui->mapView->scene();
-
-
+    m_scene->clear();
 
     ui->mapView->setRenderHint(QPainter::Antialiasing);
     ui->mapView->setDragMode(QGraphicsView::ScrollHandDrag);
@@ -138,14 +125,13 @@ bool MainWindow::drawMap()
     double y_d = y_max - y_min;
 
     double h, w;
-    if (x_d >= y_d){
-        double coef = x_d / y_d;
-        h = ui->mapView->width() / coef - 5;
-        w = ui->mapView->width() - 5;
-    } else {
-        double coef = y_d / x_d;
+
+    double coef = x_d / y_d;
+    w = ui->mapView->width() - 5;
+    h = w / coef;
+    if (h > ui->mapView->height()){
         h = ui->mapView->height() - 5;
-        w = ui->mapView->height() / coef - 5;
+        w = h * coef;
     }
 
     DrawEngine drawEngine(
@@ -154,21 +140,16 @@ bool MainWindow::drawMap()
                 *m_symbolCtrl
                 );
 
-
-//    scene->setSceneRect(0, 0, w, h);
-    //ui->mapView->fitInView(QRectF(QPointF(0,0),QSize(1920,1080)));
-    //scene->setSceneRect(QRectF(QPointF(0,0),ui->mapView->size()));
-
-    QPolygonF points;
     QSizeF dpim(ui->mapView->physicalDpiY(), ui->mapView->physicalDpiX());
     dpim /= MM_PER_INCH;
-    //std::cout <<  h << " " << w << " " << dpim << std::endl;
+
     drawEngine.setHeightWidth(h, w);
     drawEngine.draw(dpim, m_scene, 1000000);
 
     const auto& img = drawEngine.img();
     img.save(filenames::IMG_MAP);
 
+    return true;
 }
 
 void MainWindow::on_saveAsPngAction_triggered()
