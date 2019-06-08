@@ -36,11 +36,11 @@ qreal euclideanDistance(const QPointF &from, const QPointF& to)
 
 qreal mercator(qreal lat)
 {
-    lat *= M_PI/180.0;
-    qreal t = tan(M_PI / 4.0 + lat / 2.0);
-    //qreal a = abs(t);
-    //return log(t);
-    return lat;
+    lat = lat * M_PI / 180.0;
+    qreal t = tan(M_PI_4 + lat / 2.0);
+    qreal a = abs(t);
+    return log(a);
+    //return lat;
 }
 
 double DrawEngine::rotationQt(double rotation, int rotationType, double lineRotation)
@@ -508,33 +508,37 @@ QPointF DrawEngine::getPoint(const QVector<QPointF> &points, int linePlacementMo
 
 QPointF DrawEngine::transform(const GM_Point &point)
 {
+    //static const qreal semiMajor = 6378137.0 / 100000.0;
+    static const qreal semiMajor = 1;
     static const qreal minInDeg = 60;
     static const qreal mInNmi = 1852;
 
-    static const qreal latMin = m_mapCtrl.getLatInterval().first;
-    static const qreal latMax = m_mapCtrl.getLatInterval().second;
-    static const qreal lonMin = m_mapCtrl.getLonInterval().first;
-    static const qreal lonMax = m_mapCtrl.getLonInterval().second;
+    const qreal latMin = m_mapCtrl.getLatInterval().first;
+    const qreal latMax = m_mapCtrl.getLatInterval().second;
+    const qreal lonMin = m_mapCtrl.getLonInterval().first;
+    const qreal lonMax = m_mapCtrl.getLonInterval().second;
 
-    const qreal lonCenter = lonMin + (lonMax - lonMin) / 2;
+    const qreal _lonCenter = lonMin + (lonMax - lonMin) / 2;
+    const qreal lonCenterC = _lonCenter * M_PI / 180.0 * semiMajor;
     const qreal _latCenter = latMin + (latMax - latMin) / 2;
-    const qreal latCenterM = mercator(_latCenter);
+    const qreal latCenterM = mercator(_latCenter) * semiMajor;
 
     const qreal xCenter = width / 2;
     const qreal yCenter = height / 2;
 
-    const qreal pixXmetr = 1 / m_dpiInM.width() / 1000;
-    const qreal pixYmetr = 1 / m_dpiInM.height() / 1000;
+    const qreal pixXmetr = 1.0 / m_dpiInM.width() / 1000;
+    const qreal pixYmetr = 1.0 / m_dpiInM.height() / 1000;
 
-    const qreal lon = std::stod(point.x());
+    const qreal _lon = std::stod(point.x());
+    const qreal lonC = _lon * M_PI / 180.0 * semiMajor;
     const qreal _lat = std::stod(point.y());
-    const qreal latM = mercator(_lat);
+    const qreal latM = mercator(_lat) * semiMajor;
 
-    const qreal lonShift = (lon - lonCenter) * minInDeg;// * cos(_latCenter);
+    const qreal lonShift = (lonC - lonCenterC) * minInDeg;
     const qreal latShift = (latM - latCenterM) * minInDeg;
 
     const qreal x = lonShift * mInNmi / m_scale / pixXmetr;
     const qreal y = latShift * mInNmi / m_scale / pixYmetr;
 
-    return QPointF(xCenter + x, yCenter + y);
+    return QPointF(xCenter + x, yCenter + height - y);
 }
