@@ -13,6 +13,7 @@ class PortrayalCatalogueController;
 class ContextParam;
 class DrawingInstructionsController;
 class QGraphicsScene;
+class QLabel;
 
 namespace Ui {
 class MainWindow;
@@ -35,6 +36,9 @@ private slots:
     void on_actionContext_Parametrs_triggered();
 
     void updateContextParams();
+    void updateScale(double scale);
+    void adjustScale(double factor);
+
     void keyPressEvent(QKeyEvent *event);
 
 private:
@@ -45,6 +49,9 @@ private:
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *m_scene;
+    long m_mapScale;
+    double m_scaleStep;
+    double m_scaleShiftFactor;
 
     bool m_isMapLoad = false;
 

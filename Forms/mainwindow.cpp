@@ -5,7 +5,6 @@
 #include "Forms/contextparam.h"
 
 #include <QFileDialog>
-#include <iostream>
 
 static QTextStream errorStream(stderr);
 
@@ -16,8 +15,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     qInstallMessageHandler(myMessageOutput);
-        m_scene = new QGraphicsScene();
-        ui->mapView->setScene(m_scene);
+    m_scene = new QGraphicsScene();
+    ui->mapView->setScene(m_scene);
+
+    m_scaleStep = 1.005;
+    m_scaleShiftFactor = 10;
 }
 
 MainWindow::~MainWindow()
@@ -104,6 +106,8 @@ bool MainWindow::drawMap()
         return false;
     }
 
+    updateScale(25000);
+
     m_scene->clear();
 
     delete ui->mapView->scene();
@@ -116,23 +120,23 @@ bool MainWindow::drawMap()
     ui->mapView->setDragMode(QGraphicsView::ScrollHandDrag);
     ui->mapView->setFocus();
 
-    double y_min = m_mapController->getLatInterval().first;
-    double y_max = m_mapController->getLatInterval().second;
-    double x_min = m_mapController->getLonInterval().first;
-    double x_max = m_mapController->getLonInterval().second;
+//    double y_min = m_mapController->getLatInterval().first;
+//    double y_max = m_mapController->getLatInterval().second;
+//    double x_min = m_mapController->getLonInterval().first;
+//    double x_max = m_mapController->getLonInterval().second;
 
-    double x_d = x_max - x_min;
-    double y_d = y_max - y_min;
+//    double x_d = x_max - x_min;
+//    double y_d = y_max - y_min;
 
-    double h, w;
+//    double h, w;
 
-    double coef = x_d / y_d;
-    w = ui->mapView->width() - 5;
-    h = w / coef;
-    if (h > ui->mapView->height()){
-        h = ui->mapView->height() - 5;
-        w = h * coef;
-    }
+//    double coef = x_d / y_d;
+//    w = ui->mapView->width() - 5;
+//    h = w / coef;
+//    if (h > ui->mapView->height()){
+//        h = ui->mapView->height() - 5;
+//        w = h * coef;
+//    }
 
     DrawEngine drawEngine(
                 *m_mapController,
@@ -143,8 +147,9 @@ bool MainWindow::drawMap()
     QSizeF dpim(ui->mapView->physicalDpiY(), ui->mapView->physicalDpiX());
     dpim /= MM_PER_INCH;
 
-    drawEngine.setHeightWidth(h, w);
-    drawEngine.draw(dpim, m_scene, 1000000);
+
+    drawEngine.setHeightWidth(ui->page_2->height(), ui->page_2->width());
+    drawEngine.draw(dpim, m_scene, m_mapScale);
 
     const auto& img = drawEngine.img();
     img.save(filenames::IMG_MAP);
@@ -179,16 +184,38 @@ void MainWindow::updateContextParams()
     doPortrayal();
 }
 
+void MainWindow::updateScale(double scale)
+{
+    ui->mapScaleLbl->setText(QString::number(scale));
+    m_mapScale = scale;
+}
+
+void MainWindow::adjustScale(double factor)
+{
+    updateScale(m_mapScale/factor);
+    ui->mapView->scale(factor, factor);
+}
+
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    int key = event->key();
-    const double scaleFactor = 1.005;
-    if (key == Qt::Key_Equal || key == Qt::Key_Plus)
-    {
-        ui->mapView->scale(scaleFactor, scaleFactor);
+    double scaleFactor = m_scaleStep;
+    switch (event->key()) {
+    case Qt::Key_Equal:
+    case Qt::Key_Plus:
+        scaleFactor = m_scaleStep;
+        break;
+    case Qt::Key_Minus:
+        scaleFactor = 1.0 / m_scaleStep;
+        break;
+    case Qt::Key_Equal| Qt::Key_Shift:
+    case Qt::Key_Plus | Qt::Key_Shift:
+        scaleFactor = m_scaleStep * m_scaleShiftFactor;
+        break;
+    case Qt::Key_Minus | Qt::Key_Shift:
+        scaleFactor = 1.0 /  m_scaleStep * m_scaleShiftFactor;
+        break;
     }
-    if (key == Qt::Key_Minus)
-    {
-        ui->mapView->scale(1.0 / scaleFactor, 1.0 / scaleFactor);
-    }
+    adjustScale(scaleFactor);
+
+    //keyPressEvent(event);
 }
