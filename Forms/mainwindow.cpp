@@ -110,9 +110,6 @@ bool MainWindow::drawMap()
 
     m_scene->clear();
 
-    ui->mapView->setTransform(QTransform());
-    ui->mapView->fitInView(m_scene->sceneRect(), Qt::KeepAspectRatio);
-
     ui->mapView->setRenderHint(QPainter::Antialiasing);
     ui->mapView->setDragMode(QGraphicsView::ScrollHandDrag);
     ui->mapView->setFocus();
