@@ -104,7 +104,7 @@ bool MainWindow::drawMap()
         return false;
     }
 
-    //m_scene->clear();
+    m_scene->clear();
 
     //m_scene->setSceneRect(0, 0, ui->mapView->width(), ui->mapView->height());
 
@@ -160,10 +160,11 @@ bool MainWindow::drawMap()
     //scene->setSceneRect(QRectF(QPointF(0,0),ui->mapView->size()));
 
     QPolygonF points;
-    double dpim = ui->mapView->physicalDpiX() / MM_PER_INCH;
+    QSizeF dpim(ui->mapView->physicalDpiY(), ui->mapView->physicalDpiX());
+    dpim /= MM_PER_INCH;
     //std::cout <<  h << " " << w << " " << dpim << std::endl;
     drawEngine.setHeightWidth(h, w);
-    drawEngine.draw(dpim, m_scene);
+    drawEngine.draw(dpim, m_scene, 1000000);
 
     const auto& img = drawEngine.img();
     img.save(filenames::IMG_MAP);

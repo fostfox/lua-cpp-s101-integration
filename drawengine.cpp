@@ -24,13 +24,22 @@
 #include <QGLWidget>
 #endif
 
-#include <math.h>
+#include <cmath>
 
 qreal euclideanDistance(const QPointF &from, const QPointF& to)
 {
     double dx = to.x() - from.x();
     double dy = to.y() - from.y();
     return sqrt(dx*dx + dy*dy);
+}
+
+qreal mercator(qreal lat)
+{
+    lat *= M_PI/180.0;
+    qreal t = tan(M_PI / 4.0 + lat / 2.0);
+    //qreal a = abs(t);
+    //return log(t);
+    return lat;
 }
 
 double DrawEngine::rotationQt(double rotation, int rotationType, double lineRotation)
@@ -63,9 +72,10 @@ void DrawEngine::setHeightWidth(double h, double w){
     width = w;
 }
 
-void DrawEngine::draw(double dpim, QGraphicsScene *scene)
+void DrawEngine::draw(const QSizeF &dpiInM, QGraphicsScene *scene, double scale)
 {
-    m_dpi = dpim;
+    m_scale = scale;
+    m_dpiInM = dpiInM;
     m_scene = scene;
 
     using pair = std::pair<QString, DrawingInstructionsController::vDrawingInstruction>;
@@ -111,8 +121,8 @@ void DrawEngine::drawPoint(const Fe2spRef &, GM_Point* ref, const DrawEngine::vD
             item->setRotation(rot);
             auto newP = QPointF(pixmap.height(), pixmap.width()) / 2.0;
             auto offset = pi->symbol().offset();
-            newP.rx() +=  offset.x()*m_dpi;
-            newP.ry() -=  offset.y()*m_dpi;
+            newP.rx() +=  offset.x()*m_dpiInM.width();
+            newP.ry() -=  offset.y()*m_dpiInM.height();
             auto t = item->transform();
             item->setTransform({t.m11(),t.m12(),t.m21(),t.m22(),t.dx()-newP.x(),t.dy()-newP.y()});
 
@@ -175,8 +185,8 @@ void DrawEngine::drawPoint(const Fe2spRef &, GM_Point* ref, const DrawEngine::vD
                     item->setRotation(textPoint->rotation());
 
                     auto offset = textPoint->offset();
-                    newP.rx() -=  offset.x()*m_dpi;
-                    newP.ry() +=  offset.y()*m_dpi;
+                    newP.rx() -=  offset.x()*m_dpiInM.width();
+                    newP.ry() +=  offset.y()*m_dpiInM.height();
 
                     auto t = item->transform();
                     item->setTransform({t.m11(),t.m12(),t.m21(),t.m22(),t.dx()-newP.x(),t.dy()-newP.y()});
@@ -214,7 +224,7 @@ void DrawEngine::drawCurve(const Fe2spRef &fe2spRef, GM_Curve* ref, const DrawEn
                 const auto &colorRef = lineStyle->pen().color();
                 QColor color = m_symbolCtrl.colorPalette("1").colorProfile("Day", colorRef.token()).color();
                 color.setAlphaF(1 - colorRef.transparency());
-                QPen p(QBrush(color), lineStyle->pen().width()*m_dpi);
+                QPen p(QBrush(color), lineStyle->pen().width()*m_dpiInM.width());
                 p.setCapStyle(lineStyle->capStyleQt());
                 p.setJoinStyle(lineStyle->joinStyleQt());
                 p.setCosmetic(true);
@@ -259,8 +269,8 @@ void DrawEngine::drawCurve(const Fe2spRef &fe2spRef, GM_Curve* ref, const DrawEn
 
                 auto newP = QPointF(pixmap.height(), pixmap.width()) / 2.0;
                 auto offset = pi->symbol().offset();
-                newP.rx() +=  offset.x()*m_dpi;
-                newP.ry() -=  offset.y()*m_dpi;
+                newP.rx() +=  offset.x()*m_dpiInM.width();
+                newP.ry() -=  offset.y()*m_dpiInM.height();
                 auto t = item->transform();
                 item->setTransform({t.m11(),t.m12(),t.m21(),t.m22(),t.dx()-newP.x(),t.dy()-newP.y()});
 
@@ -468,7 +478,7 @@ QPointF DrawEngine::getPoint(const QVector<QPointF> &points, int linePlacementMo
 {
     using namespace symbol;
 
-    double offsetMM = offset*m_dpi;
+    double offsetMM = offset*m_dpiInM.width();
 
     switch ((LinePlacementMode)linePlacementMode) {
     case LinePlacementMode::RELATIVE_MODE : {
@@ -497,29 +507,60 @@ QPointF DrawEngine::getPoint(const QVector<QPointF> &points, int linePlacementMo
 
 QPointF DrawEngine::transform(const GM_Point &point)
 {
+    static const qreal minInDeg = 60;
+    static const qreal mInNmi = 1852;
+
+    static const qreal latMin = m_mapCtrl.getLatInterval().first;
+    static const qreal latMax = m_mapCtrl.getLatInterval().second;
+    static const qreal lonMin = m_mapCtrl.getLonInterval().first;
+    static const qreal lonMax = m_mapCtrl.getLonInterval().second;
+
+    const qreal lonCenter = lonMin + (lonMax - lonMin) / 2;
+    const qreal _latCenter = latMin + (latMax - latMin) / 2;
+    const qreal latCenterM = mercator(_latCenter);
+
+    const qreal xCenter = width / 2;
+    const qreal yCenter = height / 2;
+
+    const qreal pixXmetr = 1 / m_dpiInM.width() / 1000;
+    const qreal pixYmetr = 1 / m_dpiInM.height() / 1000;
+
+    const qreal lon = std::stod(point.x());
+    const qreal _lat = std::stod(point.y());
+    const qreal latM = mercator(_lat);
+
+    const qreal lonShift = (lon - lonCenter) * minInDeg;// * cos(_latCenter);
+    const qreal latShift = (latM - latCenterM) * minInDeg;
+
+    const qreal x = lonShift * mInNmi / m_scale / pixXmetr;
+    const qreal y = latShift * mInNmi / m_scale / pixYmetr;
+
+    return QPointF(xCenter + x, yCenter + y);
+
+
     //const double SHIFT_LAT = 90;
     //const double SHIFT_LON = 180;
 
-    const static double lat_min = m_mapCtrl.getLatInterval().first;
-    const static double lat_max = m_mapCtrl.getLatInterval().second;
-    const static double lon_min = m_mapCtrl.getLonInterval().first;
-    const static double lon_max = m_mapCtrl.getLonInterval().second;
+//    const static double lat_min = m_mapCtrl.getLatInterval().first;
+//    const static double lat_max = m_mapCtrl.getLatInterval().second;
+//    const static double lon_min = m_mapCtrl.getLonInterval().first;
+//    const static double lon_max = m_mapCtrl.getLonInterval().second;
 
-    const static double lat_length = lat_max - lat_min;
-    const static double lon_length = lon_max - lon_min;
+//    const static double lat_length = lat_max - lat_min;
+//    const static double lon_length = lon_max - lon_min;
 
-    const static double ky =  height / lat_length;
-    const static double kx =  width / lon_length;
-    //const static double ky =  m_scene->height() / lat_length;
-    //const static double kx =  m_scene->width() / lon_length;
+//    const static double ky =  height / lat_length;
+//    const static double kx =  width / lon_length;
+//    //const static double ky =  m_scene->height() / lat_length;
+//    //const static double kx =  m_scene->width() / lon_length;
 
-    double y = std::stod(point.y());
-    double x = std::stod(point.x());
+//    double y = std::stod(point.y());
+//    double x = std::stod(point.x());
 
-    double y1 = (y - lat_min) * ky;
-    double x1 = (x - lon_min) * kx;
+//    double y1 = (y - lat_min) * ky;
+//    double x1 = (x - lon_min) * kx;
 
-    return QPointF(x1, height - y1);
-    //return QPointF(std::stod(point.x()), std::stod(point.y()));
+//    return QPointF(x1, height - y1);
+//    //return QPointF(std::stod(point.x()), std::stod(point.y()));
 }
 

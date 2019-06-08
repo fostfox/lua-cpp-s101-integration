@@ -31,7 +31,7 @@ public:
                , const PortrayalCatalogueController&
                ,QObject* parent = nullptr);
 
-    void draw(double dpim, QGraphicsScene* scene);
+    void draw(const QSizeF &dpiInM, QGraphicsScene* scene, double scale);
     void setHeightWidth(double h, double w);
     const QImage& img() const;
 
@@ -58,7 +58,8 @@ private:
     double rotationQt(double rotation, int rotationCRSType, double lineRotation = 0);
     QPointF transform(const GM_Point& );
 
-    double m_dpi;
+    QSizeF m_dpiInM;
+    double m_scale;
     QGraphicsScene* m_scene;
 
     double m_trueNorthDirection = 90;
