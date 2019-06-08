@@ -104,13 +104,18 @@ void DrawEngine::drawPoint(const Fe2spRef &, GM_Point* ref, const DrawEngine::vD
             auto* item = new QGraphicsPixmapItem(pixmap);
             item->setFlag(QGraphicsItem :: ItemIgnoresTransformations);
             item->setZValue(di->drawingPriority());
-            auto newP = p - QPointF(item->boundingRect().size().height(), item->boundingRect().size().width()) / 2.0;
+
+            item->setPos(p);
+            item->setTransformOriginPoint(QPointF(item->boundingRect().size().height(), item->boundingRect().size().width()) / 2.0);
+            auto rot = rotationQt(pi->symbol().rotation(), (int)pi->symbol().rotationCRS());
+            item->setRotation(rot);
+            auto newP = QPointF(pixmap.height(), pixmap.width()) / 2.0;
             auto offset = pi->symbol().offset();
             newP.rx() +=  offset.x()*m_dpi;
             newP.ry() -=  offset.y()*m_dpi;
-            item->setPos(newP);
-            auto rot = rotationQt(pi->symbol().rotation(), (int)pi->symbol().rotationCRS());
-            item->setRotation(rot);
+            auto t = item->transform();
+            item->setTransform({t.m11(),t.m12(),t.m21(),t.m22(),t.dx()-newP.x(),t.dy()-newP.y()});
+
             m_scene->addItem(item);
         }
         auto ti = std::dynamic_pointer_cast<drawing_instruction::TextInstruction>(di);
@@ -136,41 +141,46 @@ void DrawEngine::drawPoint(const Fe2spRef &, GM_Point* ref, const DrawEngine::vD
                     }
 
                     item->setFont(font);
-                    item->setRotation(textPoint->rotation());
                     item->setPlainText(elem.text());
+                    item->setPos(p);
 
                     QFontMetrics metrics(font);
                     auto brwidth = item->boundingRect().width();
                     auto brheight = item->boundingRect().height();
                     auto btwidth = metrics.width(elem.text());
                     auto btheight = metrics.height();
-                    QPointF boundingRectOffset((brwidth-btwidth) / 2.0,  (brheight-btheight)/ 2.0);
+                    QPointF boundingRectOffset((brwidth-btwidth) / 2.0,  (/*brheight-*/btheight)/ 2.0);
 
-                    auto newP = p-boundingRectOffset;
+                    auto newP = boundingRectOffset;
 
                     switch (textPoint->verticalAlignment()) {
                     case  text_package::VerticalAlignment::CENTER:
-                        newP.ry() -= btheight/2.0;
+                        newP.ry() += btheight/2.0;
                         break;
                     case  text_package::VerticalAlignment::BOTTOM:
                     case  text_package::VerticalAlignment::BASELINE:
-                         newP.ry() -= btheight;
+                         newP.ry() += btheight;
                     break;
                     }
                     switch (textPoint->horizontalAlignment()) {
                     case text_package::HorizontalAlignment::CENTER:
-                        newP.rx() -= btwidth/2.0;
+                        newP.rx() += btwidth/2.0;
                         break;
                     case text_package::HorizontalAlignment::END:
-                        newP.rx() -= btwidth;
+                        newP.rx() += btwidth;
                         break;
                     }
 
-                    auto offset = textPoint->offset();
-                    newP.rx() +=  offset.x()*m_dpi;
-                    newP.ry() -=  offset.y()*m_dpi;
+                    item->setTransformOriginPoint(newP);
+                    item->setRotation(textPoint->rotation());
 
-                    item->setPos(newP);
+                    auto offset = textPoint->offset();
+                    newP.rx() -=  offset.x()*m_dpi;
+                    newP.ry() +=  offset.y()*m_dpi;
+
+                    auto t = item->transform();
+                    item->setTransform({t.m11(),t.m12(),t.m21(),t.m22(),t.dx()-newP.x(),t.dy()-newP.y()});
+
                     m_scene->addItem(item);
                 }
             }
@@ -240,11 +250,20 @@ void DrawEngine::drawCurve(const Fe2spRef &fe2spRef, GM_Curve* ref, const DrawEn
                 auto* item = new QGraphicsPixmapItem(pixmap);
                 item->setFlag(QGraphicsItem :: ItemIgnoresTransformations);
                 item->setZValue(di->drawingPriority());
-                auto newP = point - QPointF(item->boundingRect().size().height(), item->boundingRect().size().width()) / 2.0;
-                item->setPos(newP);
-                rotation = rotationQt(sybol.rotation(), (int)sybol.rotationCRS(), rotation);
 
+                item->setPos(point);
+                item->setTransformOriginPoint(QPointF(item->boundingRect().size().height(), item->boundingRect().size().width()) / 2.0);
+
+                rotation = rotationQt(sybol.rotation(), (int)sybol.rotationCRS(), rotation);
                 item->setRotation(rotation);
+
+                auto newP = QPointF(pixmap.height(), pixmap.width()) / 2.0;
+                auto offset = pi->symbol().offset();
+                newP.rx() +=  offset.x()*m_dpi;
+                newP.ry() -=  offset.y()*m_dpi;
+                auto t = item->transform();
+                item->setTransform({t.m11(),t.m12(),t.m21(),t.m22(),t.dx()-newP.x(),t.dy()-newP.y()});
+
                 m_scene->addItem(item);
             }
         }
@@ -274,37 +293,45 @@ void DrawEngine::drawCurve(const Fe2spRef &fe2spRef, GM_Curve* ref, const DrawEn
                     item->setFont(font);
                     item->setPlainText(elem.text());
 
+                    double rotation;
+                    auto point = getPoint(points, (int)textLine->placementMode(), textLine->startOffset(), rotation);
+
+                    item->setPos(point);
+
                     QFontMetrics metrics(font);
                     auto brwidth = item->boundingRect().width();
                     auto brheight = item->boundingRect().height();
                     auto btwidth = metrics.width(elem.text());
                     auto btheight = metrics.height();
-                    QPointF boundingRectOffset((brwidth-btwidth) / 2.0,  (brheight-btheight)/ 2.0);
+                    QPointF boundingRectOffset((brwidth-btwidth) / 2.0,  (/*brheight-*/btheight)/ 2.0);
 
-                    double rotation;
-                    auto point = getPoint(points, (int)textLine->placementMode(), textLine->startOffset(), rotation);
-                    auto newP = point - boundingRectOffset;
+
+                    auto newP = boundingRectOffset;
 
                     switch (textLine->verticalAlignment()) {
                     case  text_package::VerticalAlignment::CENTER:
-                        newP.ry() -= btheight/2.0;
+                        newP.ry() += btheight/2.0;
                         break;
                     case  text_package::VerticalAlignment::BOTTOM:
                     case  text_package::VerticalAlignment::BASELINE:
-                         newP.ry() -= btheight;
+                         newP.ry() += btheight;
                     break;
                     }
                     switch (textLine->horizontalAlignment()) {
                     case text_package::HorizontalAlignment::CENTER:
-                        newP.rx() -= btwidth/2.0;
+                        newP.rx() += btwidth/2.0;
                         break;
                     case text_package::HorizontalAlignment::END:
-                        newP.rx() -= btwidth;
+                        newP.rx() += btwidth;
                         break;
                     }
 
-                    item->setPos(newP);
+                    item->setTransformOriginPoint(newP);
                     item->setRotation(rotation);
+
+                    auto t = item->transform();
+                    item->setTransform({t.m11(),t.m12(),t.m21(),t.m22(),t.dx()-newP.x(),t.dy()-newP.y()});
+
                     m_scene->addItem(item);
                 }
             }
@@ -387,6 +414,7 @@ void DrawEngine::drawSurface(const Fe2spRef & fe2spRef, GM_Surface* ref, const D
             if (symbolFill) {
                 auto ref = symbolFill->symbol().reference();
                 auto pixmap = m_symbolCtrl.symbolProfile(ref).pixmap();
+//                QPixmap res(pixmap.size().width(),pixmap.size().height());
                 QBrush brush;
                 brush.setTexture(pixmap);
                 brush.setMatrix({1,0,1,0,0,0});
@@ -459,7 +487,7 @@ QPointF DrawEngine::getPoint(const QVector<QPointF> &points, int linePlacementMo
                 double k = (sumDistances - offsetMM) / distance;
                 QPointF point = points[i] + (points[i+1] - points[i]) * k;
                 auto angle = QLineF(points[i], points[i+1]).angle();
-                rotation = (angle >= 180) ? angle-180 : angle;
+                rotation = -angle;//(angle >= 180) ? angle-180 : angle;
                 return point;
             }
         }
