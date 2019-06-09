@@ -14,6 +14,8 @@ class ContextParam;
 class DrawingInstructionsController;
 class QGraphicsScene;
 class QLabel;
+class DrawEngine;
+
 
 namespace Ui {
 class MainWindow;
@@ -62,6 +64,8 @@ private:
     std::unique_ptr<ContexParametrController> m_contextParamCtrl;
     std::unique_ptr<PortrayalCatalogueController> m_symbolCtrl;
     std::unique_ptr<DrawingInstructionsController> m_drawInstCtrl;
+
+    DrawEngine* m_drawEngine = nullptr;
 };
 
 #endif // MAINWINDOW_H

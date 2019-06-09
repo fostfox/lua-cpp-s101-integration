@@ -7,6 +7,8 @@
 
 namespace drawing_instruction {
 
+const QString OVER_RADAR_S = "overRadar";
+const QString UNDER_RADAR_S = "underRadar";
 
 //!
 //! \brief A reference to a feature type
@@ -46,6 +48,8 @@ private:
 class DrawingInstruction
 {
 public:
+    using scale_t = int;
+
     DrawingInstruction() = default;
     DrawingInstruction(const QString &viewingGroup, const QString &displayPlane, const int &drawingPriority, const FeatureReference &m_featureReference);
     virtual ~DrawingInstruction() = default
@@ -55,11 +59,11 @@ public:
     const QString& displayPlane() const;
     const int& drawingPriority() const;
 
-    std::optional<int> scaleMinimum() const;
-    void setScaleMinimum(int scaleMinimum);
+    std::optional<scale_t> scaleMinimum() const;
+    void setScaleMinimum(std::optional<scale_t> scaleMinimum);
 
-    std::optional<int> scaleMaximum() const;
-    void setScaleMaximum(int scaleMaximum);
+    std::optional<scale_t> scaleMaximum() const;
+    void setScaleMaximum(std::optional<scale_t> scaleMaximum);
 
     QVector<SpatialReference> spatialReferences() const;
     void setSpatialReferences(const QVector<SpatialReference> &spatialReferences);
@@ -72,8 +76,8 @@ private:
     QString m_viewingGroup;
     QString m_displayPlane;
     int m_drawingPriority;
-    std::optional<int> m_scaleMinimum;
-    std::optional<int> m_scaleMaximum;
+    std::optional<scale_t> m_scaleMinimum;
+    std::optional<scale_t> m_scaleMaximum;
     FeatureReference m_featureReference;
     QVector<SpatialReference> m_spatialReferences;
 };

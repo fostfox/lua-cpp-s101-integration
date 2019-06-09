@@ -7,6 +7,8 @@
 
 static const double MM_PER_INCH = 25.4;
 
+static const int MAX_DRAW_PRIORITY = 1000;
+
 static const auto dateTime = QString::number(QDateTime::currentSecsSinceEpoch());
 namespace filenames {
 const static QString MAP_SET      = "XMLData/MAP_SET/";

@@ -16,24 +16,24 @@ const int &DrawingInstruction::drawingPriority() const
     return m_drawingPriority;
 }
 
-std::optional<int> DrawingInstruction::scaleMinimum() const
+std::optional<DrawingInstruction::scale_t> DrawingInstruction::scaleMinimum() const
 {
     return m_scaleMinimum;
 }
 
-void DrawingInstruction::setScaleMinimum(int scaleMinimum)
+void DrawingInstruction::setScaleMinimum(std::optional<scale_t> scaleMinimum)
 {
-    m_scaleMinimum = std::make_optional(scaleMinimum);
+    m_scaleMinimum = scaleMinimum;
 }
 
-std::optional<int> DrawingInstruction::scaleMaximum() const
+std::optional<DrawingInstruction::scale_t> DrawingInstruction::scaleMaximum() const
 {
     return m_scaleMaximum;
 }
 
-void DrawingInstruction::setScaleMaximum(int scaleMaximum)
+void DrawingInstruction::setScaleMaximum(std::optional<scale_t> scaleMaximum)
 {
-    m_scaleMaximum = std::make_optional(scaleMaximum);
+    m_scaleMaximum = scaleMaximum;
 }
 
 QVector<SpatialReference> DrawingInstruction::spatialReferences() const

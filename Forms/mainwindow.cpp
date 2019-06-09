@@ -106,7 +106,7 @@ bool MainWindow::drawMap()
         return false;
     }
 
-    updateScale(25000);
+    updateScale(600000);
 
     m_scene->clear();
 
@@ -138,7 +138,7 @@ bool MainWindow::drawMap()
 //        w = h * coef;
 //    }
 
-    DrawEngine drawEngine(
+    m_drawEngine = new DrawEngine(
                 *m_mapController,
                 *m_drawInstCtrl,
                 *m_symbolCtrl
@@ -148,10 +148,11 @@ bool MainWindow::drawMap()
     dpim /= MM_PER_INCH;
 
 
-    drawEngine.setHeightWidth(ui->page_2->height(), ui->page_2->width());
-    drawEngine.draw(dpim, m_scene, m_mapScale);
+    m_drawEngine->setHeightWidth(ui->page_2->height(), ui->page_2->width());
+    m_drawEngine->draw(dpim, m_scene, m_mapScale);
+    m_drawEngine->setVisibleScaledItems(m_mapScale);
 
-    const auto& img = drawEngine.img();
+    const auto& img = m_drawEngine->img();
     img.save(filenames::IMG_MAP);
 
     return true;
@@ -188,6 +189,9 @@ void MainWindow::updateScale(double scale)
 {
     ui->mapScaleLbl->setText(QString::number(scale));
     m_mapScale = scale;
+    if (m_drawEngine != nullptr) {
+        m_drawEngine->setVisibleScaledItems(m_mapScale);
+    }
 }
 
 void MainWindow::adjustScale(double factor)

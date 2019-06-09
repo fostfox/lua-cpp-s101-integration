@@ -18,6 +18,8 @@
 #include <QStyleOptionGraphicsItem>
 #include <QSvgRenderer>
 
+#include <QTimer>
+
 #include <QTextDocument>
 #include <iostream>
 
@@ -26,6 +28,74 @@
 #endif
 
 #include <cmath>
+
+class QGraphicsItemLayer : public QGraphicsItem
+{
+public:
+    QRectF boundingRect() const override;
+    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) override ;
+};
+QRectF QGraphicsItemLayer::boundingRect() const {
+    return QRectF(0,0,0,0);
+}
+void QGraphicsItemLayer::paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) { }
+
+
+class ScaleGroup : public QObject
+{
+        Q_OBJECT
+public:
+    using scale_t = drawing_instruction::DrawingInstruction::scale_t;
+
+    void init() {
+        m_timer = new QTimer();
+        connect(m_timer, SIGNAL(timeout()), SLOT(setOpasity()));
+    }
+    ScaleGroup() : QObject(nullptr) { init(); }
+    ScaleGroup(std::optional<float> scaleMax, std::optional<float> scaleMin, QGraphicsScene* scene)
+        :m_scaleMax(scaleMax), m_scaleMin(scaleMin), QObject(nullptr)  {
+        pLayer = new QGraphicsItemLayer;
+        scene->addItem(pLayer);
+        init();
+    }
+    ~ScaleGroup() { delete m_timer; }
+
+    void addItem(QGraphicsItem* item) {
+        item->setParentItem(pLayer);
+    }
+    void setVisible(bool isVisible) {
+        qreal factor = isVisible ? -1 : 1;
+        m_step *= factor;
+        m_timer->start(time_ms);
+    }
+
+    void setMax(std::optional<scale_t> max) { m_scaleMax = max; }
+    void setMin(std::optional<scale_t> min) { m_scaleMin = min; }
+    const std::optional<scale_t>& max() const { return m_scaleMax; }
+    const std::optional<scale_t>& min() const { return m_scaleMin; }
+
+    static scale_t maxScale() { return std::numeric_limits<scale_t>::min(); }
+    static scale_t minScale() { return std::numeric_limits<scale_t>::max(); }
+
+private slots:
+    void setOpasity(){
+        pLayer->setOpacity(m_opacity + m_step);
+        if (m_opacity > 0 || m_opacity < 1){
+            m_timer->start(time_ms);
+        }
+    }
+
+private:
+//    QGraphicsItemGroup m_itemGroup = QGraphicsItemGroup();
+    //QVector<QGraphicsItem*> m_items;
+    QGraphicsItemLayer* pLayer;
+    std::optional<scale_t> m_scaleMax;
+    std::optional<scale_t> m_scaleMin;
+    QTimer* m_timer;
+    qreal m_opacity = 1;
+    qreal m_step = 0.1;
+    int time_ms = 10;
+};
 
 qreal euclideanDistance(const QPointF &from, const QPointF& to)
 {
@@ -42,6 +112,8 @@ qreal mercator(qreal lat)
     return log(a);
     //return lat;
 }
+
+// /////////////////////////////////////////////////////////////////////////////////////
 
 double DrawEngine::rotationQt(double rotation, int rotationType, double lineRotation)
 {
@@ -68,6 +140,7 @@ DrawEngine::DrawEngine(const FeatureMapController &mc
 {
 }
 
+
 void DrawEngine::setHeightWidth(double h, double w){
     height = h;
     width = w;
@@ -75,6 +148,8 @@ void DrawEngine::setHeightWidth(double h, double w){
 
 void DrawEngine::draw(const QSizeF &dpiInM, QGraphicsScene *scene, double scale)
 {
+    m_scaleGroups.clear();
+
     m_scale = scale;
     m_dpiInM = dpiInM;
     m_scene = scene;
@@ -104,6 +179,16 @@ const QImage &DrawEngine::img() const
     return m_img;
 }
 
+void DrawEngine::setVisibleScaledItems(float mapScale)
+{
+    for (auto itemGroup : m_scaleGroups) {
+        auto scaleMax = itemGroup->max().value_or(ScaleGroup::maxScale());
+        auto scaleMin = itemGroup->min().value_or(ScaleGroup::minScale());
+        bool isVisibe = (mapScale <= scaleMin && mapScale >= scaleMax) ? true : false;
+        itemGroup->setVisible(isVisibe);
+    }
+}
+
 void DrawEngine::drawPoint(const Fe2spRef &, GM_Point* ref, const DrawEngine::vDrawingInstruction &drawInstr)
 {
     QPointF p = transform(*ref);
@@ -127,7 +212,8 @@ void DrawEngine::drawPoint(const Fe2spRef &, GM_Point* ref, const DrawEngine::vD
             auto t = item->transform();
             item->setTransform({t.m11(),t.m12(),t.m21(),t.m22(),t.dx()-newP.x(),t.dy()-newP.y()});
 
-            m_scene->addItem(item);
+            setGroupItem(item, di);
+            //m_scene->addItem(item);
         }
         auto ti = std::dynamic_pointer_cast<drawing_instruction::TextInstruction>(di);
         if (ti){
@@ -192,7 +278,8 @@ void DrawEngine::drawPoint(const Fe2spRef &, GM_Point* ref, const DrawEngine::vD
                     auto t = item->transform();
                     item->setTransform({t.m11(),t.m12(),t.m21(),t.m22(),t.dx()-newP.x(),t.dy()-newP.y()});
 
-                    m_scene->addItem(item);
+                    setGroupItem(item, di);
+                    //m_scene->addItem(item);
                 }
             }
         }
@@ -247,7 +334,8 @@ void DrawEngine::drawCurve(const Fe2spRef &fe2spRef, GM_Curve* ref, const DrawEn
                 item->setPen(p);
             }
             item->setPath(path);
-            m_scene->addItem(item);
+            setGroupItem(item, di);
+            //m_scene->addItem(item);
         }
         auto pi = std::dynamic_pointer_cast<drawing_instruction::PointInstruction>(di);
         if (pi){
@@ -275,7 +363,8 @@ void DrawEngine::drawCurve(const Fe2spRef &fe2spRef, GM_Curve* ref, const DrawEn
                 auto t = item->transform();
                 item->setTransform({t.m11(),t.m12(),t.m21(),t.m22(),t.dx()-newP.x(),t.dy()-newP.y()});
 
-                m_scene->addItem(item);
+                setGroupItem(item, di);
+                //m_scene->addItem(item);
             }
         }
 
@@ -343,7 +432,8 @@ void DrawEngine::drawCurve(const Fe2spRef &fe2spRef, GM_Curve* ref, const DrawEn
                     auto t = item->transform();
                     item->setTransform({t.m11(),t.m12(),t.m21(),t.m22(),t.dx()-newP.x(),t.dy()-newP.y()});
 
-                    m_scene->addItem(item);
+                    setGroupItem(item, di);
+                    //m_scene->addItem(item);
                 }
             }
         }
@@ -408,7 +498,6 @@ void DrawEngine::drawSurface(const Fe2spRef & fe2spRef, GM_Surface* ref, const D
         item->setPen(Qt::NoPen);
         auto ai = std::dynamic_pointer_cast<drawing_instruction::AreaInstruction>(di);
         if (ai){
-
             auto colorFill = dynamic_cast<const area_fills::ColorFill*>(ai->areaFill());
             if (colorFill) {
                 const auto &colorRef = colorFill->color();
@@ -431,11 +520,13 @@ void DrawEngine::drawSurface(const Fe2spRef & fe2spRef, GM_Surface* ref, const D
                 brush.setMatrix({1,0,1,0,0,0});
                 item->setBrush(brush);
             }
-        }
-        item->setPolygon(points);
-        m_scene->addItem(item);
-        if (!poly.isClosed()){
-            qCritical(QString("has not Closeded, refId=%1").arg(fe2spRef.refId()).toLocal8Bit());
+            item->setPolygon(points);
+            setGroupItem(item, di);
+
+            //m_scene->addItem(item);
+            if (!poly.isClosed()){
+                qCritical(QString("has not Closeded, refId=%1").arg(fe2spRef.refId()).toLocal8Bit());
+            }
         }
     }
 }
@@ -519,9 +610,9 @@ QPointF DrawEngine::transform(const GM_Point &point)
     const qreal lonMax = m_mapCtrl.getLonInterval().second;
 
     const qreal _lonCenter = lonMin + (lonMax - lonMin) / 2;
-    const qreal lonCenterC = _lonCenter * M_PI / 180.0 * semiMajor;
+    const qreal lonCenterC = _lonCenter * M_PI / 180.0;
     const qreal _latCenter = latMin + (latMax - latMin) / 2;
-    const qreal latCenterM = mercator(_latCenter) * semiMajor;
+    const qreal latCenterM = mercator(_latCenter);
 
     const qreal xCenter = width / 2;
     const qreal yCenter = height / 2;
@@ -530,9 +621,9 @@ QPointF DrawEngine::transform(const GM_Point &point)
     const qreal pixYmetr = 1.0 / m_dpiInM.height() / 1000;
 
     const qreal _lon = std::stod(point.x());
-    const qreal lonC = _lon * M_PI / 180.0 * semiMajor;
+    const qreal lonC = _lon * M_PI / 180.0;
     const qreal _lat = std::stod(point.y());
-    const qreal latM = mercator(_lat) * semiMajor;
+    const qreal latM = mercator(_lat);
 
     const qreal lonShift = (lonC - lonCenterC) * minInDeg;
     const qreal latShift = (latM - latCenterM) * minInDeg;
@@ -540,5 +631,38 @@ QPointF DrawEngine::transform(const GM_Point &point)
     const qreal x = lonShift * mInNmi / m_scale / pixXmetr;
     const qreal y = latShift * mInNmi / m_scale / pixYmetr;
 
-    return QPointF(xCenter + x, yCenter + height - y);
+    const qreal tmpK = 100;
+    return QPointF(xCenter + x, yCenter + height - y) * tmpK;
+}
+
+void DrawEngine::setGroupItem(QGraphicsItem *item, const shared_instruction &drawInstr)
+{
+    auto sMax = drawInstr->scaleMaximum();
+    auto sMin = drawInstr->scaleMinimum();
+
+    if (sMax) {
+        auto l = sMax.value();
+        qDebug("test");
+    }
+    if (sMin) {
+        auto l = sMin.value();
+        qDebug("test");
+    }
+    auto it = std::find_if(m_scaleGroups.begin(), m_scaleGroups.end(),
+                        [&sMax, &sMin](ScaleGroup* p)
+    { return (p->max() == sMax && p->min() == sMin); } );
+
+    if (it == m_scaleGroups.end()) {
+        auto group = new ScaleGroup(sMax, sMin, m_scene);
+        m_scaleGroups.push_back(group);
+        it = &m_scaleGroups.last();
+    }
+
+    auto drawingPriority = drawInstr->drawingPriority();
+//    if (drawInstr->displayPlane() == drawing_instruction::UNDER_RADAR_S) {
+//        drawingPriority -= MAX_DRAW_PRIORITY;
+//    }
+    //item->setZValue(drawingPriority);
+
+    (*it)->addItem(item);
 }

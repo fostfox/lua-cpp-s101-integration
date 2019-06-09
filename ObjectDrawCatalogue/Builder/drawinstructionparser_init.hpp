@@ -48,8 +48,8 @@ struct VisibilityDefault {
     QString viewingGroup = "";
     QString displayPlane = "";
     int drawingPriority = 0;
-    int scaleMinimum = INT_MIN;
-    int scaleMaximum = INT_MAX;
+    std::optional<drawing_instruction::DrawingInstruction::scale_t> scaleMinimum;
+    std::optional<drawing_instruction::DrawingInstruction::scale_t> scaleMaximum;
 };
 struct TransformDefault {
     double xOffsetMM = 0;

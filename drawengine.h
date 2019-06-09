@@ -2,6 +2,7 @@
 
 #include <QImage>
 #include <memory>
+#include <QObject>
 
 class FeatureMapController;
 class DrawingInstructionsController;
@@ -16,9 +17,8 @@ namespace symbol { class LineSymbolPlacement; }
 class QPointF;
 class Fe2spRef;
 class QGraphicsScene;
-
-#include <QObject>
-
+class QGraphicsItem;
+class ScaleGroup;
 
 class DrawEngine : public QObject
 {
@@ -34,6 +34,7 @@ public:
     void draw(const QSizeF &dpiInM, QGraphicsScene* scene, double scale);
     void setHeightWidth(double h, double w);
     const QImage& img() const;
+    void setVisibleScaledItems(float mapScale);
 
 private:
     const FeatureMapController& m_mapCtrl;
@@ -41,6 +42,8 @@ private:
     const PortrayalCatalogueController& m_symbolCtrl;
 
     QImage m_img;
+
+    QVector<ScaleGroup*> m_scaleGroups;
 
 private:
     using shared_instruction = std::shared_ptr<drawing_instruction::DrawingInstruction>;
@@ -57,6 +60,8 @@ private:
 
     double rotationQt(double rotation, int rotationCRSType, double lineRotation = 0);
     QPointF transform(const GM_Point& );
+
+    void setGroupItem(QGraphicsItem* item, const shared_instruction &drawInstr);
 
     QSizeF m_dpiInM;
     double m_scale;
